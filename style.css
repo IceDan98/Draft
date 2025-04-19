@@ -1,0 +1,1035 @@
+/* style.css - Modern Minimalist Redesign */
+:root {
+    /* Base Sizes */
+    --gap-size: 0.5rem; /* Slightly increased base gap */
+    --gap-half: calc(var(--gap-size) / 2);
+    --gap-double: calc(var(--gap-size) * 2);
+
+    /* Sizes (vmin/vh for scalability) */
+    --ban-size: 5.5vmin;
+    --card-size: 8vh; /* Slightly smaller */
+    --nick-height: 3.5vh;
+    --nick-font-size: 2.8vh; /* Slightly smaller */
+    --button-size: 4.2vh; /* Slightly smaller */
+    --timer-font-size: 2vh;
+    --score-size: 4.2vh;
+    --score-font-size: 2vh;
+    --filter-button-size: 3.8vh; /* Smaller filter buttons */
+    --global-ban-icon-size: calc(var(--card-size) * 0.8); /* Smaller global bans */
+
+    /* Minimum Sizes */
+    --ban-min-size: 28px;
+    --pick-min-height: 55px; /* Slightly taller picks */
+    --card-min-size: 42px;
+    --nick-min-height: 16px;
+    --button-min-size: 28px;
+    --score-min-size: 28px;
+    --team-name-min-height: 30px;
+    --team-col-min-width: 240px; /* Slightly narrower columns */
+    --global-ban-icon-min-size: 35px;
+
+    /* Colors - New Palette */
+    --color-background: #0a0f1f; /* Dark deep blue */
+    --color-background-gradient-end: #0f0a1a; /* Dark purple hint */
+    --color-surface-1: #10182f; /* Slightly lighter surface */
+    --color-surface-2: #1a2340; /* Even lighter surface for cards/slots */
+    --color-text-primary: #e0e8f0; /* Off-white */
+    --color-text-secondary: #8095b0; /* Muted blue-grey */
+    --color-text-placeholder: #556a88;
+    --color-border: #2a3858; /* Subtle border */
+    --color-border-medium: #405075; /* Slightly stronger border */
+    --color-accent-gold: #c8aa6e; /* LoL Gold */
+    --color-accent-blue: #50a0f0; /* Bright Blue */
+    --color-accent-red: #f05050; /* Bright Red */
+    --color-accent-green: #40f0a0; /* Bright Green */
+    --color-accent-purple: #a070f0; /* Purple for priority */
+
+    --color-blue-team: var(--color-accent-blue);
+    --color-red-team: var(--color-accent-red);
+
+    --color-blue-bg-transparent: rgba(80, 160, 240, 0.1); /* Faint blue bg */
+    --color-red-bg-transparent: rgba(240, 80, 80, 0.1); /* Faint red bg */
+    --color-grid-bg-transparent: rgba(26, 35, 64, 0.5); /* Surface 2 with transparency */
+
+    --color-tooltip-bg: rgba(10, 15, 31, 0.9);
+    --color-tooltip-text: var(--color-text-primary);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.15);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.2);
+    --shadow-glow-gold: 0 0 10px 0px rgba(200, 170, 110, 0.5);
+    --shadow-glow-blue: 0 0 10px 0px rgba(80, 160, 240, 0.5);
+    --shadow-glow-red: 0 0 8px 0px rgba(240, 80, 80, 0.4);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    scrollbar-color: var(--color-border-medium) var(--color-surface-1);
+    scrollbar-width: thin;
+}
+body::-webkit-scrollbar { width: 8px; }
+body::-webkit-scrollbar-track { background: var(--color-surface-1); }
+body::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; border: 2px solid var(--color-surface-1); }
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-background);
+    /* Optional subtle gradient */
+    background-image: linear-gradient(45deg, var(--color-background), var(--color-background-gradient-end));
+    color: var(--color-text-primary);
+    height: 100vh;
+    overflow: hidden; /* Keep hidden on body */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--gap-size); /* Use new gap size */
+}
+
+.team-name {
+    font-family: 'Cinzel', serif; /* Keep Cinzel for team names */
+}
+.nickname-input {
+     font-family: 'Inter', sans-serif; /* Use Inter for nicks */
+}
+
+#loadingIndicator {
+    transition: opacity 0.5s ease-out;
+}
+#loadingIndicator.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#mainLayout {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: auto minmax(300px, 1fr) auto; /* Wider center column */
+    gap: var(--gap-size);
+    height: 100%;
+    width: 100%;
+    max-width: 2600px; /* Increased max width */
+    max-height: calc(100vh - var(--gap-double)); /* Adjusted max-height */
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+#mainLayout:not(.hidden) {
+    opacity: 1;
+}
+
+#topRowContainer {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: var(--gap-size);
+    align-items: center;
+    margin-bottom: var(--gap-size);
+    min-height: calc(var(--button-size) + var(--gap-size));
+}
+
+.top-row-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-size);
+    min-width: 0;
+}
+.top-row-cell.blue-info { grid-column: 1; justify-content: flex-start; }
+.top-row-cell.center-controls { grid-column: 2; justify-content: center; }
+.top-row-cell.red-info { grid-column: 3; justify-content: flex-end; }
+
+.center-controls-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content max-content max-content minmax(0, 1fr);
+    align-items: center;
+    gap: var(--gap-size);
+    width: 100%;
+}
+
+.team-name {
+    width: auto;
+    max-width: 300px; /* Allow wider names */
+    text-align: center;
+    font-size: clamp(1.2rem, 3.5vmin, 1.8rem); /* Larger name font */
+    font-weight: 600; /* Slightly less bold */
+    flex-shrink: 1;
+    min-height: var(--team-name-min-height);
+    line-height: var(--team-name-min-height);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.375rem; /* Rounded corners */
+    background-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: text;
+}
+.team-name[contenteditable="true"]:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.team-name[contenteditable="true"]:focus {
+    outline: 2px solid var(--color-accent-gold);
+    background-color: rgba(0, 0, 0, 0.3);
+    white-space: normal;
+    overflow: visible;
+    box-shadow: var(--shadow-glow-gold);
+}
+#blue-team-name-h2 { justify-self: end; text-align: right; color: var(--color-blue-team); }
+#red-team-name-h2 { justify-self: start; text-align: left; color: var(--color-red-team); }
+
+.score-input {
+    width: var(--score-size);
+    height: var(--score-size);
+    min-width: var(--score-min-size);
+    min-height: var(--score-min-size);
+    border: 1px solid var(--color-border); /* Subtle border */
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--score-font-size);
+    font-weight: 600; /* Slightly less bold */
+    flex-shrink: 0;
+    justify-self: center;
+    background-color: var(--color-surface-1);
+    cursor: text;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.score-input:hover {
+     background-color: var(--color-surface-2);
+     border-color: var(--color-border-medium);
+}
+.score-input:focus {
+    outline: none;
+    border-color: var(--color-accent-gold);
+    background-color: var(--color-surface-2);
+    box-shadow: var(--shadow-glow-gold);
+}
+.score-input:empty::before {
+    content: "0";
+    color: var(--color-text-placeholder);
+    font-style: normal; /* No italic */
+}
+#blue-score { color: var(--color-blue-team); }
+#red-score { color: var(--color-red-team); }
+
+.timer-display-button {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--timer-font-size);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    min-width: 6ch;
+    text-align: center;
+    background-color: var(--color-accent-green);
+    color: var(--color-background); /* Dark text on bright button */
+    border: none;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.375rem;
+    height: var(--button-size);
+    min-height: var(--button-min-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+.timer-display-button:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-green), #fff 10%); /* Slightly lighter green */
+    box-shadow: var(--shadow-md);
+}
+.timer-display-button:disabled,
+.timer-display-button.timer-disabled {
+    cursor: default;
+    background-color: var(--color-surface-2);
+    color: var(--color-text-secondary);
+    opacity: 0.8;
+    box-shadow: none;
+}
+.timer-display-button.timer-running {
+    background-color: var(--color-surface-2);
+    color: var(--color-text-primary);
+    cursor: default;
+    opacity: 1;
+    box-shadow: none;
+}
+.timer-display-button.timer-ending {
+    color: var(--color-accent-red); /* Red text for urgency */
+    animation: pulse-red 1s infinite;
+}
+@keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(240, 80, 80, 0.4); }
+    50% { box-shadow: 0 0 5px 2px rgba(240, 80, 80, 0.2); }
+}
+
+
+.bans-container {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-half);
+    flex-shrink: 0;
+}
+
+#draftArea {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: var(--gap-size);
+    overflow: hidden;
+    min-height: 0;
+    align-items: stretch;
+}
+
+.team-column {
+    min-width: var(--team-col-min-width);
+    width: auto;
+    max-width: 480px; /* Slightly wider max */
+    flex: 0 1 var(--team-col-min-width);
+    padding: var(--gap-size);
+    border-radius: 0.5rem;
+    box-shadow: none; /* Removed shadow */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+    border: 1px solid var(--color-border); /* Use subtle border */
+    background-color: rgba(16, 24, 47, 0.3); /* Faint surface bg */
+}
+.team-column.blue-column { background-color: var(--color-blue-bg-transparent); border-color: color-mix(in srgb, var(--color-blue-team), transparent 70%); }
+.team-column.red-column { background-color: var(--color-red-bg-transparent); border-color: color-mix(in srgb, var(--color-red-team), transparent 70%);}
+.team-column::-webkit-scrollbar { display: none; }
+
+.team-column.draft-disabled {
+    pointer-events: none;
+    opacity: 0.6; /* More faded */
+    filter: grayscale(60%);
+}
+
+.picks-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-size); /* Increased gap */
+    flex-grow: 1;
+    justify-content: space-around;
+    width: 100%;
+    min-height: 0;
+    margin-top: var(--gap-size);
+}
+
+.pick-slot, .ban-slot {
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    border-radius: 0.375rem;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+.ban-slot {
+    width: var(--ban-size);
+    height: var(--ban-size);
+    min-width: var(--ban-min-size);
+    min-height: var(--ban-min-size);
+    border-radius: 0.25rem; /* Smaller radius for bans */
+}
+.pick-slot {
+    min-height: var(--pick-min-height);
+    width: 100%;
+    height: auto;
+    flex-grow: 1;
+    position: relative;
+}
+.pick-slot img, .ban-slot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.highlight-action {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-glow-gold);
+    background-color: color-mix(in srgb, var(--color-surface-2), var(--color-accent-gold) 10%);
+}
+
+.swap-selected {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue);
+}
+
+@keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.preview-flash > img { animation: flash 1s infinite ease-in-out; }
+
+.nickname-input[contenteditable="true"] {
+    position: absolute;
+    bottom: 5px; /* Fixed offset */
+    width: auto;
+    max-width: calc(100% - 16px); /* More padding */
+    z-index: 1;
+    font-size: calc(var(--nick-font-size) * 0.9); /* Slightly smaller relative size */
+    font-weight: 500;
+    color: #fff; /* Pure white for contrast */
+    height: auto; /* Auto height */
+    min-height: var(--nick-min-height);
+    background-color: rgba(0, 0, 0, 0.6); /* Darker semi-transparent bg */
+    border-radius: 0.25rem;
+    padding: 2px 6px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Softer shadow */
+    pointer-events: auto;
+    cursor: text;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.3; /* Adjusted line height */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent;
+}
+[id^="blue-pick-"] .nickname-input { right: 8px; left: auto; text-align: right; }
+[id^="red-pick-"] .nickname-input { left: 8px; right: auto; text-align: left; }
+
+.nickname-input[contenteditable="true"]:empty::before {
+    content: "Ник"; /* Shorter placeholder */
+    color: var(--color-text-placeholder);
+    font-style: normal;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+.nickname-input[contenteditable="true"]:focus {
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    border: 1px solid var(--color-accent-gold);
+    box-shadow: var(--shadow-glow-gold);
+}
+
+#championGridContainer {
+    grid-column: 2;
+    background-color: transparent; /* Remove bg color */
+    border-radius: 0.5rem;
+    padding: 0; /* Remove padding */
+    box-shadow: none; /* Remove shadow */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 300px; /* Wider min width */
+    border: none; /* Remove border */
+}
+
+#globallyBannedDisplay {
+    flex-shrink: 0;
+    margin-bottom: var(--gap-size); /* Reduced margin */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-half);
+    width: 100%;
+    min-height: calc(var(--global-ban-icon-min-size) + var(--gap-half));
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--gap-half);
+    transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+}
+#globallyBannedDisplay.hidden { opacity: 0; max-height: 0; margin-bottom: 0; padding-bottom: 0; border-bottom: none; overflow: hidden; }
+
+.global-bans-row { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; gap: var(--gap-size); }
+#global-bans-blue, #global-bans-red { display: grid; grid-template-columns: repeat(5, auto); gap: var(--gap-half); align-items: center; min-height: var(--global-ban-icon-min-size); }
+#global-bans-blue { justify-items: start; }
+#global-bans-red { justify-items: end; }
+
+.global-ban-icon {
+    width: var(--global-ban-icon-size);
+    height: var(--global-ban-icon-size);
+    min-width: var(--global-ban-icon-min-size);
+    min-height: var(--global-ban-icon-min-size);
+    background-size: cover;
+    background-position: center;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-surface-1); /* Darker bg */
+    border: 1px solid var(--color-border);
+    opacity: 0.6; /* More faded */
+    cursor: not-allowed;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+.global-ban-icon img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(90%) brightness(60%); } /* Stronger filter */
+
+.search-controls-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-half); /* Reduced gap */
+    margin-bottom: var(--gap-size);
+    flex-shrink: 0;
+    overflow-x: auto;
+    padding: var(--gap-half); /* Add padding */
+    background-color: var(--color-surface-1); /* Add background */
+    border-radius: 0.375rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+}
+.search-controls-wrapper::-webkit-scrollbar { height: 4px; }
+.search-controls-wrapper::-webkit-scrollbar-track { background: transparent; }
+.search-controls-wrapper::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 2px; }
+
+#championSearch {
+    flex-grow: 1;
+    flex-shrink: 1;
+    font-size: clamp(0.85rem, 2vmin, 1rem); /* Slightly larger base */
+    min-width: 120px; /* Reduced min width */
+    height: var(--filter-button-size);
+    min-height: 30px; /* Reduced min height */
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+    padding: 0 0.5rem;
+    color: var(--color-text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#championSearch::placeholder { color: var(--color-text-placeholder); }
+#championSearch:focus {
+    outline: none;
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue);
+    background-color: var(--color-surface-1); /* Darken on focus */
+}
+
+#roleFilterButtons { display: flex; gap: var(--gap-half); flex-shrink: 0; }
+
+.search-controls-wrapper .action-button { flex-shrink: 0; }
+
+.action-button {
+    color: var(--color-text-primary);
+    width: var(--button-size);
+    height: var(--button-size);
+    min-width: var(--button-min-size);
+    min-height: var(--button-min-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 0.375rem;
+    font-weight: 500; /* Regular weight */
+    transition: background-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    font-size: calc(var(--button-size) * 0.45); /* Smaller font */
+    line-height: 1;
+    flex-shrink: 0;
+    background-color: var(--color-surface-2); /* Use surface color */
+    box-shadow: var(--shadow-sm);
+}
+.action-button:hover:not(:disabled) {
+    background-color: var(--color-border-medium); /* Darker hover */
+    border-color: var(--color-text-secondary);
+    color: #fff; /* Brighter text */
+    box-shadow: var(--shadow-md);
+}
+.action-button:active:not(:disabled) {
+    transform: scale(0.95); /* Click effect */
+    background-color: var(--color-border);
+    box-shadow: none;
+}
+.action-button:focus-visible {
+    outline: 2px solid var(--color-accent-blue);
+    outline-offset: 1px;
+    box-shadow: var(--shadow-glow-blue);
+    border-color: var(--color-accent-blue);
+}
+.action-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+    background-color: var(--color-surface-2);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+}
+
+.icon-button { font-size: calc(var(--button-size) * 0.55); width: var(--button-size); } /* Slightly larger icon */
+
+/* Specific Button Overrides */
+#confirmPickBanButton { background-color: var(--color-accent-green); color: var(--color-background); border-color: var(--color-accent-green); }
+#confirmPickBanButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-green), #fff 15%); }
+#resetButton { background-color: var(--color-accent-red); color: var(--color-background); border-color: var(--color-accent-red);}
+#resetButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-red), #fff 15%); }
+#nextDraftButton { background-color: var(--color-accent-gold); color: var(--color-background); border-color: var(--color-accent-gold); }
+#nextDraftButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-gold), #fff 15%); }
+#priorityFilterButton { background-color: var(--color-surface-2); color: var(--color-accent-purple); border-color: var(--color-border); }
+#priorityFilterButton:hover:not(:disabled) { background-color: var(--color-border-medium); color: color-mix(in srgb, var(--color-accent-purple), #fff 20%);}
+#priorityFilterButton.active { background-color: var(--color-accent-purple); color: var(--color-background); border-color: var(--color-accent-purple); box-shadow: 0 0 8px 0px rgba(160, 112, 240, 0.5); }
+
+
+.filter-button {
+    background-color: var(--color-surface-2);
+    width: var(--filter-button-size);
+    height: var(--filter-button-size);
+    font-size: calc(var(--filter-button-size) * 0.4);
+    font-weight: 600;
+    min-width: 30px; /* Smaller min size */
+    min-height: 30px;
+    padding: 0 2px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary); /* Muted text */
+}
+.filter-button:hover:not(:disabled) {
+    background-color: var(--color-border-medium);
+    color: var(--color-text-primary);
+}
+.filter-button.active {
+    background-color: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
+    color: var(--color-background); /* Dark text on active */
+    box-shadow: var(--shadow-glow-blue);
+}
+
+#championGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap-half);
+    overflow-y: auto;
+    align-content: flex-start;
+    flex-grow: 1;
+    min-height: 0;
+    transition: opacity 0.3s ease;
+    padding: var(--gap-size); /* Add padding around grid */
+    background-color: var(--color-surface-1); /* Add bg to grid area */
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+}
+#championGrid::-webkit-scrollbar { width: 6px; }
+#championGrid::-webkit-scrollbar-track { background: transparent; }
+#championGrid::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 3px; }
+#championGrid::-webkit-scrollbar-thumb:hover { background-color: var(--color-border-medium); }
+#championGrid { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
+
+.champion-card {
+    width: var(--card-size);
+    height: var(--card-size);
+    min-width: var(--card-min-size);
+    min-height: var(--card-min-size);
+    border-radius: 0.25rem;
+    overflow: hidden;
+    background-color: var(--color-surface-2);
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border); /* Subtle border */
+    box-shadow: var(--shadow-sm);
+}
+.champion-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.2s ease, transform 0.2s ease; }
+.champion-card:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-medium);
+}
+ .champion-card:hover img {
+     transform: scale(1.03); /* Slight image zoom on hover */
+ }
+.champion-card:focus-visible {
+     outline: 2px solid var(--color-accent-blue);
+     outline-offset: 1px;
+     box-shadow: var(--shadow-glow-blue);
+     border-color: var(--color-accent-blue);
+     transform: scale(1.03);
+}
+
+.champion-card.selected { border-color: var(--color-accent-gold); }
+.champion-card.selected img { filter: grayscale(80%) brightness(50%) sepia(30%); opacity: 0.7; } /* More distinct selected style */
+.champion-card.disabled { pointer-events: none; opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.champion-card.disabled img { filter: grayscale(100%) brightness(40%); transform: none; }
+.champion-card.disabled:hover { transform: none; border-color: var(--color-border); }
+
+
+.tooltip {
+    position: fixed;
+    background-color: var(--color-tooltip-bg);
+    color: var(--color-tooltip-text);
+    padding: 0.5rem 0.8rem; /* More padding */
+    border-radius: 0.375rem;
+    font-size: 0.9rem; /* Slightly larger */
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out; /* Faster fade */
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border-medium);
+}
+.tooltip.visible { opacity: 1; }
+.tooltip-title { font-weight: 600; display: block; margin-bottom: 0.1rem; color: var(--color-accent-gold); }
+.tooltip-name { font-weight: 400; color: var(--color-text-secondary); font-size: 0.8rem; }
+
+
+#statusMessage {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-surface-1);
+    color: var(--color-text-primary);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.375rem;
+    z-index: 90;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid var(--color-border-medium);
+    box-shadow: var(--shadow-md);
+    transform: translate(-50%, 10px); /* Start slightly lower */
+}
+#statusMessage.visible {
+    opacity: 1;
+    transform: translate(-50%, 0); /* Move up */
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1280px) { /* Wider breakpoint */
+     .search-controls-wrapper { flex-wrap: wrap; } /* Allow wrap earlier */
+     #championSearch { min-width: 180px; }
+}
+
+@media (max-width: 1024px) {
+    :root {
+        --card-size: 7.5vh;
+        --ban-size: 5vh;
+        --button-size: 4vh;
+        --filter-button-size: 3.5vh;
+        --score-size: 4vh;
+        --nick-font-size: 2.5vh;
+        --gap-size: 0.3rem;
+        --team-col-min-width: 220px;
+    }
+     .team-name { font-size: clamp(1rem, 3vmin, 1.4rem); max-width: 200px;}
+     .search-controls-wrapper { margin-bottom: var(--gap-size); padding: var(--gap-half); }
+     #championSearch { min-width: 150px; }
+}
+
+@media (max-width: 768px) {
+     :root {
+        --card-size: 7vh;
+        --ban-size: 4.5vh;
+        --button-size: 3.8vh;
+        --filter-button-size: 3.2vh;
+        --score-size: 3.8vh;
+        --nick-font-size: 2.2vh;
+        --team-col-min-width: 180px;
+     }
+    #mainLayout {
+        grid-template-columns: auto minmax(150px, 1fr) auto;
+        gap: var(--gap-half);
+    }
+     .center-controls-wrapper {
+        grid-template-columns: 1fr auto auto auto 1fr;
+        gap: var(--gap-half);
+    }
+    .team-name { max-width: 150px; font-size: clamp(0.9rem, 2.8vmin, 1.2rem);}
+    .bans-container { gap: 2px; }
+    .search-controls-wrapper { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    #championSearch { width: auto; flex-grow: 1; min-width: 120px; }
+    #roleFilterButtons { justify-content: flex-start; }
+    .picks-container { gap: 2px; }
+}
+
+@media (max-width: 480px) {
+    body { padding: 2px; }
+    :root {
+        --card-size: 6.5vh;
+        --ban-size: 4vh;
+        --button-size: 3.5vh;
+        --filter-button-size: 3vh;
+        --score-size: 3.5vh;
+        --nick-font-size: 2vh;
+        --card-min-size: 38px; /* Slightly larger min card */
+        --ban-min-size: 25px;
+        --button-min-size: 28px;
+        --score-min-size: 28px;
+        --team-col-min-width: 90px; /* Allow columns to be very narrow */
+    }
+     #mainLayout {
+        grid-template-columns: auto minmax(100px, 1fr) auto; /* Even smaller center */
+        gap: 2px;
+    }
+     #topRowContainer { grid-template-columns: 1fr auto 1fr; }
+     .top-row-cell.blue-info { grid-column: 1; }
+     .top-row-cell.center-controls { grid-column: 2; }
+     .top-row-cell.red-info { grid-column: 3; }
+     .center-controls-wrapper { display: flex; flex-wrap: wrap; justify-content: center; }
+     #timerDisplay { order: -1; margin-bottom: var(--gap-half); }
+     .team-name { max-width: 100px; font-size: clamp(0.8rem, 2.5vmin, 1rem); }
+     .bans-container { display: grid; grid-template-columns: repeat(3, 1fr); }
+     #blue-ban-4, #blue-ban-5, #red-ban-4, #red-ban-5 { margin-top: 2px; }
+     .filter-button { min-width: 28px; min-height: 28px; font-size: 0.6rem; }
+     #championGrid { gap: 2px; }
+     .team-column { padding: var(--gap-half); }
+     .picks-container { gap: 1px; }
+     .nickname-input { min-height: 16px; font-size: 1.8vh; }
+     .search-controls-wrapper { overflow-x: visible; flex-wrap: wrap; } /* Allow wrap on smallest */
+     #championSearch { min-width: 100px; }
+}
+
+    </style>
+</head>
+<body class="flex flex-col items-center p-4">
+
+    <div id="loadingIndicator" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
+        <div class="text-white text-xl font-semibold animate-pulse">Загрузка данных чемпионов...</div>
+    </div>
+
+    <div id="mainLayout" class="hidden">
+        <div id="topRowContainer">
+            <div class="top-row-cell blue-info">
+                <div class="bans-container" id="blue-bans-display">
+                    <div id="blue-ban-1" class="ban-slot" aria-label="Синий бан 1"></div>
+                    <div id="blue-ban-2" class="ban-slot" aria-label="Синий бан 2"></div>
+                    <div id="blue-ban-3" class="ban-slot" aria-label="Синий бан 3"></div>
+                    <div id="blue-ban-4" class="ban-slot" aria-label="Синий бан 4"></div>
+                    <div id="blue-ban-5" class="ban-slot" aria-label="Синий бан 5"></div>
+                </div>
+            </div>
+
+            <div class="top-row-cell center-controls">
+                 <div class="center-controls-wrapper">
+                     <h2 contenteditable="true" spellcheck="false" class="team-name" id="blue-team-name-h2" aria-label="Название синей команды">Синяя Команда</h2>
+                     <div contenteditable="true" id="blue-score" class="score-input" inputmode="numeric" aria-label="Счет синей команды"></div>
+                     <button id="timerDisplay" class="timer-display-button" title="Начать драфт" aria-label="Таймер / Старт драфта">--:--</button>
+                     <div contenteditable="true" id="red-score" class="score-input" inputmode="numeric" aria-label="Счет красной команды"></div>
+                     <h2 contenteditable="true" spellcheck="false" class="team-name" id="red-team-name-h2" aria-label="Название красной команды">Красная Команда</h2>
+                 </div>
+            </div>
+
+            <div class="top-row-cell red-info">
+                 <div class="bans-container" id="red-bans-display">
+                    <div id="red-ban-1" class="ban-slot" aria-label="Красный бан 1"></div>
+                    <div id="red-ban-2" class="ban-slot" aria-label="Красный бан 2"></div>
+                    <div id="red-ban-3" class="ban-slot" aria-label="Красный бан 3"></div>
+                    <div id="red-ban-4" class="ban-slot" aria-label="Красный бан 4"></div>
+                    <div id="red-ban-5" class="ban-slot" aria-label="Красный бан 5"></div>
+                 </div>
+            </div>
+        </div>
+
+        <div id="draftArea">
+            <div class="team-column blue-column draft-disabled">
+                 <div class="picks-container blue-picks-container">
+                     <div id="blue-pick-1" class="pick-slot" aria-label="Синий пик 1"></div>
+                     <div id="blue-pick-2" class="pick-slot" aria-label="Синий пик 2"></div>
+                     <div id="blue-pick-3" class="pick-slot" aria-label="Синий пик 3"></div>
+                     <div id="blue-pick-4" class="pick-slot" aria-label="Синий пик 4"></div>
+                     <div id="blue-pick-5" class="pick-slot" aria-label="Синий пик 5"></div>
+                 </div>
+            </div>
+
+            <div id="championGridContainer">
+                 <div id="globallyBannedDisplay" class="hidden">
+                     <div class="global-bans-row">
+                         <div id="global-bans-blue"></div>
+                         <div id="global-bans-red"></div>
+                     </div>
+                 </div>
+                 <div class="search-controls-wrapper">
+                     <input type="text" id="championSearch" placeholder="Поиск..." aria-label="Поиск чемпиона" class="p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500">
+                     <div id="roleFilterButtons" class="flex justify-center gap-2" role="group" aria-label="Фильтр по ролям">
+                         <button type="button" class="action-button filter-button active" data-role="All" title="Фильтр: Все">ALL</button>
+                         <button type="button" class="action-button filter-button" data-role="Top" title="Фильтр: Топ">TOP</button>
+                         <button type="button" class="action-button filter-button" data-role="Jungle" title="Фильтр: Лес">JNG</button>
+                         <button type="button" class="action-button filter-button" data-role="Mid" title="Фильтр: Мид">MID</button>
+                         <button type="button" class="action-button filter-button" data-role="ADC" title="Фильтр: АДК">ADC</button>
+                         <button type="button" class="action-button filter-button" data-role="Support" title="Фильтр: Поддержка">SUP</button>
+                     </div>
+                     <button id="priorityFilterButton" class="action-button icon-button" title="Показать только приоритетных чемпионов" aria-label="Показать только приоритетных чемпионов">⭐</button>
+                     <button id="confirmPickBanButton" class="action-button confirm-button icon-button" title="Подтвердить выбор/бан" aria-label="Подтвердить выбор/бан" disabled>✔️</button>
+                     <button id="nextDraftButton" class="action-button next-draft-button icon-button" title="Следующий драфт (Fearless)" aria-label="Следующий драфт (Fearless)" disabled>▶️</button>
+                     <button id="swapButton" class="action-button icon-button" title="Поменять команды местами" aria-label="Поменять команды местами">⇄</button>
+                     <button id="clearPicksButton" class="action-button icon-button" title="Очистить пики/баны текущей игры" aria-label="Очистить пики/баны текущей игры">🧹</button>
+                     <button id="toggleTimerButton" class="action-button icon-button" title="Сменить время таймера (30/45с)" aria-label="Сменить время таймера">⏱️</button>
+                     <button id="undoButton" class="action-button undo-button icon-button" title="Отменить действие" aria-label="Отменить действие" disabled>↩</button>
+                     <button id="resetButton" class="action-button reset-button icon-button" title="Полный сброс" aria-label="Полный сброс">🔄</button>
+                 </div>
+                 <div id="championGrid" role="grid" aria-label="Сетка выбора чемпионов">
+                     </div>
+            </div>
+
+            <div class="team-column red-column draft-disabled">
+                <div class="picks-container red-picks-container">
+                     <div id="red-pick-1" class="pick-slot" aria-label="Красный пик 1"></div>
+                     <div id="red-pick-2" class="pick-slot" aria-label="Красный пик 2"></div>
+                     <div id="red-pick-3" class="pick-slot" aria-label="Красный пик 3"></div>
+                     <div id="red-pick-4" class="pick-slot" aria-label="Красный пик 4"></div>
+                     <div id="red-pick-5" class="pick-slot" aria-label="Красный пик 5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="championTooltip" class="tooltip" role="tooltip"></div>
+
+    <div id="statusMessage" aria-live="polite"></div>
+
+    <script defer>
+        // script.js (Same JS as previous version - no changes needed for design update)
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM Loaded. Initializing script...");
+
+            // --- Global Elements ---
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const mainLayout = document.getElementById('mainLayout');
+            const championGridElement = document.getElementById('championGrid');
+            const startButton = document.getElementById('timerDisplay');
+            const resetButton = document.getElementById('resetButton');
+            const undoButton = document.getElementById('undoButton');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const championSearch = document.getElementById('championSearch');
+            const bluePicksContainer = document.querySelector('.blue-picks-container');
+            const redPicksContainer = document.querySelector('.red-picks-container');
+            const blueColumn = document.querySelector('.blue-column');
+            const redColumn = document.querySelector('.red-column');
+            const swapButton = document.getElementById('swapButton');
+            const clearPicksButton = document.getElementById('clearPicksButton');
+            const toggleTimerButton = document.getElementById('toggleTimerButton');
+            const filterButtons = document.querySelectorAll('#roleFilterButtons .filter-button');
+            const confirmPickBanButton = document.getElementById('confirmPickBanButton');
+            const priorityFilterButton = document.getElementById('priorityFilterButton');
+            const nextDraftButton = document.getElementById('nextDraftButton');
+            const globallyBannedDisplay = document.getElementById('globallyBannedDisplay');
+            const globalBansBlueContainer = document.getElementById('global-bans-blue');
+            const globalBansRedContainer = document.getElementById('global-bans-red');
+            const championTooltip = document.getElementById('championTooltip');
+            const statusMessage = document.getElementById('statusMessage');
+            const blueTeamNameH2 = document.getElementById('blue-team-name-h2');
+            const redTeamNameH2 = document.getElementById('red-team-name-h2');
+            const blueScoreEl = document.getElementById('blue-score');
+            const redScoreEl = document.getElementById('red-score');
+
+            // --- State Variables ---
+            let allChampions = [];
+            let processedChampions = [];
+            let ddragonVersion = 'latest';
+            let baseIconUrl = '';
+            let baseSplashUrl = '';
+            let currentStep = 0;
+            let selectedChampions = new Set();
+            let draftHistory = [];
+            let pickNicknames = {};
+            let isDraftComplete = false;
+            let isDraftStarted = false;
+            let selectedSwapSlotId = null;
+            let timerInterval = null;
+            let draftTimerDuration = 30;
+            let timerSeconds = draftTimerDuration;
+            let currentRoleFilter = 'All';
+            let previewedChampion = null;
+            let isPriorityFilterActive = false;
+            let statusTimeout = null;
+            let globallyDisabledChampions = new Set();
+            let globalBanHistory = [];
+
+            // --- Data ---
+            const championRolesMap = { 'Aatrox': ['Top'], 'Ahri': ['Mid'], 'Akali': ['Mid', 'Top'], 'Akshan': ['Mid', 'Top'], 'Alistar': ['Support'], 'Amumu': ['Jungle', 'Support'], 'Anivia': ['Mid'], 'Annie': ['Mid', 'Support'], 'Aphelios': ['ADC'], 'Ashe': ['ADC', 'Support'], 'AurelionSol': ['Mid'], 'Azir': ['Mid'], 'Bard': ['Support'], 'Belveth': ['Jungle'], 'Blitzcrank': ['Support'], 'Brand': ['Support', 'Mid', 'Jungle'], 'Braum': ['Support'], 'Briar': ['Jungle'], 'Caitlyn': ['ADC'], 'Camille': ['Top'], 'Cassiopeia': ['Top', 'Mid'], 'Chogath': ['Top', 'Mid'], 'Corki': ['Mid', 'ADC'], 'Darius': ['Top', 'Jungle'], 'Diana': ['Jungle', 'Mid'], 'DrMundo': ['Top', 'Jungle'], 'Draven': ['ADC'], 'Ekko': ['Jungle', 'Mid'], 'Elise': ['Jungle'], 'Evelynn': ['Jungle'], 'Ezreal': ['ADC'], 'Fiddlesticks': ['Jungle'], 'Fiora': ['Top'], 'Fizz': ['Mid'], 'Galio': ['Mid', 'Support'], 'Gangplank': ['Top'], 'Garen': ['Top'], 'Gnar': ['Top'], 'Gragas': ['Jungle', 'Top', 'Mid', 'Support'], 'Graves': ['Jungle'], 'Gwen': ['Top', 'Jungle'], 'Hecarim': ['Jungle'], 'Heimerdinger': ['Top', 'Mid', 'Support'], 'Hwei': ['Mid', 'Support'], 'Illaoi': ['Top'], 'Irelia': ['Top', 'Mid'], 'Ivern': ['Jungle', 'Support'], 'Janna': ['Support'], 'JarvanIV': ['Jungle'], 'Jax': ['Top', 'Jungle'], 'Jayce': ['Top', 'Mid'], 'Jhin': ['ADC'], 'Jinx': ['ADC'], 'Kaisa': ['ADC'], 'Kalista': ['ADC'], 'Karma': ['Support', 'Mid'], 'Karthus': ['Jungle', 'Mid'], 'Kassadin': ['Mid'], 'Katarina': ['Mid'], 'Kayle': ['Top', 'Mid'], 'Kayn': ['Jungle'], 'Kennen': ['Top', 'Mid'], 'Khazix': ['Jungle'], 'Kindred': ['Jungle'], 'Kled': ['Top', 'Mid'], 'KogMaw': ['ADC'], 'KSante': ['Top'], 'Leblanc': ['Mid'], 'LeeSin': ['Jungle'], 'Leona': ['Support'], 'Lillia': ['Jungle'], 'Lissandra': ['Mid'], 'Lucian': ['ADC'], 'Lulu': ['Support'], 'Lux': ['Mid', 'Support'], 'Malphite': ['Top', 'Support', 'Mid'], 'Malzahar': ['Mid'], 'Maokai': ['Jungle', 'Support'], 'MasterYi': ['Jungle'], 'Milio': ['Support'], 'MissFortune': ['ADC'], 'Mordekaiser': ['Top', 'Jungle'], 'Morgana': ['Support', 'Mid', 'Jungle'], 'Naafiri': ['Jungle', 'Mid'], 'Nami': ['Support'], 'Nasus': ['Top'], 'Nautilus': ['Support'], 'Neeko': ['Mid', 'Support'], 'Nidalee': ['Jungle'], 'Nilah': ['ADC'], 'Nocturne': ['Jungle'], 'Nunu': ['Jungle'], 'Olaf': ['Top', 'Jungle'], 'Orianna': ['Mid'], 'Ornn': ['Top'], 'Pantheon': ['Top', 'Mid', 'Support', 'Jungle'], 'Poppy': ['Top', 'Jungle', 'Support'], 'Pyke': ['Support', 'Mid'], 'Qiyana': ['Jungle', 'Mid'], 'Quinn': ['Top', 'Mid'], 'Rakan': ['Support'], 'Rammus': ['Jungle'], 'RekSai': ['Jungle'], 'Rell': ['Support', 'Jungle'], 'Renata': ['Support'], 'Renekton': ['Top'], 'Rengar': ['Jungle', 'Top'], 'Riven': ['Top'], 'Rumble': ['Top', 'Mid', 'Jungle'], 'Ryze': ['Top', 'Mid'], 'Samira': ['ADC'], 'Sejuani': ['Jungle'], 'Senna': ['Support', 'ADC'], 'Seraphine': ['Support', 'Mid', 'ADC'], 'Sett': ['Top', 'Support'], 'Shaco': ['Jungle', 'Support'], 'Shen': ['Top', 'Support'], 'Shyvana': ['Jungle'], 'Singed': ['Top'], 'Sion': ['Top', 'Mid'], 'Sivir': ['ADC'], 'Skarner': ['Jungle', 'Top'], 'Smolder': ['ADC', 'Mid'], 'Sona': ['Support'], 'Soraka': ['Support'], 'Swain': ['Support', 'Mid', 'ADC'], 'Sylas': ['Mid', 'Jungle'], 'Syndra': ['Mid'], 'TahmKench': ['Top', 'Support'], 'Taliyah': ['Jungle', 'Mid'], 'Talon': ['Jungle', 'Mid'], 'Taric': ['Support'], 'Teemo': ['Top'], 'Thresh': ['Support'], 'Tristana': ['ADC', 'Mid'], 'Trundle': ['Top', 'Jungle'], 'Tryndamere': ['Top'], 'TwistedFate': ['Mid', 'ADC'], 'Twitch': ['ADC', 'Jungle'], 'Udyr': ['Jungle', 'Top'], 'Urgot': ['Top'], 'Varus': ['ADC', 'Mid'], 'Vayne': ['ADC', 'Top'], 'Veigar': ['Mid', 'ADC', 'Support'], 'Velkoz': ['Mid', 'Support'], 'Vex': ['Mid'], 'Vi': ['Jungle'], 'Viego': ['Jungle'], 'Viktor': ['Mid'], 'Vladimir': ['Top', 'Mid'], 'Volibear': ['Top', 'Jungle'], 'Warwick': ['Jungle', 'Top'], 'MonkeyKing': ['Top', 'Jungle'], 'Xayah': ['ADC'], 'Xerath': ['Mid', 'Support'], 'XinZhao': ['Jungle'], 'Yasuo': ['Mid', 'Top', 'ADC'], 'Yone': ['Top', 'Mid'], 'Yorick': ['Top', 'Jungle'], 'Yuumi': ['Support'], 'Zac': ['Jungle'], 'Zed': ['Mid', 'Jungle'], 'Zeri': ['ADC'], 'Ziggs': ['Mid', 'ADC', 'Support'], 'Zilean': ['Support', 'Mid'], 'Zoe': ['Mid', 'Support'], 'Zyra': ['Support', 'Jungle', 'Mid'] };
+            const priorityChampions = new Set(['Aatrox', 'Ahri', 'Akali', 'Akshan', 'Alistar', 'Amumu', 'Annie', 'Ashe', 'AurelionSol', 'Blitzcrank', 'Brand', 'Braum', 'Caitlyn', 'Camille', 'Corki', 'Darius', 'Diana', 'DrMundo', 'Draven', 'Ekko', 'Evelynn', 'Ezreal', 'Fiddlesticks', 'Fiora', 'Fizz', 'Galio', 'Garen', 'Gnar', 'Gragas', 'Graves', 'Gwen', 'Hecarim', 'Heimerdinger', 'Irelia', 'Janna', 'JarvanIV', 'Jax', 'Jayce', 'Jhin', 'Jinx', 'Kaisa', 'Kalista', 'Karma', 'Kassadin', 'Katarina', 'Kayle', 'Kayn', 'Kennen', 'Khazix', 'Kindred', 'LeeSin', 'Leona', 'Lillia', 'Lissandra', 'Lucian', 'Lulu', 'Lux', 'Malphite', 'Maokai', 'MasterYi', 'Milio', 'MissFortune', 'Mordekaiser', 'Morgana', 'Nami', 'Nasus', 'Nautilus', 'Nilah', 'Nunu', 'Olaf', 'Orianna', 'Ornn', 'Pantheon', 'Poppy', 'Pyke', 'Rakan', 'Rammus', 'Renekton', 'Rengar', 'Riven', 'Rumble', 'Samira', 'Senna', 'Seraphine', 'Sett', 'Shen', 'Shyvana', 'Singed', 'Sion', 'Sivir', 'Sona', 'Soraka', 'Swain', 'Syndra', 'Talon', 'Teemo', 'Thresh', 'Tristana', 'Tryndamere', 'TwistedFate', 'Twitch', 'Urgot', 'Varus', 'Vayne', 'Veigar', 'Vex', 'Vi', 'Viego', 'Viktor', 'Vladimir', 'Volibear', 'Warwick', 'MonkeyKing', 'Xayah', 'XinZhao', 'Yasuo', 'Yone', 'Yuumi', 'Zed', 'Zeri', 'Ziggs', 'Zoe', 'Zyra', 'Ryze', 'Nocturne', 'Zilean', 'Renata', 'Belveth', 'Naafiri', 'Briar', 'Hwei', 'Smolder']);
+            const draftOrder = [ { type: 'ban', team: 'blue', slot: 'blue-ban-1', text: 'Синие: Бан 1' }, { type: 'ban', team: 'red', slot: 'red-ban-1', text: 'Красные: Бан 1' }, { type: 'ban', team: 'blue', slot: 'blue-ban-2', text: 'Синие: Бан 2' }, { type: 'ban', team: 'red', slot: 'red-ban-2', text: 'Красные: Бан 2' }, { type: 'ban', team: 'blue', slot: 'blue-ban-3', text: 'Синие: Бан 3' }, { type: 'ban', team: 'red', slot: 'red-ban-3', text: 'Красные: Бан 3' }, { type: 'pick', team: 'blue', slot: 'blue-pick-1', text: 'Синие: Пик 1' }, { type: 'pick', team: 'red', slot: 'red-pick-1', text: 'Красные: Пик 1' }, { type: 'pick', team: 'red', slot: 'red-pick-2', text: 'Красные: Пик 2' }, { type: 'pick', team: 'blue', slot: 'blue-pick-2', text: 'Синие: Пик 2' }, { type: 'pick', team: 'blue', slot: 'blue-pick-3', text: 'Синие: Пик 3' }, { type: 'pick', team: 'red', slot: 'red-pick-3', text: 'Красные: Пик 3' }, { type: 'ban', team: 'red', slot: 'red-ban-4', text: 'Красные: Бан 4' }, { type: 'ban', team: 'blue', slot: 'blue-ban-4', text: 'Синие: Бан 4' }, { type: 'ban', team: 'red', slot: 'red-ban-5', text: 'Красные: Бан 5' }, { type: 'ban', team: 'blue', slot: 'blue-ban-5', text: 'Синие: Бан 5' }, { type: 'pick', team: 'red', slot: 'red-pick-4', text: 'Красные: Пик 4' }, { type: 'pick', team: 'blue', slot: 'blue-pick-4', text: 'Синие: Пик 4' }, { type: 'pick', team: 'blue', slot: 'blue-pick-5', text: 'Синие: Пик 5' }, { type: 'pick', team: 'red', slot: 'red-pick-5', text: 'Красные: Пик 5' } ];
+
+            // --- Utility Functions ---
+            const debounce = (func, wait) => { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func(...args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; };
+            const showStatusMessage = (message, duration = 3000) => { if (!statusMessage) return; statusMessage.textContent = message; statusMessage.classList.add('visible'); clearTimeout(statusTimeout); statusTimeout = setTimeout(() => { statusMessage.classList.remove('visible'); }, duration); };
+            const getChampionById = (id) => processedChampions.find(champ => champ.id === id);
+
+            // --- Data Fetching ---
+            async function loadChampionData() { try { const versionsResponse = await fetch('https://ddragon.leagueoflegends.com/api/versions.json'); if (!versionsResponse.ok) throw new Error(`Failed to fetch versions: ${versionsResponse.statusText}`); const versions = await versionsResponse.json(); ddragonVersion = versions[0]; console.log(`Using DDragon version: ${ddragonVersion}`); baseIconUrl = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/`; baseSplashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/`; const dataUrl = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`; const championDataResponse = await fetch(dataUrl); if (!championDataResponse.ok) throw new Error(`Failed to fetch champion data: ${championDataResponse.statusText}`); const championData = await championDataResponse.json(); allChampions = championData.data; processedChampions = Object.values(allChampions).map(champ => ({ id: champ.id, name: champ.name, title: champ.title, roles: championRolesMap[champ.id] || [], iconUrl: `${baseIconUrl}${champ.image.full}`, splashUrl: `${baseSplashUrl}${champ.id}_0.jpg` })); processedChampions.sort((a, b) => a.name.localeCompare(b.name)); console.log(`Successfully loaded and processed ${processedChampions.length} champions.`); return true; } catch (error) { console.error("Error loading champion data:", error); showStatusMessage(`Ошибка загрузки данных чемпионов: ${error.message}`, 5000); loadingIndicator.textContent = `Ошибка загрузки! ${error.message}`; mainLayout.classList.add('hidden'); return false; } }
+
+            // --- Timer Functions ---
+            function stopTimer() { clearInterval(timerInterval); timerInterval = null; timerDisplay.classList.remove('timer-running', 'timer-ending'); }
+            function formatTime(seconds) { const minutes = Math.floor(seconds / 60); const remainingSeconds = seconds % 60; return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`; }
+            function resetTimerDisplay() { stopTimer(); timerSeconds = draftTimerDuration; timerDisplay.textContent = formatTime(timerSeconds); timerDisplay.disabled = false; timerDisplay.classList.remove('timer-disabled'); timerDisplay.title = 'Начать драфт'; timerDisplay.setAttribute('aria-label', 'Таймер / Старт драфта'); }
+            function startTimer() { stopTimer(); timerSeconds = draftTimerDuration; timerDisplay.textContent = formatTime(timerSeconds); timerDisplay.disabled = true; timerDisplay.classList.add('timer-running', 'timer-disabled'); timerDisplay.title = 'Драфт идет...'; timerDisplay.setAttribute('aria-label', `Таймер: ${formatTime(timerSeconds)}`); timerInterval = setInterval(() => { timerSeconds--; timerDisplay.textContent = formatTime(timerSeconds); timerDisplay.setAttribute('aria-label', `Таймер: ${formatTime(timerSeconds)}`); if (timerSeconds <= 10 && timerSeconds > 0) { timerDisplay.classList.add('timer-ending'); } else { timerDisplay.classList.remove('timer-ending'); } if (timerSeconds <= 0) { stopTimer(); timerDisplay.classList.add('timer-ending'); console.log("Timer reached zero!"); } }, 1000); }
+
+            // --- Draft Logic ---
+            function createChampionCard(champ) { const card = document.createElement('button'); card.className = 'champion-card'; card.dataset.championId = champ.id; card.dataset.championName = champ.name.toLowerCase(); card.dataset.roles = champ.roles.join(','); card.setAttribute('role', 'gridcell'); card.setAttribute('aria-label', champ.name); const img = document.createElement('img'); img.src = champ.iconUrl; img.alt = ""; img.title = `${champ.name}\n${champ.title}`; img.className = 'w-full h-full object-cover block pointer-events-none'; img.loading = 'lazy'; img.onerror = () => { img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%234a5568'/%3E%3C/svg%3E`; card.setAttribute('aria-label', `${champ.name} (ошибка загрузки)`); }; card.appendChild(img); card.addEventListener('click', () => handleChampionPreview(champ)); card.addEventListener('mouseover', (event) => showChampionTooltip(event, champ)); card.addEventListener('mouseout', hideChampionTooltip); card.addEventListener('focus', (event) => showChampionTooltip(event, champ)); card.addEventListener('blur', hideChampionTooltip); return card; }
+            function displayChampions() { const fragment = document.createDocumentFragment(); processedChampions.forEach(champ => { fragment.appendChild(createChampionCard(champ)); }); championGridElement.innerHTML = ''; championGridElement.appendChild(fragment); filterChampions(); }
+            function updateDraftUI() { document.querySelectorAll('.pick-slot, .ban-slot').forEach(el => { el.classList.remove('highlight-action', 'preview-flash', 'swap-selected'); }); previewedChampion = null; confirmPickBanButton.disabled = true; if (!isDraftStarted) { resetTimerDisplay(); blueColumn.classList.add('draft-disabled'); redColumn.classList.add('draft-disabled'); nextDraftButton.disabled = true; timerDisplay.disabled = false; swapButton.disabled = false; clearPicksButton.disabled = draftHistory.length === 0 && Object.keys(pickNicknames).length === 0 && selectedChampions.size === 0; toggleTimerButton.disabled = false; priorityFilterButton.disabled = false; resetButton.disabled = false; } else if (currentStep < draftOrder.length) { isDraftComplete = false; const action = draftOrder[currentStep]; const activeSlot = document.getElementById(action.slot); if (activeSlot) { activeSlot.classList.add('highlight-action'); const isConfirmed = draftHistory.some(entry => entry.slotId === action.slot); if (!isConfirmed) { const currentNickname = pickNicknames[action.slot] || ''; restoreSlotPlaceholder(activeSlot, action.slot, currentNickname); } } if (!timerInterval) startTimer(); nextDraftButton.disabled = true; timerDisplay.disabled = true; swapButton.disabled = true; clearPicksButton.disabled = true; toggleTimerButton.disabled = true; priorityFilterButton.disabled = true; resetButton.disabled = true; } else { isDraftComplete = true; stopTimer(); timerDisplay.textContent = "Драфт Завершен!"; timerDisplay.classList.add('timer-disabled'); timerDisplay.disabled = true; timerDisplay.title = 'Драфт завершен'; blueColumn.classList.remove('draft-disabled'); redColumn.classList.remove('draft-disabled'); nextDraftButton.disabled = false; swapButton.disabled = false; clearPicksButton.disabled = false; toggleTimerButton.disabled = true; priorityFilterButton.disabled = true; resetButton.disabled = false; } undoButton.disabled = draftHistory.length === 0 || !isDraftStarted; updateChampionAvailability(); displayGloballyBanned(); document.querySelectorAll('.pick-slot').forEach(slot => { const champId = getSlotChampionId(slot.id); slot.style.cursor = isDraftComplete && champId ? 'pointer' : 'default'; slot.title = isDraftComplete && champId ? 'Нажмите для выбора обмена' : ''; }); }
+            function updateChampionAvailability() { const combinedDisabled = new Set([...selectedChampions, ...globallyDisabledChampions]); document.querySelectorAll('.champion-card').forEach(card => { const champId = card.dataset.championId; const isDisabled = combinedDisabled.has(champId); const isSelected = selectedChampions.has(champId); card.classList.toggle('selected', isSelected); card.classList.toggle('disabled', isDisabled); card.disabled = isDisabled; card.setAttribute('aria-disabled', isDisabled.toString()); }); }
+            function handleChampionPreview(champion) { if (!isDraftStarted || isDraftComplete || currentStep >= draftOrder.length) return; const isDisabled = selectedChampions.has(champion.id) || globallyDisabledChampions.has(champion.id); if (isDisabled) { showStatusMessage(`${champion.name} уже выбран или заблокирован.`, 2000); return; } const currentAction = draftOrder[currentStep]; const slotElement = document.getElementById(currentAction.slot); if (slotElement) { document.querySelectorAll('.preview-flash').forEach(el => el.classList.remove('preview-flash')); previewedChampion = champion; const existingNickname = pickNicknames[currentAction.slot] || ''; fillSlot(slotElement, champion, currentAction.type, existingNickname); slotElement.classList.add('preview-flash'); confirmPickBanButton.disabled = false; } }
+            function handleConfirmPickBan() { if (!previewedChampion || !isDraftStarted || isDraftComplete || currentStep >= draftOrder.length) return; const championToConfirm = previewedChampion; const currentAction = draftOrder[currentStep]; const slotElement = document.getElementById(currentAction.slot); const isDisabled = selectedChampions.has(championToConfirm.id) || globallyDisabledChampions.has(championToConfirm.id); if (!slotElement || isDisabled) { console.warn("Confirmation failed: Slot not found or champion unavailable."); previewedChampion = null; confirmPickBanButton.disabled = true; if (slotElement) slotElement.classList.remove('preview-flash'); return; } slotElement.classList.remove('preview-flash'); const previousNickname = pickNicknames[currentAction.slot] || ''; selectedChampions.add(championToConfirm.id); draftHistory.push({ championId: championToConfirm.id, slotId: currentAction.slot, step: currentStep, previousNickname: previousNickname, type: currentAction.type, team: currentAction.team }); currentStep++; previewedChampion = null; confirmPickBanButton.disabled = true; updateDraftUI(); filterChampions(); console.log(`Confirmed: ${currentAction.type} ${championToConfirm.name} in slot ${currentAction.slot}`); }
+            function fillSlot(slotElement, champion, type, nicknameText = '') { if (!slotElement || !champion) return; slotElement.innerHTML = ''; slotElement.classList.remove('preview-flash'); const img = document.createElement('img'); img.src = type === 'pick' ? champion.splashUrl : champion.iconUrl; img.alt = champion.name; img.className = 'w-full h-full object-cover block absolute inset-0 z-0 pointer-events-none'; img.onerror = () => { const errorSpan = document.createElement('span'); errorSpan.className = 'text-[1.5vmin] text-red-400'; errorSpan.textContent = 'Err'; slotElement.innerHTML = ''; slotElement.appendChild(errorSpan); if (type === 'pick') { addNicknameInput(slotElement, nicknameText); } }; slotElement.appendChild(img); if (type === 'pick') { addNicknameInput(slotElement, nicknameText); slotElement.dataset.championId = champion.id; } else { delete slotElement.dataset.championId; } slotElement.setAttribute('aria-label', `${slotElement.ariaLabel.split(':')[0]}: ${champion.name}`); }
+            function addNicknameInput(slotElement, text = '') { const nicknameInput = document.createElement('div'); nicknameInput.contentEditable = true; nicknameInput.spellcheck = false; nicknameInput.className = 'nickname-input'; nicknameInput.textContent = text || ''; nicknameInput.dataset.slotId = slotElement.id; nicknameInput.addEventListener('input', (e) => { const slotId = e.target.dataset.slotId; if (slotId) { pickNicknames[slotId] = e.target.textContent.trim(); console.log("Nickname updated:", pickNicknames); } }); nicknameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }); slotElement.appendChild(nicknameInput); }
+            function restoreSlotPlaceholder(slotElement, slotId, nicknameText = '') { if (!slotElement) return; slotElement.innerHTML = ''; slotElement.classList.remove('preview-flash', 'swap-selected'); delete slotElement.dataset.championId; slotElement.style.backgroundImage = ''; slotElement.style.cursor = 'default'; slotElement.title = ''; slotElement.setAttribute('aria-label', `${slotElement.ariaLabel.split(':')[0]}: Empty`); if (slotId && slotId.includes('-pick-')) { addNicknameInput(slotElement, nicknameText); pickNicknames[slotId] = nicknameText; } else { delete pickNicknames[slotId]; } }
+            function getSlotChampionId(slotId) { const slotElement = document.getElementById(slotId); return slotElement ? slotElement.dataset.championId : null; }
+            function handleUndo() { if (draftHistory.length === 0 || !isDraftStarted) return; deselectSwapSlots(); const lastAction = draftHistory.pop(); if (!lastAction) return; currentStep = lastAction.step; selectedChampions.delete(lastAction.championId); const slotElement = document.getElementById(lastAction.slotId); if (slotElement) { restoreSlotPlaceholder(slotElement, lastAction.slotId, lastAction.previousNickname); } isDraftComplete = false; previewedChampion = null; confirmPickBanButton.disabled = true; updateDraftUI(); filterChampions(); showStatusMessage("Действие отменено", 1500); console.log("Undo:", lastAction); }
+            function resetDraftFull() { console.log("Resetting series (full reset)..."); if (!confirm("Вы уверены, что хотите полностью сбросить драфт? Это удалит все данные сессии (ники, счет, историю игр).")) { return; } currentStep = 0; selectedChampions.clear(); draftHistory = []; pickNicknames = {}; globallyDisabledChampions.clear(); globalBanHistory = []; isDraftComplete = false; isDraftStarted = false; previewedChampion = null; confirmPickBanButton.disabled = true; deselectSwapSlots(); stopTimer(); draftTimerDuration = 30; resetTimerDisplay(); document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { restoreSlotPlaceholder(slot, slot.id, ''); slot.classList.remove('highlight-action', 'preview-flash'); }); if (blueTeamNameH2) blueTeamNameH2.textContent = 'Синяя Команда'; if (redTeamNameH2) redTeamNameH2.textContent = 'Красная Команда'; if (blueScoreEl) blueScoreEl.textContent = ''; if (redScoreEl) redScoreEl.textContent = ''; blueColumn.classList.add('draft-disabled'); redColumn.classList.add('draft-disabled'); championSearch.value = ''; currentRoleFilter = 'All'; filterButtons.forEach(btn => { btn.classList.toggle('active', btn.dataset.role === 'All'); }); isPriorityFilterActive = false; if (priorityFilterButton) { priorityFilterButton.classList.remove('active'); priorityFilterButton.title = 'Показать только приоритетных чемпионов'; priorityFilterButton.setAttribute('aria-pressed', 'false'); } displayGloballyBanned(); updateChampionAvailability(); filterChampions(); updateDraftUI(); localStorage.removeItem('lolDraftState'); showStatusMessage("Драфт полностью сброшен.", 2000); }
+            function resetCurrentGamePicksBans() { console.log("Resetting current game picks/bans..."); if (isDraftStarted && !isDraftComplete) { if (!confirm("Драфт уже начат. Вы уверены, что хотите очистить текущие пики/баны?")) { return; } } currentStep = 0; selectedChampions.clear(); draftHistory = []; isDraftComplete = false; isDraftStarted = false; previewedChampion = null; confirmPickBanButton.disabled = true; deselectSwapSlots(); stopTimer(); resetTimerDisplay(); document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { const currentNickname = pickNicknames[slot.id] || ''; restoreSlotPlaceholder(slot, slot.id, currentNickname); slot.classList.remove('highlight-action', 'preview-flash'); }); blueColumn.classList.add('draft-disabled'); redColumn.classList.add('draft-disabled'); updateChampionAvailability(); filterChampions(); updateDraftUI(); showStatusMessage("Пики/баны текущей игры очищены.", 2000); }
+            function handleStartDraft() { if (isDraftStarted) return; console.log("Starting draft..."); isDraftStarted = true; blueColumn.classList.remove('draft-disabled'); redColumn.classList.remove('draft-disabled'); updateDraftUI(); }
+            const debouncedFilter = debounce(() => { filterChampions(); }, 250);
+            function filterChampions() { const searchTerm = championSearch.value.toLowerCase().trim(); let visibleCount = 0; document.querySelectorAll('.champion-card').forEach(card => { const champId = card.dataset.championId; const champName = card.dataset.championName; const champRoles = card.dataset.roles ? card.dataset.roles.split(',') : []; const searchMatch = champName.includes(searchTerm) || champId.toLowerCase().includes(searchTerm); const roleMatch = currentRoleFilter === 'All' || champRoles.includes(currentRoleFilter); const isPriority = priorityChampions.has(champId); const hideByPriorityFilter = isPriorityFilterActive && !isPriority; const isVisible = searchMatch && roleMatch && !hideByPriorityFilter; card.style.display = isVisible ? 'flex' : 'none'; if (isVisible) visibleCount++; const isDisabled = selectedChampions.has(champId) || globallyDisabledChampions.has(champId); card.classList.toggle('disabled', isDisabled); card.disabled = isDisabled; card.setAttribute('aria-disabled', isDisabled.toString()); card.classList.toggle('selected', selectedChampions.has(champId)); }); }
+            function deselectSwapSlots() { if (selectedSwapSlotId) { const prevSelected = document.getElementById(selectedSwapSlotId); if (prevSelected) { prevSelected.classList.remove('swap-selected'); } selectedSwapSlotId = null; } }
+            function handlePickContainerClick(event) { if (event.target.classList.contains('nickname-input')) { return; } const clickedSlot = event.target.closest('.pick-slot'); if (!isDraftComplete || !clickedSlot || !clickedSlot.dataset.championId) { deselectSwapSlots(); return; } const clickedSlotId = clickedSlot.id; if (!selectedSwapSlotId) { selectedSwapSlotId = clickedSlotId; clickedSlot.classList.add('swap-selected'); console.log("Swap select:", selectedSwapSlotId); } else { if (selectedSwapSlotId === clickedSlotId) { deselectSwapSlots(); console.log("Swap deselect"); } else { const firstSlot = document.getElementById(selectedSwapSlotId); if (!firstSlot) { deselectSwapSlots(); return; } const team1 = selectedSwapSlotId.startsWith('blue') ? 'blue' : 'red'; const team2 = clickedSlotId.startsWith('blue') ? 'blue' : 'red'; if (team1 === team2) { console.log("Attempting swap between:", selectedSwapSlotId, clickedSlotId); const champId1 = firstSlot.dataset.championId; const champId2 = clickedSlot.dataset.championId; const champ1 = getChampionById(champId1); const champ2 = getChampionById(champId2); const nick1 = pickNicknames[selectedSwapSlotId] || ''; const nick2 = pickNicknames[clickedSlotId] || ''; pickNicknames[selectedSwapSlotId] = nick2; pickNicknames[clickedSlotId] = nick1; if (champ1 && champ2) { fillSlot(firstSlot, champ2, 'pick', nick2); fillSlot(clickedSlot, champ1, 'pick', nick1); showStatusMessage(`Обмен: ${champ1.name} <-> ${champ2.name}`, 2000); } deselectSwapSlots(); } else { console.log("Swap select (different team):", clickedSlotId); deselectSwapSlots(); selectedSwapSlotId = clickedSlotId; clickedSlot.classList.add('swap-selected'); } } } }
+            function handleSwapTeams() { try { const tempName = blueTeamNameH2.textContent; blueTeamNameH2.textContent = redTeamNameH2.textContent; redTeamNameH2.textContent = tempName; const tempScore = blueScoreEl.textContent; blueScoreEl.textContent = redScoreEl.textContent; redScoreEl.textContent = tempScore; if (isDraftComplete) { console.log("Swapping picks/bans/nicknames after draft completion..."); const newPickNicknames = {}; const newSelectedChampions = new Set(); const newBluePicks = []; const newRedPicks = []; for (let i = 1; i <= 5; i++) { const blueBan = document.getElementById(`blue-ban-${i}`); const redBan = document.getElementById(`red-ban-${i}`); if (blueBan && redBan) { const tempHTML = blueBan.innerHTML; blueBan.innerHTML = redBan.innerHTML; redBan.innerHTML = tempHTML; const tempAria = blueBan.getAttribute('aria-label'); blueBan.setAttribute('aria-label', redBan.getAttribute('aria-label')); redBan.setAttribute('aria-label', tempAria); } } for (let i = 1; i <= 5; i++) { const blueSlotId = `blue-pick-${i}`; const redSlotId = `red-pick-${i}`; const blueChampId = getSlotChampionId(blueSlotId); const redChampId = getSlotChampionId(redSlotId); const blueNick = pickNicknames[blueSlotId] || ''; const redNick = pickNicknames[redSlotId] || ''; newPickNicknames[blueSlotId] = redNick; newPickNicknames[redSlotId] = blueNick; if(redChampId) newBluePicks.push({ slotId: blueSlotId, champId: redChampId, nick: redNick }); if(blueChampId) newRedPicks.push({ slotId: redSlotId, champId: blueChampId, nick: blueNick }); } pickNicknames = newPickNicknames; document.querySelectorAll('.pick-slot').forEach(slot => restoreSlotPlaceholder(slot, slot.id, '')); newBluePicks.forEach(p => { const champ = getChampionById(p.champId); if(champ) fillSlot(document.getElementById(p.slotId), champ, 'pick', p.nick); newSelectedChampions.add(p.champId); }); newRedPicks.forEach(p => { const champ = getChampionById(p.champId); if(champ) fillSlot(document.getElementById(p.slotId), champ, 'pick', p.nick); newSelectedChampions.add(p.champId); }); selectedChampions = newSelectedChampions; deselectSwapSlots(); showStatusMessage("Команды поменялись местами (пики/баны/ники).", 2000); } else if (!isDraftStarted) { console.log("Swapping nicknames before draft starts..."); const swappedNicks = {}; for (let i = 1; i <= 5; i++) { const blueSlotId = `blue-pick-${i}`; const redSlotId = `red-pick-${i}`; const blueNick = pickNicknames[blueSlotId] || ''; const redNick = pickNicknames[redSlotId] || ''; swappedNicks[blueSlotId] = redNick; swappedNicks[redSlotId] = blueNick; const blueNickInput = document.querySelector(`#${blueSlotId} .nickname-input`); const redNickInput = document.querySelector(`#${redSlotId} .nickname-input`); if (blueNickInput) blueNickInput.textContent = redNick; if (redNickInput) redNickInput.textContent = blueNick; } pickNicknames = swappedNicks; deselectSwapSlots(); showStatusMessage("Команды поменялись местами (ники).", 2000); } else { console.warn("Attempted to swap teams during an active draft. Only names/scores swapped."); showStatusMessage("Нельзя менять пики/баны во время драфта.", 2000); } updateChampionAvailability(); } catch (error) { console.error("Error in handleSwapTeams:", error); showStatusMessage("Ошибка при смене команд.", 3000); } }
+            function handleToggleTimer() { if (isDraftStarted) return; draftTimerDuration = draftTimerDuration === 30 ? 45 : 30; resetTimerDisplay(); toggleTimerButton.title = `Сменить время таймера (${draftTimerDuration === 30 ? '-> 45с' : '-> 30с'})`; showStatusMessage(`Время таймера: ${draftTimerDuration} сек.`, 1500); console.log("Timer duration set to:", draftTimerDuration); }
+            function handleRoleFilterClick(event) { const clickedButton = event.currentTarget; if (!clickedButton) return; currentRoleFilter = clickedButton.dataset.role; filterButtons.forEach(btn => btn.classList.remove('active')); clickedButton.classList.add('active'); filterChampions(); }
+            function handlePriorityFilterToggle() { isPriorityFilterActive = !isPriorityFilterActive; priorityFilterButton.classList.toggle('active', isPriorityFilterActive); priorityFilterButton.setAttribute('aria-pressed', isPriorityFilterActive.toString()); priorityFilterButton.title = isPriorityFilterActive ? 'Показать всех чемпионов' : 'Показать только приоритетных чемпионов'; console.log('Priority filter active:', isPriorityFilterActive); filterChampions(); }
+            function displayGloballyBanned() { if (!globalBansBlueContainer || !globalBansRedContainer || !globallyBannedDisplay) return; globalBansBlueContainer.innerHTML = ''; globalBansRedContainer.innerHTML = ''; if (globalBanHistory.length > 0) { globallyBannedDisplay.classList.remove('hidden'); const blueFragment = document.createDocumentFragment(); const redFragment = document.createDocumentFragment(); globalBanHistory.forEach(banInfo => { const champ = getChampionById(banInfo.championId); if (champ) { const iconDiv = document.createElement('div'); iconDiv.className = 'global-ban-icon'; iconDiv.title = `${champ.name} (Заблокирован ${banInfo.team === 'blue' ? 'синими' : 'красными'} в пред. игре)`; iconDiv.setAttribute('aria-label', iconDiv.title); const img = document.createElement('img'); img.src = champ.iconUrl; img.alt = ""; img.loading = 'lazy'; img.onerror = () => { img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%234a5568'/%3E%3C/svg%3E`; }; iconDiv.appendChild(img); if (banInfo.team === 'blue') { blueFragment.appendChild(iconDiv); } else { redFragment.appendChild(iconDiv); } } }); globalBansBlueContainer.appendChild(blueFragment); globalBansRedContainer.appendChild(redFragment); } else { globallyBannedDisplay.classList.add('hidden'); } }
+            function handleNextDraft() { console.log("handleNextDraft: Starting..."); if (!isDraftComplete) { console.warn("handleNextDraft: Draft not complete."); showStatusMessage("Драфт не завершен. Завершите его перед переходом к следующему.", 3000); return; } let addedBansCount = 0; draftHistory.forEach(action => { if (action.type === 'pick' && !globallyDisabledChampions.has(action.championId)) { globalBanHistory.push({ championId: action.championId, team: action.team }); globallyDisabledChampions.add(action.championId); addedBansCount++; } }); console.log(`handleNextDraft: Added ${addedBansCount} champions to global bans.`); resetCurrentGamePicksBans(); showStatusMessage("Переход к следующему драфту. Пики предыдущей игры заблокированы.", 2500); console.log("handleNextDraft: Current draft state reset for next game."); }
+
+            // --- Tooltip Functions ---
+            let tooltipTimeout;
+            function showChampionTooltip(event, champion) { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { if (!championTooltip || !champion) return; championTooltip.innerHTML = `<strong class="tooltip-title">${champion.name}</strong><span class="tooltip-name">${champion.title}</span>`; championTooltip.style.visibility = 'hidden'; championTooltip.style.display = 'block'; const tooltipRect = championTooltip.getBoundingClientRect(); championTooltip.style.visibility = ''; championTooltip.style.display = ''; const rect = event.target.getBoundingClientRect(); let top = rect.top - tooltipRect.height - 8; let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2); if (top < 0) { top = rect.bottom + 8; } if (left < 0) { left = 5; } else if (left + tooltipRect.width > window.innerWidth) { left = window.innerWidth - tooltipRect.width - 5; } championTooltip.style.left = `${left}px`; championTooltip.style.top = `${top}px`; championTooltip.classList.add('visible'); }, 100); }
+            function hideChampionTooltip() { clearTimeout(tooltipTimeout); if (championTooltip) { championTooltip.classList.remove('visible'); } }
+
+            // --- Initialization ---
+            async function initializeApp() {
+                const dataLoaded = await loadChampionData();
+                if (!dataLoaded) return;
+                loadingIndicator.classList.add('hidden');
+                mainLayout.classList.remove('hidden');
+                displayChampions();
+                console.log("Starting fresh.");
+                currentStep = 0; selectedChampions.clear(); draftHistory = []; pickNicknames = {}; globallyDisabledChampions.clear(); globalBanHistory = []; isDraftComplete = false; isDraftStarted = false; previewedChampion = null; confirmPickBanButton.disabled = true; deselectSwapSlots(); stopTimer(); draftTimerDuration = 30; resetTimerDisplay();
+                document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { restoreSlotPlaceholder(slot, slot.id, ''); slot.classList.remove('highlight-action', 'preview-flash'); });
+                if (blueTeamNameH2) blueTeamNameH2.textContent = 'Синяя Команда'; if (redTeamNameH2) redTeamNameH2.textContent = 'Красная Команда'; if (blueScoreEl) blueScoreEl.textContent = ''; if (redScoreEl) redScoreEl.textContent = '';
+                blueColumn.classList.add('draft-disabled'); redColumn.classList.add('draft-disabled'); championSearch.value = ''; currentRoleFilter = 'All'; filterButtons.forEach(btn => { btn.classList.toggle('active', btn.dataset.role === 'All'); }); isPriorityFilterActive = false; if (priorityFilterButton) { priorityFilterButton.classList.remove('active'); priorityFilterButton.title = 'Показать только приоритетных чемпионов'; priorityFilterButton.setAttribute('aria-pressed', 'false'); }
+                displayGloballyBanned(); updateChampionAvailability(); filterChampions(); updateDraftUI();
+
+                // Attach Event Listeners
+                timerDisplay.addEventListener('click', handleStartDraft);
+                resetButton.addEventListener('click', resetDraftFull);
+                clearPicksButton.addEventListener('click', resetCurrentGamePicksBans);
+                undoButton.addEventListener('click', handleUndo);
+                swapButton.addEventListener('click', handleSwapTeams);
+                toggleTimerButton.addEventListener('click', handleToggleTimer);
+                confirmPickBanButton.addEventListener('click', handleConfirmPickBan);
+                priorityFilterButton.addEventListener('click', handlePriorityFilterToggle);
+                nextDraftButton.addEventListener('click', handleNextDraft);
+                championSearch.addEventListener('input', debouncedFilter);
+                filterButtons.forEach(button => { if (button) button.addEventListener('click', handleRoleFilterClick); });
+                blueColumn.addEventListener('click', handlePickContainerClick);
+                redColumn.addEventListener('click', handlePickContainerClick);
+                [blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl].forEach(el => { if (el) { el.addEventListener('blur', (e) => { e.target.textContent = e.target.textContent.trim(); }); el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }); } });
+                console.log("Draft simulator initialized successfully.");
+            }
+            initializeApp();
+        });
+    </script>
+
+</body>
+</html>
