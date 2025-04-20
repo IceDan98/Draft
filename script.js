@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Fully Loaded. Initializing App v8.0+socket-debug...");
 
     // --- Socket.IO Setup ---
-    const SERVER_URL = 'YOUR_SERVER_URL'; // <--- ЗАМЕНИТЬ НА АДРЕС СЕРВЕРА! (e.g., 'http://localhost:3000')
+    const SERVER_URL = 'http://localhost:3000'; // 
     let socket;
     try {
         // Attempt to connect to the server
