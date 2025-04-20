@@ -1,1002 +1,1124 @@
-/* style.css - Extracted from v6.0 HTML */
-:root {
-    /* Base Sizes */
-    --gap-size: 0.5rem;
-    --gap-half: calc(var(--gap-size) / 2);
-    --gap-double: calc(var(--gap-size) * 2);
-
-    /* Sizes (vmin/vh for scalability) */
-    --ban-size: 5.5vmin;
-    --card-size: 8vh;
-    --nick-height: 3.5vh;
-    --nick-font-size: 2.8vh;
-    --button-size: 4.2vh;
-    --timer-font-size: 2vh;
-    --score-size: 4.2vh;
-    --score-font-size: 2vh;
-    --filter-button-size: 3.8vh;
-    --global-ban-icon-size: calc(var(--card-size) * 0.8);
-
-    /* Minimum Sizes */
-    --ban-min-size: 28px;
-    --pick-min-height: 55px;
-    --card-min-size: 42px;
-    --nick-min-height: 16px;
-    --button-min-size: 28px;
-    --score-min-size: 28px;
-    --team-name-min-height: 30px;
-    --team-col-min-width: 240px;
-    --global-ban-icon-min-size: 35px;
-
-    /* Colors - Dark Theme (Default) */
-    --color-background: #0a0f1f;
-    --color-background-gradient-end: #0f0a1a;
-    --color-surface-1: #10182f;
-    --color-surface-2: #1a2340;
-    --color-text-primary: #e0e8f0;
-    --color-text-secondary: #8095b0;
-    --color-text-placeholder: #556a88;
-    --color-border: #2a3858;
-    --color-border-medium: #405075;
-    --color-accent-gold: #c8aa6e;
-    --color-accent-blue: #50a0f0;
-    --color-accent-red: #f05050;
-    --color-accent-green: #40f0a0;
-    --color-accent-purple: #a070f0;
-
-    --color-blue-team: var(--color-accent-blue);
-    --color-red-team: var(--color-accent-red);
-
-    --color-blue-bg-transparent: rgba(80, 160, 240, 0.1);
-    --color-red-bg-transparent: rgba(240, 80, 80, 0.1);
-    --color-grid-bg-transparent: rgba(26, 35, 64, 0.5);
-
-    --color-tooltip-bg: rgba(10, 15, 31, 0.9);
-    --color-tooltip-text: var(--color-text-primary);
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.15);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.2);
-    --shadow-glow-gold: 0 0 10px 0px rgba(200, 170, 110, 0.5);
-    --shadow-glow-blue: 0 0 10px 0px rgba(80, 160, 240, 0.5);
-    --shadow-glow-red: 0 0 8px 0px rgba(240, 80, 80, 0.4);
-}
-
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    scrollbar-color: var(--color-border-medium) var(--color-surface-1);
-    scrollbar-width: thin;
-}
-body::-webkit-scrollbar { width: 8px; }
-body::-webkit-scrollbar-track { background: var(--color-surface-1); }
-body::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; border: 2px solid var(--color-surface-1); }
-
-
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--color-background);
-    background-image: linear-gradient(45deg, var(--color-background), var(--color-background-gradient-end));
-    color: var(--color-text-primary);
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#app-container {
-    width: 100%;
-    height: 100%;
-    max-width: 2600px;
-    padding: var(--gap-size);
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    position: relative; /* Needed for absolute positioning of admin button */
-}
-
-.page {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* --- Home Page Styles --- */
-#homePage {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-#homeTitle {
-    font-family: 'Cinzel', serif;
-    color: var(--color-accent-gold);
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    font-size: clamp(2rem, 6vmin, 3.5rem);
-    margin-bottom: 2rem;
-}
-/* Styles for new home page elements */
-.lobby-input {
-    background-color: var(--color-surface-2);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-primary);
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    margin-bottom: 1rem;
-    width: 80%;
-    max-width: 300px;
-    text-align: center;
-}
-.lobby-input::placeholder {
-    color: var(--color-text-placeholder);
-}
-#createLobbyButton {
-    background-color: var(--color-accent-blue);
-    color: var(--color-background);
-    border-color: var(--color-accent-blue);
-    padding: 0.8rem 2rem;
-    font-size: clamp(1rem, 2.5vh, 1.3rem);
-    min-width: 150px;
-    font-weight: 600;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
-    box-shadow: var(--shadow-md);
-    margin-top: 1rem;
-}
-#createLobbyButton:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--color-accent-blue), #fff 15%);
-    box-shadow: var(--shadow-lg);
-}
- #createLobbyButton:active:not(:disabled) {
-    transform: scale(0.98);
-    box-shadow: var(--shadow-sm);
-}
- #lobbyLinksDisplay {
-    margin-top: 2rem;
-    background-color: var(--color-surface-1);
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-border);
-    max-width: 90%;
-    word-wrap: break-word; /* Ensure long links wrap */
-    text-align: left; /* Align text left */
- }
- #lobbyLinksDisplay p {
-    margin-bottom: 0.75rem; /* Increased spacing */
-    font-size: clamp(0.8rem, 2vmin, 1rem); /* Responsive font size */
- }
- #lobbyLinksDisplay strong {
-    color: var(--color-accent-gold);
-    display: inline-block;
-    min-width: 100px; /* Align labels */
- }
- #lobbyLinksDisplay a, #lobbyLinksDisplay span { /* Style generated links/text */
-     color: var(--color-accent-blue);
-     display: inline-block;
-     margin-left: 0.5rem;
-     word-break: break-all; /* Break long URLs */
-     background-color: var(--color-surface-2); /* Add background */
-     padding: 0.2rem 0.4rem; /* Add padding */
-     border-radius: 0.25rem; /* Rounded corners */
-     cursor: pointer; /* Indicate clickability */
-     border: 1px solid var(--color-border-medium);
- }
- #lobbyLinksDisplay a:hover {
-     text-decoration: none;
-     background-color: var(--color-border-medium);
-     color: var(--color-text-primary);
- }
- .copy-button {
-    background-color: var(--color-accent-purple);
-    color: var(--color-background);
-    border: none;
-    padding: 0.1rem 0.4rem;
-    font-size: 0.75em;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    margin-left: 0.5rem;
-    transition: background-color 0.2s;
- }
- .copy-button:hover {
-    background-color: color-mix(in srgb, var(--color-accent-purple), #fff 15%);
- }
-
-/* --- Admin Button Style --- */
-#adminButton {
-    position: absolute;
-    top: var(--gap-double); /* Adjust spacing */
-    right: var(--gap-double); /* Adjust spacing */
-    z-index: 10; /* Ensure it's above other elements */
-    background-color: var(--color-accent-gold);
-    color: var(--color-background);
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-size: clamp(0.8rem, 2vmin, 1rem);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
-    box-shadow: var(--shadow-md);
-    border: none;
-}
-#adminButton:hover {
-    background-color: color-mix(in srgb, var(--color-accent-gold), #fff 15%);
-    box-shadow: var(--shadow-lg);
-}
-#adminButton:active {
-    transform: scale(0.98);
-    box-shadow: var(--shadow-sm);
-}
-
-
-/* --- Draft Page Styles --- */
-#draftPage {
-     height: 100%;
-     overflow: hidden;
-}
-
-
-.team-name {
-    font-family: 'Cinzel', serif;
-}
-.nickname-input {
-     font-family: 'Inter', sans-serif;
-}
-
-#loadingIndicator {
-    position: fixed; /* Ensure it covers everything */
-    inset: 0;
-    background-color: rgba(10, 15, 31, 0.85); /* Slightly darker overlay */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; /* High z-index */
-    transition: opacity 0.5s ease-out;
-}
-#loadingIndicator.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-#mainLayout {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: auto minmax(300px, 1fr) auto;
-    gap: var(--gap-size);
-    height: 100%;
-    width: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease-in;
-}
-#mainLayout:not(.hidden) {
-    opacity: 1;
-}
-
-#topRowContainer {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    display: grid;
-    grid-template-columns: subgrid;
-    gap: var(--gap-size);
-    align-items: center;
-    margin-bottom: var(--gap-size);
-    min-height: calc(var(--button-size) + var(--gap-size));
-}
-
-.top-row-cell {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-size);
-    min-width: 0;
-}
-.top-row-cell.blue-info { grid-column: 1; justify-content: flex-start; }
-.top-row-cell.center-controls { grid-column: 2; justify-content: center; }
-.top-row-cell.red-info { grid-column: 3; justify-content: flex-end; }
-
-.center-controls-wrapper {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) max-content max-content max-content minmax(0, 1fr);
-    align-items: center;
-    gap: var(--gap-size);
-    width: 100%;
-}
-
-.team-name {
-    width: auto;
-    max-width: 300px;
-    text-align: center;
-    font-size: clamp(1.2rem, 3.5vmin, 1.8rem);
-    font-weight: 600;
-    flex-shrink: 1;
-    min-height: var(--team-name-min-height);
-    line-height: var(--team-name-min-height);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.375rem;
-    background-color: transparent;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    cursor: default; /* Default cursor */
-}
-.team-name[contenteditable="true"] { /* Only editable when true */
-     cursor: text;
-}
-.team-name[contenteditable="true"]:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-.team-name[contenteditable="true"]:focus {
-    outline: 2px solid var(--color-accent-gold);
-    background-color: rgba(0, 0, 0, 0.3);
-    white-space: normal;
-    overflow: visible;
-    box-shadow: var(--shadow-glow-gold);
-}
-#blue-team-name-h2 { justify-self: end; text-align: right; color: var(--color-blue-team); }
-#red-team-name-h2 { justify-self: start; text-align: left; color: var(--color-red-team); }
-
-.score-input {
-    width: var(--score-size);
-    height: var(--score-size);
-    min-width: var(--score-min-size);
-    min-height: var(--score-min-size);
-    border: 1px solid var(--color-border);
-    border-radius: 0.375rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--score-font-size);
-    font-weight: 600;
-    flex-shrink: 0;
-    justify-self: center;
-    background-color: var(--color-surface-1);
-    cursor: default; /* Default cursor */
-    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
- .score-input[contenteditable="true"] { /* Only editable when true */
-     cursor: text;
- }
-.score-input[contenteditable="true"]:hover {
-     background-color: var(--color-surface-2);
-     border-color: var(--color-border-medium);
-}
-.score-input[contenteditable="true"]:focus {
-    outline: none;
-    border-color: var(--color-accent-gold);
-    background-color: var(--color-surface-2);
-    box-shadow: var(--shadow-glow-gold);
-}
-.score-input:empty::before {
-    content: "0";
-    color: var(--color-text-placeholder);
-    font-style: normal;
-}
-#blue-score { color: var(--color-blue-team); }
-#red-score { color: var(--color-red-team); }
-
-.timer-display-button {
-    font-family: 'Inter', sans-serif;
-    font-size: var(--timer-font-size);
-    font-weight: 600;
-    color: var(--color-text-primary);
-    min-width: 6ch;
-    text-align: center;
-    background-color: var(--color-accent-green);
-    color: var(--color-background);
-    border: none;
-    padding: 0.2rem 0.6rem;
-    border-radius: 0.375rem;
-    height: var(--button-size);
-    min-height: var(--button-min-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-    flex-shrink: 0;
-    box-shadow: var(--shadow-sm);
-}
-.timer-display-button:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--color-accent-green), #fff 10%);
-    box-shadow: var(--shadow-md);
-}
-.timer-display-button:disabled,
-.timer-display-button.timer-disabled {
-    cursor: default;
-    background-color: var(--color-surface-2);
-    color: var(--color-text-secondary);
-    opacity: 0.8;
-    box-shadow: none;
-}
-.timer-display-button.timer-running {
-    background-color: var(--color-surface-2);
-    color: var(--color-text-primary);
-    cursor: default;
-    opacity: 1;
-    box-shadow: none;
-}
-.timer-display-button.timer-ending {
-    color: var(--color-accent-red);
-    animation: pulse-red 1s infinite;
-}
-@keyframes pulse-red {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(240, 80, 80, 0.4); }
-    50% { box-shadow: 0 0 5px 2px rgba(240, 80, 80, 0.2); }
-}
-
-
-.bans-container {
-    display: flex;
-    justify-content: center;
-    gap: var(--gap-half);
-    flex-shrink: 0;
-}
-
-#draftArea {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: subgrid;
-    gap: var(--gap-size);
-    overflow: hidden;
-    min-height: 0;
-    align-items: stretch;
-}
-
-.team-column {
-    min-width: var(--team-col-min-width);
-    width: auto;
-    max-width: 480px;
-    flex: 0 1 var(--team-col-min-width);
-    padding: var(--gap-size);
-    border-radius: 0.5rem;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    scrollbar-width: none;
-    transition: opacity 0.3s ease, filter 0.3s ease;
-    border: 1px solid var(--color-border);
-    background-color: rgba(16, 24, 47, 0.3);
-}
-.team-column.blue-column { background-color: var(--color-blue-bg-transparent); border-color: color-mix(in srgb, var(--color-blue-team), transparent 70%); }
-.team-column.red-column { background-color: var(--color-red-bg-transparent); border-color: color-mix(in srgb, var(--color-red-team), transparent 70%);}
-.team-column::-webkit-scrollbar { display: none; }
-
-.team-column.draft-disabled {
-    pointer-events: none;
-    opacity: 0.6;
-    filter: grayscale(60%);
-}
-/* Style to visually indicate non-interactable column for other team */
-.team-column.role-disabled {
-     opacity: 0.7;
-     filter: grayscale(30%);
-     pointer-events: none; /* Disable clicks on the column itself */
-}
-.team-column.role-disabled .pick-slot,
-.team-column.role-disabled .ban-slot {
-     pointer-events: none; /* Disable clicks on slots */
-     cursor: not-allowed;
-}
-.team-column.role-disabled .nickname-input {
-    pointer-events: none; /* Disable nickname editing */
-    cursor: not-allowed;
-}
-
-
-.picks-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--gap-size);
-    flex-grow: 1;
-    justify-content: space-around;
-    width: 100%;
-    min-height: 0;
-    margin-top: var(--gap-size);
-}
-
-.pick-slot, .ban-slot {
-    background-color: var(--color-surface-2);
-    border: 1px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-    flex-shrink: 0;
-    border-radius: 0.375rem;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-    box-shadow: var(--shadow-sm);
-}
-.ban-slot {
-    width: var(--ban-size);
-    height: var(--ban-size);
-    min-width: var(--ban-min-size);
-    min-height: var(--ban-min-size);
-    border-radius: 0.25rem;
-}
-.pick-slot {
-    min-height: var(--pick-min-height);
-    width: 100%;
-    height: auto;
-    flex-grow: 1;
-    position: relative;
-}
-.pick-slot img, .ban-slot img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    transition: filter 0.3s ease, opacity 0.3s ease;
-}
-
-.highlight-action {
-    border-color: var(--color-accent-gold);
-    box-shadow: var(--shadow-glow-gold);
-    background-color: color-mix(in srgb, var(--color-surface-2), var(--color-accent-gold) 10%);
-}
-
-.swap-selected {
-    border-color: var(--color-accent-blue);
-    box-shadow: var(--shadow-glow-blue);
-}
-
-@keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-.preview-flash > img { animation: flash 1s infinite ease-in-out; }
-
-.nickname-input[contenteditable="true"] {
-    position: absolute;
-    bottom: 5px;
-    width: auto;
-    max-width: calc(100% - 16px);
-    z-index: 1;
-    font-size: calc(var(--nick-font-size) * 0.9);
-    font-weight: 500;
-    color: #fff; /* White text for nickname */
-    height: auto;
-    min-height: var(--nick-min-height);
-    background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 0.25rem;
-    padding: 2px 6px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    pointer-events: auto;
-    cursor: text;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    line-height: 1.3;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid transparent;
-}
- .nickname-input:not([contenteditable="true"]) { /* Style non-editable nicknames */
-     cursor: default;
-     background-color: rgba(0, 0, 0, 0.4); /* Less prominent background */
-     pointer-events: none;
- }
-
-[id^="blue-pick-"] .nickname-input { right: 8px; left: auto; text-align: right; }
-[id^="red-pick-"] .nickname-input { left: 8px; right: auto; text-align: left; }
-
-.nickname-input[contenteditable="true"]:empty::before {
-    content: "Ник";
-    color: #fff; /* White placeholder text */
-    font-style: normal;
-    opacity: 0.7; /* Make placeholder slightly transparent */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-}
-.nickname-input[contenteditable="true"]:focus {
-    outline: none;
-    background-color: rgba(0, 0, 0, 0.8);
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    border: 1px solid var(--color-accent-gold);
-    box-shadow: var(--shadow-glow-gold);
-}
-
-#championGridContainer {
-    grid-column: 2;
-    background-color: transparent;
-    border-radius: 0.5rem;
-    padding: 0;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column; /* Keep column for overall structure */
-    overflow: hidden;
-    min-width: 300px;
-    border: none;
-}
-
-#globallyBannedDisplay {
-    flex-shrink: 0;
-    margin-bottom: var(--gap-size);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--gap-half);
-    width: 100%;
-    min-height: calc(var(--global-ban-icon-min-size) + var(--gap-half));
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--gap-half);
-    transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
-}
-#globallyBannedDisplay.hidden { opacity: 0; max-height: 0; margin-bottom: 0; padding-bottom: 0; border-bottom: none; overflow: hidden; }
-
-.global-bans-row { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; gap: var(--gap-size); }
-#global-bans-blue, #global-bans-red { display: grid; grid-template-columns: repeat(5, auto); gap: var(--gap-half); align-items: center; min-height: var(--global-ban-icon-min-size); }
-#global-bans-blue { justify-items: start; }
-#global-bans-red { justify-items: end; }
-
-.global-ban-icon {
-    width: var(--global-ban-icon-size);
-    height: var(--global-ban-icon-size);
-    min-width: var(--global-ban-icon-min-size);
-    min-height: var(--global-ban-icon-min-size);
-    background-size: cover;
-    background-position: center;
-    border-radius: 0.25rem;
-    overflow: hidden;
-    flex-shrink: 0;
-    background-color: var(--color-surface-1);
-    border: 1px solid var(--color-border);
-    opacity: 0.6;
-    cursor: not-allowed;
-    position: relative;
-    box-shadow: var(--shadow-sm);
-}
-.global-ban-icon img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(90%) brightness(60%); }
-
-.search-controls-wrapper {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-half);
-    margin-bottom: var(--gap-size); /* Keep margin bottom */
-    flex-shrink: 0;
-    overflow-x: auto;
-    padding: var(--gap-half);
-    background-color: var(--color-surface-1);
-    border-radius: 0.375rem;
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-md);
-    flex-wrap: wrap; /* Allow wrapping */
-}
-.search-controls-wrapper::-webkit-scrollbar { height: 4px; }
-.search-controls-wrapper::-webkit-scrollbar-track { background: transparent; }
-.search-controls-wrapper::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 2px; }
-
-#championSearch {
-    flex-grow: 1;
-    flex-shrink: 1; /* Allow shrinking */
-    font-size: clamp(0.85rem, 2vmin, 1rem);
-    min-width: 100px; /* Allow smaller min width */
-    height: var(--filter-button-size);
-    min-height: 30px;
-    background-color: var(--color-surface-2);
-    border: 1px solid var(--color-border);
-    border-radius: 0.25rem;
-    padding: 0 0.5rem;
-    color: var(--color-text-primary);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-#championSearch::placeholder { color: var(--color-text-placeholder); }
-#championSearch:focus {
-    outline: none;
-    border-color: var(--color-accent-blue);
-    box-shadow: var(--shadow-glow-blue);
-    background-color: var(--color-surface-1);
-}
-
-#roleFilterButtons { display: flex; gap: var(--gap-half); flex-shrink: 0; }
-
-.search-controls-wrapper .action-button { flex-shrink: 0; }
-
-.action-button {
-    color: var(--color-text-primary);
-    width: var(--button-size);
-    height: var(--button-size);
-    min-width: var(--button-min-size);
-    min-height: var(--button-min-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border-radius: 0.375rem;
-    font-weight: 500;
-    transition: background-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.1s ease;
-    border: 1px solid var(--color-border);
-    cursor: pointer;
-    font-size: calc(var(--button-size) * 0.45);
-    line-height: 1;
-    flex-shrink: 0;
-    background-color: var(--color-surface-2);
-    box-shadow: var(--shadow-sm);
-}
-.action-button:hover:not(:disabled) {
-    background-color: var(--color-border-medium);
-    border-color: var(--color-text-secondary);
-    color: #fff;
-    box-shadow: var(--shadow-md);
-}
-.action-button:active:not(:disabled) {
-    transform: scale(0.95);
-    background-color: var(--color-border);
-    box-shadow: none;
-}
-.action-button:focus-visible {
-    outline: 2px solid var(--color-accent-blue);
-    outline-offset: 1px;
-    box-shadow: var(--shadow-glow-blue);
-    border-color: var(--color-accent-blue);
-}
-.action-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: none;
-    background-color: var(--color-surface-2);
-    border-color: var(--color-border);
-    color: var(--color-text-secondary);
-}
-
-.icon-button { font-size: calc(var(--button-size) * 0.55); width: var(--button-size); }
-
-/* Confirm button specific styles - Wider, Inline */
-#confirmPickBanButton {
-     /* Make it wider */
-     width: auto; /* Allow content padding to define width */
-     min-width: calc(var(--button-size) * 3); /* Minimum 3x base button width */
-     padding-left: 1.5rem; /* Add horizontal padding */
-     padding-right: 1.5rem;
-     /* Keep base height */
-     height: var(--button-size);
-     min-height: var(--button-min-size);
-     /* Adjust font size if needed */
-     font-size: calc(var(--button-size) * 0.55);
-     /* Specific background/color */
-     background-color: var(--color-accent-green);
-     color: var(--color-background);
-     border-color: var(--color-accent-green);
-}
-#confirmPickBanButton:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--color-accent-green), #fff 15%);
-}
-
-
-/* Other Specific Button Overrides */
-#resetButton { background-color: var(--color-accent-red); color: var(--color-background); border-color: var(--color-accent-red);}
-#resetButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-red), #fff 15%); }
-#nextDraftButton { background-color: var(--color-accent-gold); color: var(--color-background); border-color: var(--color-accent-gold); }
-#nextDraftButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-gold), #fff 15%); }
-#priorityFilterButton { background-color: var(--color-surface-2); color: var(--color-accent-purple); border-color: var(--color-border); }
-#priorityFilterButton:hover:not(:disabled) { background-color: var(--color-border-medium); color: color-mix(in srgb, var(--color-accent-purple), #fff 20%);}
-#priorityFilterButton.active { background-color: var(--color-accent-purple); color: var(--color-background); border-color: var(--color-accent-purple); box-shadow: 0 0 8px 0px rgba(160, 112, 240, 0.5); }
-
-
-.filter-button {
-    background-color: var(--color-surface-2);
-    width: var(--filter-button-size);
-    height: var(--filter-button-size);
-    font-size: calc(var(--filter-button-size) * 0.4);
-    font-weight: 600;
-    min-width: 30px;
-    min-height: 30px;
-    padding: 0 2px;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-}
-.filter-button:hover:not(:disabled) {
-    background-color: var(--color-border-medium);
-    color: var(--color-text-primary);
-}
-.filter-button.active {
-    background-color: var(--color-accent-blue);
-    border-color: var(--color-accent-blue);
-    color: var(--color-background);
-    box-shadow: var(--shadow-glow-blue);
-}
-
-#championGrid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--gap-half);
-    overflow-y: auto;
-    align-content: flex-start;
-    flex-grow: 1;
-    min-height: 0;
-    transition: opacity 0.3s ease;
-    padding: var(--gap-size);
-    background-color: var(--color-surface-1);
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-border);
-}
-#championGrid::-webkit-scrollbar { width: 6px; }
-#championGrid::-webkit-scrollbar-track { background: transparent; }
-#championGrid::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 3px; }
-#championGrid::-webkit-scrollbar-thumb:hover { background-color: var(--color-border-medium); }
-#championGrid { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
-
-.champion-card {
-    width: var(--card-size);
-    height: var(--card-size);
-    min-width: var(--card-min-size);
-    min-height: var(--card-min-size);
-    border-radius: 0.25rem;
-    overflow: hidden;
-    background-color: var(--color-surface-2);
-    cursor: pointer;
-    transition: transform 0.15s ease-in-out, box-shadow 0.2s ease, border-color 0.2s ease;
-    position: relative;
-    flex-shrink: 0;
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-sm);
-}
-.champion-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.2s ease, transform 0.2s ease; }
-.champion-card:hover {
-    transform: scale(1.05);
-    box-shadow: var(--shadow-md);
-    border-color: var(--color-border-medium);
-}
- .champion-card:hover img {
-     transform: scale(1.03);
- }
-.champion-card:focus-visible {
-     outline: 2px solid var(--color-accent-blue);
-     outline-offset: 1px;
-     box-shadow: var(--shadow-glow-blue);
-     border-color: var(--color-accent-blue);
-     transform: scale(1.03);
-}
-
-.champion-card.selected { border-color: var(--color-accent-gold); }
-.champion-card.selected img { filter: grayscale(80%) brightness(50%) sepia(30%); opacity: 0.7; }
-.champion-card.disabled { pointer-events: none; opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-.champion-card.disabled img { filter: grayscale(100%) brightness(40%); transform: none; }
-.champion-card.disabled:hover { transform: none; border-color: var(--color-border); }
-
-
-.tooltip {
-    position: fixed;
-    background-color: var(--color-tooltip-bg);
-    color: var(--color-tooltip-text);
-    padding: 0.5rem 0.8rem;
-    border-radius: 0.375rem;
-    font-size: 0.9rem;
-    font-family: 'Inter', sans-serif;
-    white-space: nowrap;
-    z-index: 100;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease-in-out;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--color-border-medium);
-}
-.tooltip.visible { opacity: 1; }
-.tooltip-title { font-weight: 600; display: block; margin-bottom: 0.1rem; color: var(--color-accent-gold); }
-.tooltip-name { font-weight: 400; color: var(--color-text-secondary); font-size: 0.8rem; }
-
-
-#statusMessage {
-    position: fixed;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--color-surface-1);
-    color: var(--color-text-primary);
-    padding: 0.6rem 1.2rem;
-    border-radius: 0.375rem;
-    z-index: 90;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    text-align: center;
-    border: 1px solid var(--color-border-medium);
-    box-shadow: var(--shadow-md);
-    transform: translate(-50%, 10px);
-}
-#statusMessage.visible {
-    opacity: 1;
-    transform: translate(-50%, 0);
-}
-
-/* --- Responsive Adjustments --- */
-@media (max-width: 1280px) {
-     .search-controls-wrapper { flex-wrap: wrap; }
-     #championSearch { min-width: 180px; }
-}
-
-@media (max-width: 1024px) {
-    :root {
-        --card-size: 7.5vh;
-        --ban-size: 5vh;
-        --button-size: 4vh;
-        --filter-button-size: 3.5vh;
-        --score-size: 4vh;
-        --nick-font-size: 2.5vh;
-        --gap-size: 0.3rem;
-        --team-col-min-width: 220px;
+// script.js v6.4 - Fix Filters and Swap Nicknames
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Fully Loaded. Initializing App v6.4..."); // Version Updated
+
+    // --- Constants ---
+    // Removed DRAFT_STATUS_KEY
+
+    // --- Page Elements ---
+    const appContainer = document.getElementById('app-container');
+    const homePage = document.getElementById('homePage');
+    const draftPage = document.getElementById('draftPage');
+    const adminButton = document.getElementById('adminButton');
+    // Home Page Elements
+    const team1NameInput = document.getElementById('team1NameInput');
+    const team2NameInput = document.getElementById('team2NameInput');
+    const createLobbyButton = document.getElementById('createLobbyButton');
+    const lobbyLinksDisplay = document.getElementById('lobbyLinksDisplay');
+    const judgeLinkText = document.getElementById('judgeLinkText');
+    const team1LinkText = document.getElementById('team1LinkText');
+    const team2LinkText = document.getElementById('team2LinkText');
+
+    // --- Draft Simulator Global Elements ---
+    let loadingIndicator, mainLayout, championGridElement, startButton, resetButton, undoButton, timerDisplay, championSearch, bluePicksContainer, redPicksContainer, blueColumn, redColumn, swapButton, clearPicksButton, toggleTimerButton, filterButtons, confirmPickBanButton, priorityFilterButton, nextDraftButton, globallyBannedDisplay, globalBansBlueContainer, globalBansRedContainer, championTooltip, statusMessage, blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl, returnHomeButton;
+
+    // --- State Variables ---
+    let currentPage = 'home';
+    let isDraftInitialized = false;
+    let currentUserRole = null;
+    let userTeamSide = null;
+    // Removed: let draftStateListenerInterval = null;
+
+    // Draft specific state variables
+    let allChampionsData = { en: null, ru: null };
+    let processedChampions = [];
+    let ddragonVersion = 'latest';
+    let baseIconUrl = '';
+    let baseSplashUrl = '';
+    let currentStep = 0;
+    let selectedChampions = new Set();
+    let draftHistory = [];
+    let pickNicknames = {};
+    let isDraftComplete = false;
+    let isDraftStarted = false;
+    let selectedSwapSlotId = null;
+    let timerInterval = null;
+    let draftTimerDuration = 30;
+    let timerSeconds = draftTimerDuration;
+    let currentRoleFilter = 'All';
+    let previewedChampion = null;
+    let isPriorityFilterActive = false;
+    let statusTimeout = null;
+    let globallyDisabledChampions = new Set();
+    let globalBanHistory = [];
+    // Define priorityChampions globally (outside filter function)
+    const priorityChampions = new Set([]); // Placeholder - Add priority champion IDs here if known
+
+    // --- Permissions Map ---
+    const permissions = {
+        admin: {
+            editTeamName: true, editScore: true, clearDraft: true, resetDraft: true, startDraft: true, toggleTimerDuration: true, swapSides: true, editNicknames: true, togglePriorityFilter: true, nextDraft: true,
+            pickChampion: true, banChampion: true, undoAction: true, confirmAction: true, useRoleFilters: true, returnHome: true
+        },
+        judge: {
+            editTeamName: true, editScore: true, clearDraft: true, resetDraft: true, startDraft: true, toggleTimerDuration: true, swapSides: true, editNicknames: true, togglePriorityFilter: true, nextDraft: true,
+            pickChampion: false, banChampion: false, undoAction: false, confirmAction: false, useRoleFilters: false, returnHome: true
+        },
+        team1: {
+            editTeamName: false, editScore: false, clearDraft: false, resetDraft: false, startDraft: false, toggleTimerDuration: false, swapSides: false, editNicknames: false, togglePriorityFilter: false, nextDraft: false,
+            pickChampion: true, banChampion: true, undoAction: true, confirmAction: true, useRoleFilters: true, returnHome: true
+        },
+        team2: {
+            editTeamName: false, editScore: false, clearDraft: false, resetDraft: false, startDraft: false, toggleTimerDuration: false, swapSides: false, editNicknames: false, togglePriorityFilter: false, nextDraft: false,
+            pickChampion: true, banChampion: true, undoAction: true, confirmAction: true, useRoleFilters: true, returnHome: true
+        },
+         default: {
+             editTeamName: false, editScore: false, clearDraft: false, resetDraft: false, startDraft: false, toggleTimerDuration: false, swapSides: false, editNicknames: false, togglePriorityFilter: false, nextDraft: false,
+             pickChampion: false, banChampion: false, undoAction: false, confirmAction: false, useRoleFilters: false, returnHome: true
+         }
+    };
+
+    // --- Helper Functions ---
+    const debounce = (func, wait) => { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func(...args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; };
+    const showStatusMessage = (message, duration = 3000) => { if (!statusMessage) statusMessage = document.getElementById('statusMessage'); if (!statusMessage) { console.warn("Status message element not found!"); return; } statusMessage.textContent = message; statusMessage.classList.add('visible'); clearTimeout(statusTimeout); statusTimeout = setTimeout(() => { statusMessage.classList.remove('visible'); }, duration); };
+    const getChampionById = (id) => processedChampions.find(champ => champ.id === id);
+
+    // Permission Check Function
+    function hasPermission(action, team = null) {
+        const rolePerms = permissions[currentUserRole] || permissions.default;
+        const isAdmin = currentUserRole === 'admin';
+        const hasBasicPermission = isAdmin || rolePerms[action];
+
+        let result = false;
+        if (!hasBasicPermission) {
+            result = false; // No basic permission
+        } else if (isAdmin) {
+            result = true; // Admin has all permissions
+        } else if ((currentUserRole === 'team1' || currentUserRole === 'team2') && team) {
+            // Check if the action is allowed for the specific team making the move
+            result = userTeamSide === team;
+        } else {
+            // If not a team-specific action or user is judge/admin (and has basic perm)
+            result = true;
+        }
+        // console.log(`DEBUG: hasPermission(action: ${action}, team: ${team}, role: ${currentUserRole}, side: ${userTeamSide}) -> ${result}`);
+        return result;
     }
-     .team-name { font-size: clamp(1rem, 3vmin, 1.4rem); max-width: 200px;}
-     .search-controls-wrapper { margin-bottom: var(--gap-size); padding: var(--gap-half); }
-     #championSearch { min-width: 150px; }
-}
 
-@media (max-width: 768px) {
-     :root {
-        --card-size: 7vh;
-        --ban-size: 4.5vh;
-        --button-size: 3.8vh;
-        --filter-button-size: 3.2vh;
-        --score-size: 3.8vh;
-        --nick-font-size: 2.2vh;
-        --team-col-min-width: 180px;
+
+     // Function to copy text to clipboard
+     async function copyToClipboard(text) {
+         if (!navigator.clipboard) {
+             try {
+                 const textArea = document.createElement("textarea");
+                 textArea.value = text;
+                 textArea.style.position = "fixed"; document.body.appendChild(textArea);
+                 textArea.focus(); textArea.select(); document.execCommand('copy');
+                 document.body.removeChild(textArea);
+                 showStatusMessage("Ссылка скопирована (fallback)", 1500);
+             } catch (err) { console.error('Fallback copy failed:', err); showStatusMessage("Ошибка копирования", 2000); }
+             return;
+         }
+         try {
+             await navigator.clipboard.writeText(text);
+             showStatusMessage("Ссылка скопирована!", 1500);
+         } catch (err) { console.error('Async clipboard copy failed:', err); showStatusMessage("Ошибка копирования", 2000); }
      }
-    #mainLayout {
-        grid-template-columns: auto minmax(150px, 1fr) auto;
-        gap: var(--gap-half);
-    }
-     .center-controls-wrapper {
-        grid-template-columns: 1fr auto auto auto 1fr;
-        gap: var(--gap-half);
-    }
-    .team-name { max-width: 150px; font-size: clamp(0.9rem, 2.8vmin, 1.2rem);}
-    .bans-container { gap: 2px; }
-    .search-controls-wrapper { flex-direction: row; flex-wrap: wrap; align-items: center; }
-    #championSearch { width: auto; flex-grow: 1; min-width: 120px; }
-    #roleFilterButtons { justify-content: flex-start; }
-    .picks-container { gap: 2px; }
-}
 
-@media (max-width: 480px) {
-    body { padding: 2px; }
-     #app-container { padding: 2px; } /* Reduce padding on small screens */
-    :root {
-        --card-size: 6.5vh;
-        --ban-size: 4vh;
-        --button-size: 3.5vh;
-        --filter-button-size: 3vh;
-        --score-size: 3.5vh;
-        --nick-font-size: 2vh;
-        --card-min-size: 38px;
-        --ban-min-size: 25px;
-        --button-min-size: 28px;
-        --score-min-size: 28px;
-        --team-col-min-width: 90px;
+
+    // --- Navigation & Role Handling ---
+    function navigateTo(pageName) {
+        console.log(`Navigating to: ${pageName}`);
+        currentPage = pageName;
+        // Removed: stopListeningForDraftStateChanges();
+
+        if(homePage) homePage.classList.add('hidden');
+        if(draftPage) draftPage.classList.add('hidden');
+        if(adminButton) adminButton.classList.add('hidden');
+
+        if (pageName === 'home') {
+            if(homePage) homePage.classList.remove('hidden');
+            if(adminButton) adminButton.classList.remove('hidden');
+            if (window.location.hash && currentUserRole !== 'admin') {
+                // Clear role and hash when returning home normally
+                currentUserRole = null;
+                userTeamSide = null;
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+        } else if (pageName === 'draft') {
+            if(draftPage) draftPage.classList.remove('hidden');
+            if (!isDraftInitialized) {
+                console.log("Initializing draft simulator for the first time...");
+                initializeAppDraft(); // This function now handles role assignment internally
+                isDraftInitialized = true;
+            } else {
+                 console.log("Draft already initialized, re-applying permissions for role:", currentUserRole);
+                 // Ensure elements are available before applying permissions again
+                 if (checkDraftElements()) {
+                    // Re-determine role and side in case of refresh or direct navigation
+                    if (!currentUserRole) {
+                       currentUserRole = getRoleFromHash() || 'default';
+                    }
+                    if (currentUserRole === 'team1') userTeamSide = 'blue';
+                    else if (currentUserRole === 'team2') userTeamSide = 'red';
+                    else userTeamSide = null;
+
+                    applyRolePermissions(currentUserRole);
+                    if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || 'Синяя Команда';
+                    if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
+                    // Removed listener start
+                    updateDraftUI(); // Update UI based on current role and state
+                 } else {
+                     console.error("Draft elements not found when trying to re-apply permissions.");
+                     showStatusMessage("Ошибка UI: Элементы драфта не найдены.", 5000);
+                 }
+            }
+        }
     }
-     #mainLayout {
-        grid-template-columns: auto minmax(100px, 1fr) auto;
-        gap: 2px;
+
+    function getRoleFromHash() {
+        const hash = window.location.hash;
+        if (hash.startsWith('#role=')) {
+            const role = hash.substring(6);
+            if (permissions[role] && role !== 'admin') { // Ensure role exists and is not admin
+                return role;
+            }
+        }
+        return null;
     }
-     #topRowContainer { grid-template-columns: 1fr auto 1fr; }
-     .top-row-cell.blue-info { grid-column: 1; }
-     .top-row-cell.center-controls { grid-column: 2; }
-     .top-row-cell.red-info { grid-column: 3; }
-     .center-controls-wrapper { display: flex; flex-wrap: wrap; justify-content: center; }
-     #timerDisplay { order: -1; margin-bottom: var(--gap-half); }
-     .team-name { max-width: 100px; font-size: clamp(0.8rem, 2.5vmin, 1rem); }
-     .bans-container { display: grid; grid-template-columns: repeat(3, 1fr); }
-     #blue-ban-4, #blue-ban-5, #red-ban-4, #red-ban-5 { margin-top: 2px; }
-     .filter-button { min-width: 28px; min-height: 28px; font-size: 0.6rem; }
-     #championGrid { gap: 2px; }
-     .team-column { padding: var(--gap-half); }
-     .picks-container { gap: 1px; }
-     .nickname-input { min-height: 16px; font-size: 1.8vh; }
-     .search-controls-wrapper { overflow-x: visible; flex-wrap: wrap; }
-     #championSearch { min-width: 100px; }
-}
+
+    // --- Home Page Logic ---
+    function handleCreateLobby() {
+        console.log("handleCreateLobby called");
+        const team1Name = team1NameInput.value.trim() || "Синяя Команда";
+        const team2Name = team2NameInput.value.trim() || "Красная Команда";
+        localStorage.setItem('lobbyTeam1Name', team1Name);
+        localStorage.setItem('lobbyTeam2Name', team2Name);
+        // Removed localStorage draft status set
+        const baseUrl = window.location.origin + window.location.pathname;
+        const judgeLink = baseUrl + '#role=judge';
+        const team1Link = baseUrl + '#role=team1';
+        const team2Link = baseUrl + '#role=team2';
+        if (judgeLinkText) judgeLinkText.textContent = judgeLink;
+        if (team1LinkText) team1LinkText.textContent = team1Link;
+        if (team2LinkText) team2LinkText.textContent = team2Link;
+        if (lobbyLinksDisplay) lobbyLinksDisplay.classList.remove('hidden');
+        showStatusMessage("Лобби создано! Скопируйте ссылки.", 3000);
+    }
+
+    // --- Admin Button Logic ---
+    function handleAdminClick() {
+        console.log("Admin button clicked.");
+        currentUserRole = 'admin';
+        userTeamSide = null;
+        const team1Name = team1NameInput.value.trim() || "Синяя Команда";
+        const team2Name = team2NameInput.value.trim() || "Красная Команда";
+        localStorage.setItem('lobbyTeam1Name', team1Name);
+        localStorage.setItem('lobbyTeam2Name', team2Name);
+        // Removed localStorage draft status set
+        navigateTo('draft');
+    }
+
+    // Add listener for create lobby button
+    if (createLobbyButton) {
+        createLobbyButton.addEventListener('click', handleCreateLobby);
+    } else { console.warn("Create Lobby Button not found"); }
+
+     // Add listeners for copy buttons
+     document.querySelectorAll('.copy-button').forEach(button => {
+         button.addEventListener('click', (event) => {
+             const linkId = event.target.dataset.linkId;
+             const linkSpan = document.getElementById(linkId);
+             if (linkSpan) {
+                 copyToClipboard(linkSpan.textContent);
+             } else { console.warn("Copy link span not found for id:", linkId); }
+         });
+     });
+
+    // Add listener for Admin button
+    if (adminButton) {
+        adminButton.addEventListener('click', handleAdminClick);
+    } else { console.warn("Admin Button not found"); }
+
+    // --- Function to check if draft elements exist ---
+    function checkDraftElements() {
+        // Re-fetch elements within this check to ensure they exist at the time of check
+        loadingIndicator = document.getElementById('loadingIndicator');
+        mainLayout = document.getElementById('mainLayout');
+        championGridElement = document.getElementById('championGrid');
+        timerDisplay = document.getElementById('timerDisplay');
+        resetButton = document.getElementById('resetButton');
+        undoButton = document.getElementById('undoButton');
+        championSearch = document.getElementById('championSearch');
+        blueColumn = document.querySelector('.blue-column');
+        redColumn = document.querySelector('.red-column');
+        swapButton = document.getElementById('swapButton');
+        clearPicksButton = document.getElementById('clearPicksButton');
+        toggleTimerButton = document.getElementById('toggleTimerButton');
+        confirmPickBanButton = document.getElementById('confirmPickBanButton');
+        priorityFilterButton = document.getElementById('priorityFilterButton');
+        nextDraftButton = document.getElementById('nextDraftButton');
+        returnHomeButton = document.getElementById('returnHomeButton');
+        blueTeamNameH2 = document.getElementById('blue-team-name-h2');
+        redTeamNameH2 = document.getElementById('red-team-name-h2');
+        blueScoreEl = document.getElementById('blue-score');
+        redScoreEl = document.getElementById('red-score');
+        statusMessage = document.getElementById('statusMessage');
+
+        const elementsToCheck = [
+            loadingIndicator, mainLayout, championGridElement, timerDisplay, resetButton, undoButton,
+            championSearch, blueColumn, redColumn, swapButton, clearPicksButton, toggleTimerButton,
+            confirmPickBanButton, priorityFilterButton, nextDraftButton, returnHomeButton,
+            blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl, statusMessage
+        ];
+        const missingElements = elementsToCheck.filter(el => !el);
+        if (missingElements.length > 0) {
+            console.error("Missing draft elements during check:", missingElements.map(el => el?.id || 'unknown'));
+            return false;
+        }
+        return true;
+    }
+
+
+    // --- Draft Simulator Logic (all inside initializeAppDraft) ---
+    async function initializeAppDraft() {
+        console.log("initializeAppDraft started");
+        try {
+
+            // 1. Determine Role
+            if (!currentUserRole) {
+                currentUserRole = getRoleFromHash() || 'default';
+                console.warn(`Role determined as: ${currentUserRole}`);
+            }
+            console.log(`Initializing draft with Role: ${currentUserRole}`);
+
+            // Assign team side
+            if (currentUserRole === 'team1') userTeamSide = 'blue';
+            else if (currentUserRole === 'team2') userTeamSide = 'red';
+            else userTeamSide = null;
+
+            // 2. Get Draft Page Elements (and check)
+            if (!checkDraftElements()) {
+                throw new Error("One or more draft page elements were not found during initialization!");
+            }
+            console.log("All draft elements found.");
+
+            // 3. Load Data
+            if(loadingIndicator) loadingIndicator.classList.remove('hidden');
+            const dataLoaded = await loadChampionData();
+            if (!dataLoaded) {
+                throw new Error("Failed to load champion data.");
+            }
+            if(loadingIndicator) loadingIndicator.classList.add('hidden');
+            if(mainLayout) mainLayout.classList.remove('hidden');
+
+            // 4. Initial Setup based on Role
+            displayChampions();
+            resetDraftFull(true); // Initial reset, applies permissions and calls updateDraftUI internally
+
+            // Set initial team names
+            if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || 'Синяя Команда';
+            if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
+
+            // 5. Attach Event Listeners
+            console.log("Attaching event listeners...");
+            if (timerDisplay) timerDisplay.addEventListener('click', handleStartDraft); else console.warn("Listener not attached: timerDisplay not found");
+            if (resetButton) resetButton.addEventListener('click', () => { console.log("Reset button clicked"); resetDraftFull(false); }); else console.warn("Listener not attached: resetButton not found");
+            if (clearPicksButton) clearPicksButton.addEventListener('click', () => { console.log("Clear Picks button clicked"); resetCurrentGamePicksBans(false, false); }); else console.warn("Listener not attached: clearPicksButton not found");
+            if (undoButton) undoButton.addEventListener('click', handleUndo); else console.warn("Listener not attached: undoButton not found");
+            if (swapButton) swapButton.addEventListener('click', handleSwapTeams); else console.warn("Listener not attached: swapButton not found");
+            if (toggleTimerButton) toggleTimerButton.addEventListener('click', handleToggleTimer); else console.warn("Listener not attached: toggleTimerButton not found");
+            if (confirmPickBanButton) confirmPickBanButton.addEventListener('click', handleConfirmPickBan); else console.warn("Listener not attached: confirmPickBanButton not found");
+            if (priorityFilterButton) priorityFilterButton.addEventListener('click', handlePriorityFilterToggle); else console.warn("Listener not attached: priorityFilterButton not found");
+            if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); else console.warn("Listener not attached: nextDraftButton not found");
+            if (championSearch) championSearch.addEventListener('input', debouncedFilter); else console.warn("Listener not attached: championSearch not found");
+            if (filterButtons) filterButtons.forEach(button => { if (button) button.addEventListener('click', handleRoleFilterClick); else console.warn("Listener not attached: a filter button was null"); }); else console.warn("Listener not attached: filterButtons collection is null/empty");
+            if (blueColumn) blueColumn.addEventListener('click', handlePickContainerClick); else console.warn("Listener not attached: blueColumn not found");
+            if (redColumn) redColumn.addEventListener('click', handlePickContainerClick); else console.warn("Listener not attached: redColumn not found");
+            if (returnHomeButton) returnHomeButton.addEventListener('click', () => { console.log("Return Home button clicked"); navigateTo('home'); }); else console.warn("Listener not attached: returnHomeButton not found");
+
+            // Add listeners for editable fields
+            [blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl].forEach(el => {
+                if (el) {
+                    el.addEventListener('blur', (e) => {
+                        const permissionNeeded = el.id.includes('name') ? 'editTeamName' : 'editScore';
+                        if (!hasPermission(permissionNeeded)) return;
+                        e.target.textContent = e.target.textContent.trim();
+                    });
+                    el.addEventListener('keydown', (e) => {
+                        const permissionNeeded = el.id.includes('name') ? 'editTeamName' : 'editScore';
+                        if (!hasPermission(permissionNeeded)) return;
+                        if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+                    });
+                } else { console.warn("Listener not attached: An editable H2/Score element was not found"); }
+            });
+            console.log("Event listeners attached.");
+
+            // Removed listener start
+            updateDraftUI(); // Final UI update after setup
+
+            console.log("Draft simulator page initialized successfully for role:", currentUserRole);
+
+        } catch (error) {
+            console.error("Error during initializeAppDraft:", error);
+            showStatusMessage(`Критическая ошибка инициализации: ${error.message}`, 10000);
+            if(loadingIndicator) loadingIndicator.textContent = `Ошибка! ${error.message}`;
+            if(mainLayout) mainLayout.classList.add('hidden');
+        }
+
+    } // --- End of initializeAppDraft ---
+
+
+    // --- Role Permission Application ---
+    function applyRolePermissions(role) {
+        // console.log(`DEBUG: Applying permissions for role: ${role}`); // Reduced logging
+        const can = (action, team = null) => hasPermission(action, team);
+
+        // Enable/Disable Buttons based *only* on role permissions (state handled in updateDraftUI)
+        if(timerDisplay) timerDisplay.disabled = !can('startDraft');
+        if(resetButton) resetButton.disabled = !can('resetDraft');
+        if(clearPicksButton) clearPicksButton.disabled = !can('clearDraft');
+        if(undoButton) undoButton.disabled = !can('undoAction');
+        if(swapButton) swapButton.disabled = !can('swapSides');
+        if(toggleTimerButton) toggleTimerButton.disabled = !can('toggleTimerDuration');
+        if(confirmPickBanButton) confirmPickBanButton.disabled = !can('confirmAction');
+        if(priorityFilterButton) priorityFilterButton.disabled = !can('togglePriorityFilter');
+        if(nextDraftButton) nextDraftButton.disabled = !can('nextDraft');
+        if(returnHomeButton) returnHomeButton.disabled = !can('returnHome');
+
+        // Enable/Disable Filters
+        if(filterButtons) filterButtons.forEach(btn => { if(btn) btn.disabled = !can('useRoleFilters'); });
+
+        // Enable/Disable Editing
+        if(blueTeamNameH2) blueTeamNameH2.contentEditable = can('editTeamName');
+        if(redTeamNameH2) redTeamNameH2.contentEditable = can('editTeamName');
+        if(blueScoreEl) blueScoreEl.contentEditable = can('editScore');
+        if(redScoreEl) redScoreEl.contentEditable = can('editScore');
+
+        // Disable Columns based on role (Admin overrides this)
+        if (blueColumn) blueColumn.classList.toggle('role-disabled', role === 'team2');
+        if (redColumn) redColumn.classList.toggle('role-disabled', role === 'team1');
+        if (role === 'admin') {
+            if(blueColumn) blueColumn.classList.remove('role-disabled');
+            if(redColumn) redColumn.classList.remove('role-disabled');
+        }
+
+        updateNicknameEditability();
+        // console.log(`DEBUG: Permissions applied for role: ${role}`); // Reduced logging
+    }
+
+
+     // --- Update Nickname Editability based on Role ---
+     function updateNicknameEditability() {
+         const canEdit = hasPermission('editNicknames');
+         document.querySelectorAll('.nickname-input').forEach(input => {
+             input.contentEditable = canEdit;
+             input.style.cursor = canEdit ? 'text' : 'default';
+         });
+     }
+
+
+    // --- Data Fetching (Draft Specific) ---
+    async function loadChampionData() {
+         try {
+             // console.log("Fetching DDragon versions..."); // Reduced logging
+             const versionsResponse = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
+             if (!versionsResponse.ok) throw new Error(`Версии: ${versionsResponse.statusText}`);
+             const versions = await versionsResponse.json();
+             ddragonVersion = versions[0];
+             // console.log(`Using DDragon version: ${ddragonVersion}`); // Reduced logging
+             baseIconUrl = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/`;
+             baseSplashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/`;
+
+             // FIX: Added sample role data
+             const championRolesMap = {
+                // Tanks (Top/Jungle/Support)
+                'Malphite': ['Top', 'Support'], 'Ornn': ['Top'], 'Maokai': ['Jungle', 'Support'], 'Nautilus': ['Support'], 'Leona': ['Support'], 'Amumu': ['Jungle'], 'Rammus': ['Jungle'], 'Zac': ['Jungle'], 'Sejuani': ['Jungle'], 'Shen': ['Top'], 'DrMundo': ['Top', 'Jungle'], 'TahmKench': ['Top', 'Support'], 'Sion': ['Top'], 'Poppy': ['Top', 'Jungle'], 'Kled': ['Top'],
+                // Fighters (Top/Jungle/Mid)
+                'Aatrox': ['Top'], 'Darius': ['Top'], 'Garen': ['Top'], 'Sett': ['Top', 'Support'], 'Illaoi': ['Top'], 'Mordekaiser': ['Top'], 'Urgot': ['Top'], 'Renekton': ['Top'], 'Yorick': ['Top'], 'Fiora': ['Top'], 'Camille': ['Top'], 'Irelia': ['Top', 'Mid'], 'Jax': ['Top', 'Jungle'], 'Tryndamere': ['Top'], 'Warwick': ['Jungle'], 'XinZhao': ['Jungle'], 'Vi': ['Jungle'], 'Pantheon': ['Mid', 'Support', 'Jungle'], 'LeeSin': ['Jungle'], 'Olaf': ['Jungle', 'Top'], 'RekSai': ['Jungle'], 'Hecarim': ['Jungle'], 'Skarner': ['Jungle'], 'Volibear': ['Jungle', 'Top'], 'Udyr': ['Jungle'], 'Shyvana': ['Jungle'], 'Kled': ['Top'], 'Gwen': ['Top', 'Jungle'],
+                // Mages (Mid/Support/Top/Jungle)
+                'Ahri': ['Mid'], 'Anivia': ['Mid'], 'Annie': ['Mid', 'Support'], 'AurelionSol': ['Mid'], 'Azir': ['Mid'], 'Brand': ['Support', 'Mid'], 'Cassiopeia': ['Mid', 'Top'], 'Corki': ['Mid'], 'Ekko': ['Mid', 'Jungle'], 'Fizz': ['Mid'], 'Heimerdinger': ['Mid', 'Top', 'Support'], 'Karthus': ['Jungle', 'Mid'], 'Kassadin': ['Mid'], 'Katarina': ['Mid'], 'LeBlanc': ['Mid'], 'Lissandra': ['Mid'], 'Lux': ['Mid', 'Support'], 'Malzahar': ['Mid'], 'Neeko': ['Mid', 'Support'], 'Orianna': ['Mid'], 'Ryze': ['Mid', 'Top'], 'Swain': ['Support', 'Mid', 'ADC'], 'Syndra': ['Mid'], 'Taliyah': ['Mid', 'Jungle'], 'TwistedFate': ['Mid'], 'Veigar': ['Mid', 'Support'], 'Velkoz': ['Mid', 'Support'], 'Viktor': ['Mid'], 'Vladimir': ['Mid', 'Top'], 'Xerath': ['Mid', 'Support'], 'Yasuo': ['Mid', 'Top', 'ADC'], 'Yone': ['Mid', 'Top'], 'Ziggs': ['Mid', 'ADC'], 'Zoe': ['Mid'], 'Zyra': ['Support', 'Mid'], 'Vex': ['Mid'], 'Seraphine': ['Support', 'Mid', 'ADC'], 'Sylas': ['Mid', 'Jungle'],
+                // Assassins (Mid/Jungle)
+                'Akali': ['Mid', 'Top'], 'Diana': ['Jungle', 'Mid'], 'Fizz': ['Mid'], 'Kassadin': ['Mid'], 'Katarina': ['Mid'], 'Khazix': ['Jungle'], 'LeBlanc': ['Mid'], 'Nocturne': ['Jungle'], 'Qiyana': ['Mid', 'Jungle'], 'Rengar': ['Jungle', 'Top'], 'Shaco': ['Jungle'], 'Talon': ['Mid', 'Jungle'], 'Zed': ['Mid'], 'Pyke': ['Support'], 'Kayn': ['Jungle'],
+                // Marksmen (ADC/Mid/Top)
+                'Aphelios': ['ADC'], 'Ashe': ['ADC', 'Support'], 'Caitlyn': ['ADC'], 'Draven': ['ADC'], 'Ezreal': ['ADC'], 'Jhin': ['ADC'], 'Jinx': ['ADC'], 'Kaisa': ['ADC'], 'Kalista': ['ADC'], 'Kindred': ['Jungle'], 'KogMaw': ['ADC'], 'Lucian': ['ADC', 'Mid', 'Top'], 'MissFortune': ['ADC', 'Support'], 'Samira': ['ADC'], 'Sivir': ['ADC'], 'Tristana': ['ADC', 'Mid'], 'Twitch': ['ADC', 'Jungle'], 'Varus': ['ADC', 'Mid'], 'Vayne': ['ADC', 'Top'], 'Xayah': ['ADC'], 'Zeri': ['ADC'], 'Senna': ['Support', 'ADC'], 'Akshan': ['Mid', 'Top'],
+                // Supports (Support)
+                'Bard': ['Support'], 'Braum': ['Support'], 'Janna': ['Support'], 'Karma': ['Support', 'Mid', 'Top'], 'Lulu': ['Support'], 'Morgana': ['Support', 'Mid', 'Jungle'], 'Nami': ['Support'], 'Rakan': ['Support'], 'Renata': ['Support'], 'Sona': ['Support'], 'Soraka': ['Support'], 'Taric': ['Support'], 'Thresh': ['Support'], 'Yuumi': ['Support'], 'Zilean': ['Support', 'Mid'], 'Blitzcrank': ['Support'], 'Alistar': ['Support']
+             };
+             // Removed empty priorityChampions placeholder
+
+             const dataUrlEn = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`;
+             const dataUrlRu = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/ru_RU/champion.json`;
+             // console.log("Fetching champion data (EN & RU)..."); // Reduced logging
+
+             const [enResponse, ruResponse] = await Promise.all([
+                 fetch(dataUrlEn),
+                 fetch(dataUrlRu)
+             ]);
+
+             if (!enResponse.ok) throw new Error(`Данные EN: ${enResponse.statusText}`);
+             allChampionsData.en = (await enResponse.json()).data;
+             // console.log("EN data fetched."); // Reduced logging
+
+             if (!ruResponse.ok) {
+                 console.warn(`Не удалось загрузить данные RU: ${ruResponse.statusText}. Используются английские имена.`);
+                 allChampionsData.ru = null;
+             } else {
+                 allChampionsData.ru = (await ruResponse.json()).data;
+                 // console.log("RU data fetched."); // Reduced logging
+             }
+
+             processedChampions = Object.keys(allChampionsData.en).map(champId => {
+                const enData = allChampionsData.en[champId];
+                const ruData = allChampionsData.ru ? allChampionsData.ru[champId] : null;
+                return {
+                    id: enData.id,
+                    name: { en: enData.name, ru: ruData ? ruData.name : enData.name },
+                    title: { en: enData.title, ru: ruData ? ruData.title : enData.title },
+                    roles: championRolesMap[enData.id] || [], // Use populated map
+                    iconUrl: `${baseIconUrl}${enData.image.full}`,
+                    splashUrl: `${baseSplashUrl}${enData.id}_0.jpg`
+                };
+             });
+
+             processedChampions.sort((a, b) => a.name.ru.localeCompare(b.name.ru, 'ru'));
+             console.log(`Successfully loaded and processed ${processedChampions.length} champions.`);
+             return true;
+
+         } catch (error) {
+             console.error("Error loading champion data:", error);
+             showStatusMessage(`Ошибка загрузки данных чемпионов: ${error.message}`, 5000);
+             if(loadingIndicator) loadingIndicator.textContent = `Ошибка загрузки! ${error.message}`;
+             if(mainLayout) mainLayout.classList.add('hidden');
+             return false;
+         }
+     }
+
+
+    // --- Timer Functions (Draft Specific) ---
+    function stopTimer() { clearInterval(timerInterval); timerInterval = null; if(timerDisplay) timerDisplay.classList.remove('timer-running', 'timer-ending'); }
+    function formatTime(seconds) { const minutes = Math.floor(seconds / 60); const remainingSeconds = seconds % 60; return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`; }
+    function resetTimerDisplay() { stopTimer(); timerSeconds = draftTimerDuration; if(timerDisplay) { timerDisplay.textContent = formatTime(timerSeconds); timerDisplay.disabled = !hasPermission('startDraft'); timerDisplay.classList.remove('timer-disabled'); timerDisplay.title = 'Начать драфт'; timerDisplay.setAttribute('aria-label', 'Таймер / Старт драфта'); } }
+    function startTimer() {
+        console.log("startTimer called");
+        if (!hasPermission('startDraft')) { console.log("startTimer: No permission"); return; }
+        stopTimer();
+        timerSeconds = draftTimerDuration;
+        if (!timerDisplay) { console.warn("startTimer: timerDisplay not found"); return; }
+        timerDisplay.textContent = formatTime(timerSeconds);
+        timerDisplay.disabled = true;
+        timerDisplay.classList.add('timer-running', 'timer-disabled');
+        timerDisplay.title = 'Драфт идет...';
+        timerDisplay.setAttribute('aria-label', `Таймер: ${formatTime(timerSeconds)}`);
+        timerInterval = setInterval(() => {
+            timerSeconds--;
+            if (timerDisplay) {
+                timerDisplay.textContent = formatTime(timerSeconds);
+                timerDisplay.setAttribute('aria-label', `Таймер: ${formatTime(timerSeconds)}`);
+                if (timerSeconds <= 10 && timerSeconds > 0) {
+                    timerDisplay.classList.add('timer-ending');
+                } else {
+                    timerDisplay.classList.remove('timer-ending');
+                }
+            }
+            if (timerSeconds <= 0) {
+                stopTimer();
+                if(timerDisplay) timerDisplay.classList.add('timer-ending');
+                console.log("Timer reached zero!");
+                const draftOrder = getDraftOrder();
+                if (currentStep < draftOrder.length) {
+                    const currentAction = draftOrder[currentStep];
+                    // --- MODIFIED TIMER LOGIC ---
+                    if (currentAction.type === 'pick') {
+                        if (previewedChampion) {
+                            // Auto-confirm if a champion was previewed
+                            console.log("Timer ended during PICK phase. Auto-confirming:", previewedChampion.id);
+                            showStatusMessage(`Время вышло! Авто-подтверждение: ${previewedChampion.name.ru}`, 3000);
+                            handleConfirmPickBan(); // Confirm the previewed champion
+                        } else {
+                            // Clear draft if no champion was previewed
+                            console.log("Timer ended during PICK phase. No champion previewed. Clearing current game.");
+                            showStatusMessage("Время вышло! Пик не выбран. Драфт очищен.", 3000);
+                            resetCurrentGamePicksBans(true, false); // Force clear, including global
+                        }
+                    } else if (currentAction.type === 'ban') {
+                        // Keep original ban logic: skip ban
+                        console.log("Timer ended during BAN phase. Skipping ban.");
+                        showStatusMessage("Время вышло! Бан пропущен.", 2000);
+                        const slotElement = document.getElementById(currentAction.slot);
+                        if (slotElement) {
+                            restoreSlotPlaceholder(slotElement, currentAction.slot, '');
+                        }
+                        currentStep++;
+                        resetTimerDisplay();
+                        updateDraftUI();
+                    }
+                    // --- END MODIFIED TIMER LOGIC ---
+                } else {
+                     console.log("Timer ended but draft already complete?");
+                }
+            }
+        }, 1000);
+    }
+
+
+    // --- Draft Logic Functions (Draft Specific - with permission checks added) ---
+     function createChampionCard(champ) {
+        const card = document.createElement('button');
+        card.className = 'champion-card';
+        card.dataset.championId = champ.id;
+        card.dataset.championNameEn = champ.name.en.toLowerCase();
+        card.dataset.championNameRu = champ.name.ru.toLowerCase();
+        card.dataset.roles = champ.roles.join(','); // Roles added here
+        card.setAttribute('role', 'gridcell');
+        card.setAttribute('aria-label', champ.name.ru);
+
+        const img = document.createElement('img');
+        img.src = champ.iconUrl;
+        img.alt = ""; // Decorative image
+        img.className = 'w-full h-full object-cover block pointer-events-none';
+        img.loading = 'lazy';
+        img.onerror = () => { img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%234a5568'/%3E%3C/svg%3E`; card.setAttribute('aria-label', `${champ.name.ru} (ошибка загрузки)`); };
+
+        card.appendChild(img);
+
+        // Add click listener for preview (check permission inside handler)
+        card.addEventListener('click', () => handleChampionPreview(champ));
+
+        card.addEventListener('mouseover', (event) => showChampionTooltip(event, champ));
+        card.addEventListener('mouseout', hideChampionTooltip);
+        card.addEventListener('focus', (event) => showChampionTooltip(event, champ));
+        card.addEventListener('blur', hideChampionTooltip);
+        return card;
+    }
+
+    function displayChampions() { if(!championGridElement) { console.error("displayChampions: championGridElement not found"); return; } const fragment = document.createDocumentFragment(); processedChampions.forEach(champ => { fragment.appendChild(createChampionCard(champ)); }); championGridElement.innerHTML = ''; championGridElement.appendChild(fragment); filterChampions(); }
+
+    function updateDraftUI() {
+        // console.log("DEBUG: updateDraftUI called. Role:", currentUserRole, "Side:", userTeamSide, "Step:", currentStep, "Started:", isDraftStarted); // Verbose Log
+        if (!isDraftInitialized) return;
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach(el => { el.classList.remove('highlight-action', 'preview-flash', 'swap-selected'); });
+
+        applyRolePermissions(currentUserRole); // Apply base role permissions first
+
+        const draftOrder = getDraftOrder();
+        let currentActionTeam = null;
+        if (currentStep < draftOrder.length) {
+            currentActionTeam = draftOrder[currentStep].team;
+        }
+        // console.log(`DEBUG: updateDraftUI - currentActionTeam: ${currentActionTeam}`); // Verbose Log
+
+        const canConfirm = hasPermission('confirmAction', currentActionTeam);
+        if(confirmPickBanButton) confirmPickBanButton.disabled = !canConfirm || !previewedChampion || !isDraftStarted || isDraftComplete;
+
+        const canUndo = hasPermission('undoAction', draftHistory[draftHistory.length - 1]?.team);
+        if(undoButton) undoButton.disabled = !canUndo || draftHistory.length === 0 || !isDraftStarted;
+
+        const canStart = hasPermission('startDraft');
+        const canClear = hasPermission('clearDraft');
+        const canReset = hasPermission('resetDraft');
+        const canSwap = hasPermission('swapSides');
+        const canToggleTimer = hasPermission('toggleTimerDuration');
+        const canTogglePriority = hasPermission('togglePriorityFilter');
+        const canNext = hasPermission('nextDraft');
+
+        if (!isDraftStarted) {
+            resetTimerDisplay();
+            if(blueColumn) blueColumn.classList.add('draft-disabled');
+            if(redColumn) redColumn.classList.add('draft-disabled');
+            if(nextDraftButton) nextDraftButton.disabled = !canNext || true;
+            if(swapButton) swapButton.disabled = !canSwap;
+            if(clearPicksButton) clearPicksButton.disabled = !canClear || (draftHistory.length === 0 && Object.keys(pickNicknames).length === 0 && selectedChampions.size === 0 && globalBanHistory.length === 0);
+            if(toggleTimerButton) toggleTimerButton.disabled = !canToggleTimer;
+            if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
+            if(resetButton) resetButton.disabled = !canReset;
+            if(timerDisplay) timerDisplay.disabled = !canStart;
+            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive before start
+        } else if (currentStep < draftOrder.length) {
+            isDraftComplete = false;
+            const action = draftOrder[currentStep];
+            const activeSlot = document.getElementById(action.slot);
+            // currentActionTeam is already defined above
+
+            if (activeSlot) {
+                if (currentUserRole === 'admin' || currentUserRole === 'judge' || userTeamSide === currentActionTeam) {
+                     activeSlot.classList.add('highlight-action');
+                }
+                const isConfirmed = draftHistory.some(entry => entry.slotId === action.slot);
+                if (!isConfirmed) {
+                    const currentNickname = pickNicknames[action.slot] || '';
+                    if (!activeSlot.classList.contains('preview-flash')) {
+                        restoreSlotPlaceholder(activeSlot, action.slot, currentNickname);
+                    }
+                }
+            }
+            // Start timer only if it's not already running and user has permission (judge/admin)
+            // Teams don't start the timer, they just react to it
+            if (!timerInterval && hasPermission('startDraft')) {
+                 startTimer();
+            }
+            if(nextDraftButton) nextDraftButton.disabled = true;
+            if(timerDisplay) timerDisplay.disabled = true; // Timer running or user is team
+            if(swapButton) swapButton.disabled = true;
+            if(toggleTimerButton) toggleTimerButton.disabled = true;
+            if(priorityFilterButton) priorityFilterButton.disabled = true;
+            if(clearPicksButton) clearPicksButton.disabled = !canClear;
+            if(resetButton) resetButton.disabled = !canReset;
+
+            // **Crucial:** Enable/Disable grid based on turn and role
+            const isGridInteractive = (currentUserRole === 'admin' || userTeamSide === currentActionTeam);
+            // console.log(`DEBUG: updateDraftUI - Grid Interaction Check: isAdmin=${currentUserRole === 'admin'}, isMyTurn=${userTeamSide === currentActionTeam} -> ${isGridInteractive}`); // Verbose Log
+            if (championGridElement) {
+                championGridElement.style.pointerEvents = isGridInteractive ? 'auto' : 'none';
+            }
+
+        } else { // Draft Complete
+            isDraftComplete = true;
+            stopTimer();
+            if(timerDisplay) {
+                timerDisplay.textContent = "Драфт Завершен!";
+                timerDisplay.classList.add('timer-disabled');
+                timerDisplay.disabled = true;
+                timerDisplay.title = 'Драфт завершен';
+            }
+            if(blueColumn) blueColumn.classList.remove('draft-disabled');
+            if(redColumn) redColumn.classList.remove('draft-disabled');
+            if(nextDraftButton) nextDraftButton.disabled = !canNext;
+            if(swapButton) swapButton.disabled = !canSwap;
+            if(clearPicksButton) clearPicksButton.disabled = !canClear;
+            if(toggleTimerButton) toggleTimerButton.disabled = true;
+            if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
+            if(resetButton) resetButton.disabled = !canReset;
+            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive after draft
+        }
+
+        updateChampionAvailability();
+        displayGloballyBanned();
+        document.querySelectorAll('.pick-slot').forEach(slot => {
+            const champId = getSlotChampionId(slot.id);
+            slot.style.cursor = isDraftComplete && champId && can('swapSides') ? 'pointer' : 'default';
+            slot.title = isDraftComplete && champId && can('swapSides') ? 'Нажмите для выбора обмена' : '';
+        });
+         updateNicknameEditability();
+         // console.log("DEBUG: updateDraftUI finished.");
+    }
+    function updateChampionAvailability() { if (!isDraftInitialized) return; const combinedDisabled = new Set([...selectedChampions, ...globallyDisabledChampions]); document.querySelectorAll('.champion-card').forEach(card => { const champId = card.dataset.championId; const isDisabled = combinedDisabled.has(champId); const isSelected = selectedChampions.has(champId); card.classList.toggle('selected', isSelected); card.classList.toggle('disabled', isDisabled); card.disabled = isDisabled; card.setAttribute('aria-disabled', isDisabled.toString()); }); }
+    function handleChampionPreview(champion) {
+        // console.log("handleChampionPreview called for:", champion.id); // Reduced logging
+        if (!isDraftStarted || isDraftComplete) { console.log("Preview denied: Draft not started or complete."); return; }
+        const draftOrder = getDraftOrder();
+        if (currentStep >= draftOrder.length) { console.log("Preview denied: Draft step out of bounds."); return; }
+
+        const currentAction = draftOrder[currentStep];
+        if (currentUserRole !== 'admin' && userTeamSide !== currentAction.team) {
+            console.log(`Preview denied: Not turn for role ${currentUserRole} (side ${userTeamSide}) on team ${currentAction.team}'s action.`);
+            return;
+        }
+         const permissionNeeded = currentAction.type === 'pick' ? 'pickChampion' : 'banChampion';
+         if (!hasPermission(permissionNeeded, currentAction.team)) { console.log(`Preview denied: No permission for ${permissionNeeded}.`); return; }
+
+        const isDisabled = selectedChampions.has(champion.id) || globallyDisabledChampions.has(champion.id);
+        if (isDisabled) { showStatusMessage(`${champion.name.ru} уже выбран или заблокирован.`, 2000); console.log(`Preview denied: Champion ${champion.id} disabled.`); return; }
+
+        const slotElement = document.getElementById(currentAction.slot);
+        if (slotElement) {
+            // console.log(`Previewing ${champion.id} in slot ${currentAction.slot}`); // Reduced logging
+            document.querySelectorAll('.preview-flash').forEach(el => el.classList.remove('preview-flash'));
+            previewedChampion = champion;
+            const existingNickname = pickNicknames[currentAction.slot] || '';
+            fillSlot(slotElement, champion, currentAction.type, existingNickname);
+            slotElement.classList.add('preview-flash');
+            if(confirmPickBanButton) confirmPickBanButton.disabled = !hasPermission('confirmAction', currentAction.team);
+        } else { console.warn(`Preview failed: Slot element ${currentAction.slot} not found.`); }
+     }
+    function handleConfirmPickBan() {
+        console.log("handleConfirmPickBan called");
+        if (!previewedChampion || !isDraftStarted || isDraftComplete) { console.log("Confirm denied: No preview, draft not started, or complete."); return; }
+        const draftOrder = getDraftOrder();
+         if (currentStep >= draftOrder.length) { console.log("Confirm denied: Draft step out of bounds."); return; }
+
+        const currentAction = draftOrder[currentStep];
+         if ((currentUserRole !== 'admin' && userTeamSide !== currentAction.team) || !hasPermission('confirmAction', currentAction.team)) {
+             console.log(`Confirm denied: Not turn or no permission for role ${currentUserRole} on team ${currentAction.team}'s action.`);
+             return;
+         }
+
+        const championToConfirm = previewedChampion;
+        const slotElement = document.getElementById(currentAction.slot);
+        const isDisabled = selectedChampions.has(championToConfirm.id) || globallyDisabledChampions.has(championToConfirm.id);
+
+        if (!slotElement || isDisabled) { console.warn("Confirmation failed: Slot not found or champion unavailable."); previewedChampion = null; if(confirmPickBanButton) confirmPickBanButton.disabled = true; if (slotElement) slotElement.classList.remove('preview-flash'); return; }
+
+        console.log(`Confirming ${championToConfirm.id} for slot ${currentAction.slot}`);
+        slotElement.classList.remove('preview-flash');
+        const previousNickname = pickNicknames[currentAction.slot] || '';
+        selectedChampions.add(championToConfirm.id);
+        draftHistory.push({ championId: championToConfirm.id, slotId: currentAction.slot, step: currentStep, previousNickname: previousNickname, type: currentAction.type, team: currentAction.team });
+        currentStep++;
+        previewedChampion = null;
+        resetTimerDisplay();
+        updateDraftUI();
+        filterChampions();
+    }
+    function fillSlot(slotElement, champion, type, nicknameText = '') { if (!slotElement || !champion) return; slotElement.innerHTML = ''; slotElement.classList.remove('preview-flash'); const img = document.createElement('img'); img.src = type === 'pick' ? champion.splashUrl : champion.iconUrl; img.alt = champion.name.ru; img.className = 'w-full h-full object-cover block absolute inset-0 z-0 pointer-events-none'; img.onerror = () => { const errorSpan = document.createElement('span'); errorSpan.className = 'text-[1.5vmin] text-red-400'; errorSpan.textContent = 'Err'; slotElement.innerHTML = ''; slotElement.appendChild(errorSpan); if (type === 'pick') { addNicknameInput(slotElement, nicknameText); } }; slotElement.appendChild(img); if (type === 'pick') { addNicknameInput(slotElement, nicknameText); slotElement.dataset.championId = champion.id; } else { delete slotElement.dataset.championId; } slotElement.setAttribute('aria-label', `${slotElement.ariaLabel.split(':')[0]}: ${champion.name.ru}`); }
+    function addNicknameInput(slotElement, text = '') {
+         const nicknameInput = document.createElement('div');
+         nicknameInput.spellcheck = false;
+         nicknameInput.className = 'nickname-input';
+         nicknameInput.textContent = text || '';
+         nicknameInput.dataset.slotId = slotElement.id;
+         const canEdit = hasPermission('editNicknames');
+         nicknameInput.contentEditable = canEdit;
+         nicknameInput.style.cursor = canEdit ? 'text' : 'default';
+
+         if (canEdit) {
+             nicknameInput.addEventListener('input', (e) => {
+                 const slotId = e.target.dataset.slotId;
+                 if (slotId) { pickNicknames[slotId] = e.target.textContent.trim(); /*console.log("Nickname updated:", pickNicknames);*/ } // Reduced logging
+             });
+             nicknameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
+         }
+         slotElement.appendChild(nicknameInput);
+     }
+    function restoreSlotPlaceholder(slotElement, slotId, nicknameText = '') { if (!slotElement) return; slotElement.innerHTML = ''; slotElement.classList.remove('preview-flash', 'swap-selected', 'highlight-action'); delete slotElement.dataset.championId; slotElement.style.backgroundImage = ''; slotElement.style.cursor = 'default'; slotElement.title = ''; slotElement.setAttribute('aria-label', `${slotElement.ariaLabel.split(':')[0]}: Empty`); if (slotId && slotId.includes('-pick-')) { addNicknameInput(slotElement, nicknameText); pickNicknames[slotId] = nicknameText; } else { delete pickNicknames[slotId]; } }
+    function getSlotChampionId(slotId) { const slotElement = document.getElementById(slotId); return slotElement ? slotElement.dataset.championId : null; }
+    function handleUndo() {
+         console.log("handleUndo called");
+         if (draftHistory.length === 0 || !isDraftStarted) { console.log("Undo denied: No history or draft not started."); return; }
+         const lastAction = draftHistory[draftHistory.length - 1];
+
+         if (!hasPermission('undoAction', lastAction.team)) {
+             console.log(`Undo denied: No permission for role ${currentUserRole} on team ${lastAction.team}'s action.`);
+             showStatusMessage("Нет прав для отмены этого действия.", 2000);
+             return;
+         }
+
+         deselectSwapSlots();
+         draftHistory.pop();
+         if (!lastAction) return;
+         console.log("Undoing action:", lastAction);
+         currentStep = lastAction.step;
+         selectedChampions.delete(lastAction.championId);
+         const slotElement = document.getElementById(lastAction.slotId);
+         if (slotElement) {
+             restoreSlotPlaceholder(slotElement, lastAction.slotId, lastAction.previousNickname);
+         }
+         isDraftComplete = false;
+         previewedChampion = null;
+         resetTimerDisplay();
+         updateDraftUI();
+         filterChampions();
+         showStatusMessage("Действие отменено", 1500);
+    }
+
+    // --- Reset Functions (Draft Specific - with permission checks) ---
+    function resetDraftFull(force = false) {
+        console.log("resetDraftFull called, force:", force);
+        if (!hasPermission('resetDraft')) {
+             showStatusMessage("Нет прав для сброса драфта.", 2000);
+             return;
+        }
+        if (!force && !confirm("Вы уверены, что хотите полностью сбросить драфт (включая глобальные баны)?")) {
+            console.log("Full reset cancelled by user.");
+            return;
+        }
+        console.log("resetDraftFull proceeding...");
+
+        currentStep = 0; selectedChampions.clear(); draftHistory = []; pickNicknames = {}; globallyDisabledChampions.clear(); globalBanHistory = []; isDraftComplete = false; isDraftStarted = false; previewedChampion = null; deselectSwapSlots(); stopTimer(); draftTimerDuration = 30; resetTimerDisplay();
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { restoreSlotPlaceholder(slot, slot.id, ''); slot.classList.remove('highlight-action', 'preview-flash'); });
+        if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || 'Синяя Команда';
+        if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
+        if (blueScoreEl) blueScoreEl.textContent = ''; if (redScoreEl) redScoreEl.textContent = '';
+        if(blueColumn) blueColumn.classList.add('draft-disabled'); if(redColumn) redColumn.classList.add('draft-disabled');
+        if(championSearch) championSearch.value = ''; currentRoleFilter = 'All'; if(filterButtons) filterButtons.forEach(btn => { if(btn) btn.classList.toggle('active', btn.dataset.role === 'All'); }); isPriorityFilterActive = false; if (priorityFilterButton) { priorityFilterButton.classList.remove('active'); priorityFilterButton.setAttribute('aria-pressed', 'false'); }
+        displayGloballyBanned(); updateChampionAvailability(); filterChampions(); updateDraftUI();
+        showStatusMessage("Драфт полностью сброшен.", 2000);
+    }
+
+    function resetCurrentGamePicksBans(force = false, keepGlobal = false) {
+         console.log("resetCurrentGamePicksBans called, force:", force, "keepGlobal:", keepGlobal);
+         if (!hasPermission('clearDraft')) {
+             showStatusMessage("Нет прав для очистки драфта.", 2000);
+             return;
+         }
+        if (!force && isDraftStarted && !isDraftComplete) {
+            if (!confirm("Остановить текущий драфт и очистить пики/баны этой игры" + (keepGlobal ? "?" : " (включая глобальные)?"))) {
+                console.log("resetCurrentGamePicksBans cancelled by user during draft.");
+                return;
+            }
+        }
+        console.log("resetCurrentGamePicksBans proceeding...");
+
+        currentStep = 0;
+        selectedChampions.clear(); // Clear current selections
+        draftHistory = [];
+        if (!keepGlobal) {
+            globallyDisabledChampions.clear();
+            globalBanHistory = [];
+            console.log("Global bans cleared.");
+        } else {
+             console.log("Keeping global bans for next draft.");
+             // Re-populate selectedChampions with global bans if keeping them
+             globallyDisabledChampions.forEach(champId => selectedChampions.add(champId));
+        }
+
+        isDraftComplete = false; isDraftStarted = false; previewedChampion = null; deselectSwapSlots(); stopTimer(); resetTimerDisplay();
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => {
+            const currentNickname = pickNicknames[slot.id] || '';
+            restoreSlotPlaceholder(slot, slot.id, currentNickname);
+            slot.classList.remove('highlight-action', 'preview-flash');
+        });
+        if(blueColumn) blueColumn.classList.add('draft-disabled');
+        if(redColumn) redColumn.classList.add('draft-disabled');
+        displayGloballyBanned();
+        updateChampionAvailability(); // Update availability based on (potentially kept) global bans
+        filterChampions();
+        updateDraftUI();
+        showStatusMessage(keepGlobal ? "Текущая игра очищена." : "Пики/баны текущей игры (включая глобальные) очищены.", 2000);
+    }
+
+
+    // --- Other Handlers (Draft Specific - with permission checks) ---
+    function handleStartDraft() {
+        console.log("handleStartDraft called");
+        if (!hasPermission('startDraft')) { console.log("Start denied: No permission."); return; }
+        if (!isDraftStarted) { console.log("Starting draft..."); isDraftStarted = true; if(blueColumn) blueColumn.classList.remove('draft-disabled'); if(redColumn) redColumn.classList.remove('draft-disabled'); updateDraftUI(); }
+        else { console.log("Start denied: Draft already started."); }
+     }
+    const debouncedFilter = debounce(() => { filterChampions(); }, 250);
+
+    // FIX: Filter logic updated
+    function filterChampions() {
+        if (!isDraftInitialized || !championSearch || !championGridElement) return;
+        const searchTerm = championSearch.value.toLowerCase().trim();
+        let visibleCount = 0;
+        // priorityChampions is now defined globally
+
+        championGridElement.querySelectorAll('.champion-card').forEach(card => {
+            const champId = card.dataset.championId;
+            const nameEn = card.dataset.championNameEn || '';
+            const nameRu = card.dataset.championNameRu || '';
+            const champRoles = card.dataset.roles ? card.dataset.roles.split(',') : []; // Get roles from dataset
+
+            const searchMatch = nameEn.includes(searchTerm) || nameRu.includes(searchTerm) || champId.toLowerCase().includes(searchTerm);
+            const roleMatch = currentRoleFilter === 'All' || champRoles.includes(currentRoleFilter); // Check if champRoles includes the filter
+            const isPriority = priorityChampions.has(champId);
+            const hideByPriorityFilter = isPriorityFilterActive && !isPriority;
+
+            const isVisible = searchMatch && roleMatch && !hideByPriorityFilter;
+
+            card.style.display = isVisible ? 'flex' : 'none';
+            if (isVisible) visibleCount++;
+
+            const isDisabled = selectedChampions.has(champId) || globallyDisabledChampions.has(champId);
+            card.classList.toggle('disabled', isDisabled);
+            card.disabled = isDisabled;
+            card.setAttribute('aria-disabled', isDisabled.toString());
+            card.classList.toggle('selected', selectedChampions.has(champId));
+        });
+    }
+
+    function deselectSwapSlots() { if (selectedSwapSlotId) { const prevSelected = document.getElementById(selectedSwapSlotId); if (prevSelected) { prevSelected.classList.remove('swap-selected'); } selectedSwapSlotId = null; } }
+    function handlePickContainerClick(event) {
+         // console.log("handlePickContainerClick called on:", event.target); // Reduced logging
+         if (event.target.classList.contains('nickname-input')) { return; }
+         if (!hasPermission('swapSides')) { console.log("Pick container click denied: No swap permission."); return; }
+         const clickedSlot = event.target.closest('.pick-slot');
+         if (!isDraftComplete || !clickedSlot || !clickedSlot.dataset.championId) { /*console.log("Pick container click ignored: Draft not complete or empty slot.");*/ deselectSwapSlots(); return; } // Reduced logging
+
+         const clickedSlotId = clickedSlot.id;
+         // console.log("Clicked slot:", clickedSlotId); // Reduced logging
+         if (!selectedSwapSlotId) {
+             selectedSwapSlotId = clickedSlotId;
+             clickedSlot.classList.add('swap-selected');
+             console.log("Swap select:", selectedSwapSlotId);
+         } else {
+             if (selectedSwapSlotId === clickedSlotId) {
+                 deselectSwapSlots();
+                 console.log("Swap deselect");
+             } else {
+                 const firstSlot = document.getElementById(selectedSwapSlotId);
+                 if (!firstSlot) { console.warn("Swap failed: First slot not found."); deselectSwapSlots(); return; }
+                 const team1 = selectedSwapSlotId.startsWith('blue') ? 'blue' : 'red';
+                 const team2 = clickedSlotId.startsWith('blue') ? 'blue' : 'red';
+                 if (team1 === team2) {
+                     console.log("Attempting swap between:", selectedSwapSlotId, clickedSlotId);
+                     const champId1 = firstSlot.dataset.championId;
+                     const champId2 = clickedSlot.dataset.championId;
+                     const champ1 = getChampionById(champId1);
+                     const champ2 = getChampionById(champId2);
+                     const nick1 = pickNicknames[selectedSwapSlotId] || '';
+                     const nick2 = pickNicknames[clickedSlotId] || '';
+                     // Swap nicknames in the state *before* updating UI
+                     pickNicknames[selectedSwapSlotId] = nick2;
+                     pickNicknames[clickedSlotId] = nick1;
+                     if (champ1 && champ2) {
+                         // Pass the correct swapped nicknames to fillSlot
+                         fillSlot(firstSlot, champ2, 'pick', nick2);
+                         fillSlot(clickedSlot, champ1, 'pick', nick1);
+                         showStatusMessage(`Обмен: ${champ1.name.ru} <-> ${champ2.name.ru}`, 2000);
+                     } else { console.warn("Swap failed: Champion data missing."); }
+                     deselectSwapSlots();
+                 } else {
+                     console.log("Swap select (different team):", clickedSlotId);
+                     deselectSwapSlots();
+                     selectedSwapSlotId = clickedSlotId;
+                     clickedSlot.classList.add('swap-selected');
+                 }
+             }
+         }
+     }
+
+    // FIX: Swap Nickname Logic
+    function handleSwapTeams() {
+         console.log("handleSwapTeams called");
+         if (!hasPermission('swapSides')) {
+             showStatusMessage("Нет прав для смены сторон.", 2000);
+             return;
+         }
+         try {
+             const tempName = blueTeamNameH2.textContent; blueTeamNameH2.textContent = redTeamNameH2.textContent; redTeamNameH2.textContent = tempName;
+             const tempScore = blueScoreEl.textContent; blueScoreEl.textContent = redScoreEl.textContent; redScoreEl.textContent = tempScore;
+             const storedName1 = localStorage.getItem('lobbyTeam1Name');
+             const storedName2 = localStorage.getItem('lobbyTeam2Name');
+             localStorage.setItem('lobbyTeam1Name', storedName2 || 'Красная Команда');
+             localStorage.setItem('lobbyTeam2Name', storedName1 || 'Синяя Команда');
+
+             console.log("Swapping global ban history teams..."); globalBanHistory.forEach(ban => { ban.team = ban.team === 'blue' ? 'red' : 'blue'; }); displayGloballyBanned();
+
+             if (isDraftComplete || !isDraftStarted) {
+                 console.log("Swapping picks/bans/nicknames...");
+                 const newPickNicknames = {}; // Object to store swapped nicknames
+                 const newSelectedChampions = new Set();
+                 const newBluePicks = []; const newRedPicks = [];
+                 const newBlueBans = []; const newRedBans = [];
+                 const currentBlueBans = []; const currentRedBans = [];
+
+                 // Collect current state before clearing
+                 for(let i=1; i<=5; i++) {
+                     const blueBanSlot = document.getElementById(`blue-ban-${i}`);
+                     const redBanSlot = document.getElementById(`red-ban-${i}`);
+                     const blueBanImg = blueBanSlot ? blueBanSlot.querySelector('img') : null;
+                     const redBanImg = redBanSlot ? redBanSlot.querySelector('img') : null;
+                     if(blueBanImg) currentBlueBans.push(draftHistory.find(a => a.slotId === `blue-ban-${i}`)?.championId);
+                     if(redBanImg) currentRedBans.push(draftHistory.find(a => a.slotId === `red-ban-${i}`)?.championId);
+
+                     const bluePickSlotId = `blue-pick-${i}`;
+                     const redPickSlotId = `red-pick-${i}`;
+                     const blueChampId = getSlotChampionId(bluePickSlotId);
+                     const redChampId = getSlotChampionId(redPickSlotId);
+                     const blueNick = pickNicknames[bluePickSlotId] || '';
+                     const redNick = pickNicknames[redPickSlotId] || '';
+
+                     if(redChampId) newBluePicks.push({ slotId: bluePickSlotId, champId: redChampId, nick: redNick });
+                     if(blueChampId) newRedPicks.push({ slotId: redPickSlotId, champId: blueChampId, nick: blueNick });
+
+                     // Correctly populate the swapped nicknames object
+                     newPickNicknames[bluePickSlotId] = redNick; // Blue slot gets red nick
+                     newPickNicknames[redPickSlotId] = blueNick; // Red slot gets blue nick
+                 }
+                 // Assign swapped bans
+                 currentRedBans.forEach((champId, index) => { if(champId) newBlueBans.push({ slotId: `blue-ban-${index+1}`, championId: champId }); });
+                 currentBlueBans.forEach((champId, index) => { if(champId) newRedBans.push({ slotId: `red-ban-${index+1}`, championId: champId }); });
+
+                 // *** FIX: Update the global pickNicknames object BEFORE clearing slots ***
+                 pickNicknames = newPickNicknames;
+
+                 // Clear all slots first (restoreSlotPlaceholder will now use the updated pickNicknames)
+                 document.querySelectorAll('.pick-slot, .ban-slot').forEach(slot => restoreSlotPlaceholder(slot, slot.id, pickNicknames[slot.id] || '')); // Pass current (swapped) nick
+
+                 // Re-fill slots with swapped data (fillSlot will use the passed nickname)
+                 newBlueBans.forEach(b => { const champ = getChampionById(b.championId); if(champ) fillSlot(document.getElementById(b.slotId), champ, 'ban'); if(b.championId) newSelectedChampions.add(b.championId); });
+                 newRedBans.forEach(b => { const champ = getChampionById(b.championId); if(champ) fillSlot(document.getElementById(b.slotId), champ, 'ban'); if(b.championId) newSelectedChampions.add(b.championId); });
+                 newBluePicks.forEach(p => { const champ = getChampionById(p.champId); if(champ) fillSlot(document.getElementById(p.slotId), champ, 'pick', p.nick); if(p.champId) newSelectedChampions.add(p.champId); });
+                 newRedPicks.forEach(p => { const champ = getChampionById(p.champId); if(champ) fillSlot(document.getElementById(p.slotId), champ, 'pick', p.nick); if(p.champId) newSelectedChampions.add(p.champId); });
+
+                 selectedChampions = newSelectedChampions; // Update the main selected set
+                 deselectSwapSlots();
+                 showStatusMessage("Команды поменялись местами (пики/баны/ники/глоб. баны).", 2000);
+             } else {
+                 console.warn("Attempted to swap teams during an active draft. Only names/scores/global bans swapped.");
+                 showStatusMessage("Нельзя менять пики/баны во время драфта. Сменены только имена/счет/глоб. баны.", 3000);
+             }
+             updateChampionAvailability();
+             updateDraftUI(); // Refresh UI after swap
+         } catch (error) { console.error("Error in handleSwapTeams:", error); showStatusMessage("Ошибка при смене команд.", 3000); }
+     }
+    function handleToggleTimer() {
+         console.log("handleToggleTimer called");
+         if (!hasPermission('toggleTimerDuration')) { showStatusMessage("Нет прав для смены таймера.", 2000); return; }
+         if (isDraftStarted) { console.log("Toggle timer denied: Draft started."); return; }
+         draftTimerDuration = draftTimerDuration === 30 ? 45 : 30; resetTimerDisplay(); toggleTimerButton.title = `Сменить время таймера (${draftTimerDuration === 30 ? '-> 45с' : '-> 30с'})`; showStatusMessage(`Время таймера: ${draftTimerDuration} сек.`, 1500); console.log("Timer duration set to:", draftTimerDuration);
+     }
+    function handleRoleFilterClick(event) {
+         console.log("handleRoleFilterClick called for role:", event.currentTarget?.dataset?.role);
+         if (!hasPermission('useRoleFilters')) { console.log("Role filter denied: No permission."); return; }
+         const clickedButton = event.currentTarget; if (!clickedButton) return; currentRoleFilter = clickedButton.dataset.role; filterButtons.forEach(btn => { if(btn) btn.classList.remove('active'); }); clickedButton.classList.add('active'); filterChampions();
+     }
+    function handlePriorityFilterToggle() {
+         console.log("handlePriorityFilterToggle called");
+         if (!hasPermission('togglePriorityFilter')) { showStatusMessage("Нет прав для переключения приоритета.", 2000); return; }
+        isPriorityFilterActive = !isPriorityFilterActive;
+        if(priorityFilterButton) {
+            priorityFilterButton.classList.toggle('active', isPriorityFilterActive);
+            priorityFilterButton.setAttribute('aria-pressed', isPriorityFilterActive.toString());
+            priorityFilterButton.title = isPriorityFilterActive ? 'Показать всех чемпионов' : 'Показать только приоритетных чемпионов';
+        }
+        console.log('Priority filter active:', isPriorityFilterActive);
+        filterChampions();
+        // Changed status message to be more accurate
+        showStatusMessage(isPriorityFilterActive ? "Показаны только приоритетные чемпионы." : "Показаны все чемпионы.", 2000);
+    }
+    function displayGloballyBanned() { if (!globalBansBlueContainer || !globalBansRedContainer || !globallyBannedDisplay) return; globalBansBlueContainer.innerHTML = ''; globalBansRedContainer.innerHTML = ''; if (globalBanHistory.length > 0) { globallyBannedDisplay.classList.remove('hidden'); const blueFragment = document.createDocumentFragment(); const redFragment = document.createDocumentFragment(); globalBanHistory.forEach(banInfo => { const champ = getChampionById(banInfo.championId); if (champ) { const iconDiv = document.createElement('div'); iconDiv.className = 'global-ban-icon'; const banTeamText = banInfo.team === 'blue' ? 'синими' : 'красными'; iconDiv.title = `${champ.name.ru} (Заблокирован ${banTeamText} в пред. игре)`; iconDiv.setAttribute('aria-label', iconDiv.title); const img = document.createElement('img'); img.src = champ.iconUrl; img.alt = ""; img.loading = 'lazy'; img.onerror = () => { img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%234a5568'/%3E%3C/svg%3E`; }; iconDiv.appendChild(img); if (banInfo.team === 'blue') { blueFragment.appendChild(iconDiv); } else { redFragment.appendChild(iconDiv); } } }); globalBansBlueContainer.appendChild(blueFragment); globalBansRedContainer.appendChild(redFragment); } else { globallyBannedDisplay.classList.add('hidden'); } }
+    function handleNextDraft() {
+         console.log("handleNextDraft called");
+         if (!hasPermission('nextDraft')) { showStatusMessage("Нет прав для перехода к следующему драфту.", 2000); return; }
+        if (!isDraftComplete) { console.warn("handleNextDraft: Draft not complete."); showStatusMessage("Драфт не завершен. Завершите его перед переходом к следующему.", 3000); return; }
+        let addedBansCount = 0;
+        // Add only *picks* from the completed draft history to global bans
+        draftHistory.forEach(action => {
+            if (action.type === 'pick' && !globallyDisabledChampions.has(action.championId)) {
+                globalBanHistory.push({ championId: action.championId, team: action.team });
+                globallyDisabledChampions.add(action.championId);
+                addedBansCount++;
+            }
+        });
+        console.log(`handleNextDraft: Added ${addedBansCount} champions to global bans.`);
+        resetCurrentGamePicksBans(false, true); // Keep global bans
+        showStatusMessage("Переход к следующему драфту. Пики предыдущей игры заблокированы.", 2500);
+    }
+
+    // --- Draft Order Definition ---
+    function getDraftOrder() {
+        return [
+            { team: 'blue', type: 'ban', slot: 'blue-ban-1' }, { team: 'red', type: 'ban', slot: 'red-ban-1' },
+            { team: 'blue', type: 'ban', slot: 'blue-ban-2' }, { team: 'red', type: 'ban', slot: 'red-ban-2' },
+            { team: 'blue', type: 'ban', slot: 'blue-ban-3' }, { team: 'red', type: 'ban', slot: 'red-ban-3' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-1' }, { team: 'red', type: 'pick', slot: 'red-pick-1' },
+            { team: 'red', type: 'pick', slot: 'red-pick-2' }, { team: 'blue', type: 'pick', slot: 'blue-pick-2' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-3' }, { team: 'red', type: 'pick', slot: 'red-pick-3' },
+            { team: 'red', type: 'ban', slot: 'red-ban-4' }, { team: 'blue', type: 'ban', slot: 'blue-ban-4' },
+            { team: 'red', type: 'ban', slot: 'red-ban-5' }, { team: 'blue', type: 'ban', slot: 'blue-ban-5' },
+            { team: 'red', type: 'pick', slot: 'red-pick-4' }, { team: 'blue', type: 'pick', slot: 'blue-pick-4' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-5' }, { team: 'red', type: 'pick', slot: 'red-pick-5' },
+        ];
+    }
+
+
+    // --- Tooltip Functions (Draft Specific) ---
+    let tooltipTimeout;
+    function showChampionTooltip(event, champion) { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { if (!championTooltip || !champion) return; championTooltip.innerHTML = `<strong class="tooltip-title">${champion.name.ru}</strong><span class="tooltip-name">${champion.title.ru}</span>`; championTooltip.style.visibility = 'hidden'; championTooltip.style.display = 'block'; const tooltipRect = championTooltip.getBoundingClientRect(); championTooltip.style.visibility = ''; championTooltip.style.display = ''; const rect = event.target.getBoundingClientRect(); let top = rect.top - tooltipRect.height - 8; let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2); if (top < 0) { top = rect.bottom + 8; } if (left < 0) { left = 5; } else if (left + tooltipRect.width > window.innerWidth) { left = window.innerWidth - tooltipRect.width - 5; } championTooltip.style.left = `${left}px`; championTooltip.style.top = `${top}px`; championTooltip.classList.add('visible'); }, 100); }
+    function hideChampionTooltip() { clearTimeout(tooltipTimeout); if (championTooltip) { championTooltip.classList.remove('visible'); } }
+
+    // --- localStorage Sync Logic (Removed) ---
+
+    // --- Initial App Setup ---
+     const initialRole = getRoleFromHash();
+     if (initialRole) {
+         currentUserRole = initialRole;
+         navigateTo('draft');
+     } else {
+         navigateTo('home');
+     }
+
+}); // End DOMContentLoaded
