@@ -1,6 +1,6 @@
-// script.js v6.7 - Deeper Filter Debugging
+// script.js v6.8 - Environment Difference Debugging
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v6.7..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v6.8..."); // Version Updated
 
     // --- Page Elements ---
     const appContainer = document.getElementById('app-container');
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let globalBanHistory = [];
     // Sample priority champions
     const priorityChampions = new Set(['Aatrox', 'Ahri', 'Jinx', 'LeeSin', 'Leona']);
+    console.log(`DEBUG: Initial priorityChampions size: ${priorityChampions.size}`); // DEBUG Priority List
 
     // --- Permissions Map ---
     const permissions = {
@@ -297,15 +298,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 3. Load Data
             if(loadingIndicator) loadingIndicator.classList.remove('hidden');
-            const dataLoaded = await loadChampionData();
+            const dataLoaded = await loadChampionData(); // Wait for data
             if (!dataLoaded) {
-                throw new Error("Failed to load champion data.");
+                throw new Error("Failed to load champion data. Draft cannot proceed.");
             }
+            // DEBUG: Log processed data after loading
+            console.log(`DEBUG: Processed ${processedChampions.length} champions after load.`);
+            if (processedChampions.length > 0) {
+                console.log(`DEBUG: Sample roles - ${processedChampions[0].id}: ${processedChampions[0].roles.join(',')}`);
+                if (processedChampions.length > 1) {
+                    console.log(`DEBUG: Sample roles - ${processedChampions[1].id}: ${processedChampions[1].roles.join(',')}`);
+                }
+            }
+
             if(loadingIndicator) loadingIndicator.classList.add('hidden');
             if(mainLayout) mainLayout.classList.remove('hidden');
 
             // 4. Initial Setup based on Role
-            displayChampions();
+            displayChampions(); // Display based on loaded data
             resetDraftFull(true); // Initial reset, applies permissions and calls updateDraftUI internally
 
             // Set initial team names
@@ -363,9 +373,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Draft simulator page initialized successfully for role:", currentUserRole);
 
         } catch (error) {
-            console.error("Error during initializeAppDraft:", error);
+            console.error("CRITICAL Error during initializeAppDraft:", error); // More prominent error
             showStatusMessage(`Критическая ошибка инициализации: ${error.message}`, 10000);
-            if(loadingIndicator) loadingIndicator.textContent = `Ошибка! ${error.message}`;
+            if(loadingIndicator) loadingIndicator.textContent = `Критическая Ошибка! ${error.message}`;
             if(mainLayout) mainLayout.classList.add('hidden');
         }
 
@@ -517,9 +527,9 @@ document.addEventListener('DOMContentLoaded', () => {
              return true;
 
          } catch (error) {
-             console.error("Error loading champion data:", error);
-             showStatusMessage(`Ошибка загрузки данных чемпионов: ${error.message}`, 5000);
-             if(loadingIndicator) loadingIndicator.textContent = `Ошибка загрузки! ${error.message}`;
+             console.error("CRITICAL Error loading champion data:", error); // Enhanced log
+             showStatusMessage(`КРИТИЧЕСКАЯ ОШИБКА загрузки данных: ${error.message}`, 10000); // Enhanced message
+             if(loadingIndicator) loadingIndicator.textContent = `КРИТИЧЕСКАЯ ОШИБКА! ${error.message}`;
              if(mainLayout) mainLayout.classList.add('hidden');
              return false;
          }
@@ -940,7 +950,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // DEBUG: Log filter checks for the first few champs
             if (logCount < 5) {
-                 console.log(`  [${champId}]: Roles='${card.dataset.roles}', Filter='${currentRoleFilter}', Match=${roleMatch} | Priority=${isPriority}, Hide=${hideByPriorityFilter}`);
+                 console.log(`  [${champId}]: Roles='${card.dataset.roles}', Filter='${currentRoleFilter}', RoleMatch=${roleMatch} | Priority=${isPriority}, HidePriority=${hideByPriorityFilter}, PriorityListHas=${priorityChampions.has(champId)}`); // Enhanced log
                  logCount++;
             }
 
