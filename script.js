@@ -1,6 +1,6 @@
-// script.js v6.0 - Final Version
+// script.js v6.2 - Debug Team Interaction
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v6.0..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v6.2..."); // Version Updated
 
     // --- Page Elements ---
     const appContainer = document.getElementById('app-container');
@@ -89,13 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (isAdmin) {
             result = true; // Admin has all permissions
         } else if ((currentUserRole === 'team1' || currentUserRole === 'team2') && team) {
-            result = userTeamSide === team; // Team can only act on their side
+            // Check if the action is allowed for the specific team making the move
+            result = userTeamSide === team;
         } else {
-            result = true; // Judge or non-team-specific action allowed
+            // If not a team-specific action or user is judge/admin (and has basic perm)
+            result = true;
         }
         // console.log(`DEBUG: hasPermission(action: ${action}, team: ${team}, role: ${currentUserRole}, side: ${userTeamSide}) -> ${result}`);
         return result;
     }
+
 
      // Function to copy text to clipboard
      async function copyToClipboard(text) {
@@ -130,22 +133,33 @@ document.addEventListener('DOMContentLoaded', () => {
             if(homePage) homePage.classList.remove('hidden');
             if(adminButton) adminButton.classList.remove('hidden');
             if (window.location.hash && currentUserRole !== 'admin') {
+                // Clear role and hash when returning home normally
+                currentUserRole = null;
+                userTeamSide = null;
                 history.pushState("", document.title, window.location.pathname + window.location.search);
             }
         } else if (pageName === 'draft') {
             if(draftPage) draftPage.classList.remove('hidden');
             if (!isDraftInitialized) {
                 console.log("Initializing draft simulator for the first time...");
-                initializeAppDraft();
+                initializeAppDraft(); // This function now handles role assignment internally
                 isDraftInitialized = true;
             } else {
                  console.log("Draft already initialized, re-applying permissions for role:", currentUserRole);
                  // Ensure elements are available before applying permissions again
                  if (checkDraftElements()) {
+                    // Re-determine role and side in case of refresh or direct navigation
+                    if (!currentUserRole) { // If role got lost somehow (e.g., refresh without hash)
+                       currentUserRole = getRoleFromHash() || 'default'; // Fallback to default if no hash
+                    }
+                    if (currentUserRole === 'team1') userTeamSide = 'blue';
+                    else if (currentUserRole === 'team2') userTeamSide = 'red';
+                    else userTeamSide = null;
+
                     applyRolePermissions(currentUserRole);
                     if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || 'Синяя Команда';
                     if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
-                    updateDraftUI(); // Update UI based on potentially new role
+                    updateDraftUI(); // Update UI based on current role and state
                  } else {
                      console.error("Draft elements not found when trying to re-apply permissions.");
                      showStatusMessage("Ошибка UI: Элементы драфта не найдены.", 5000);
@@ -158,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hash = window.location.hash;
         if (hash.startsWith('#role=')) {
             const role = hash.substring(6);
-            if (permissions[role] && role !== 'admin') {
+            if (permissions[role] && role !== 'admin') { // Ensure role exists and is not admin
                 return role;
             }
         }
@@ -218,6 +232,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function to check if draft elements exist ---
     function checkDraftElements() {
+        // Re-fetch elements within this check to ensure they exist at the time of check
+        loadingIndicator = document.getElementById('loadingIndicator');
+        mainLayout = document.getElementById('mainLayout');
+        championGridElement = document.getElementById('championGrid');
+        timerDisplay = document.getElementById('timerDisplay');
+        resetButton = document.getElementById('resetButton');
+        undoButton = document.getElementById('undoButton');
+        championSearch = document.getElementById('championSearch');
+        blueColumn = document.querySelector('.blue-column');
+        redColumn = document.querySelector('.red-column');
+        swapButton = document.getElementById('swapButton');
+        clearPicksButton = document.getElementById('clearPicksButton');
+        toggleTimerButton = document.getElementById('toggleTimerButton');
+        confirmPickBanButton = document.getElementById('confirmPickBanButton');
+        priorityFilterButton = document.getElementById('priorityFilterButton');
+        nextDraftButton = document.getElementById('nextDraftButton');
+        returnHomeButton = document.getElementById('returnHomeButton');
+        blueTeamNameH2 = document.getElementById('blue-team-name-h2');
+        redTeamNameH2 = document.getElementById('red-team-name-h2');
+        blueScoreEl = document.getElementById('blue-score');
+        redScoreEl = document.getElementById('red-score');
+        statusMessage = document.getElementById('statusMessage');
+
         const elementsToCheck = [
             loadingIndicator, mainLayout, championGridElement, timerDisplay, resetButton, undoButton,
             championSearch, blueColumn, redColumn, swapButton, clearPicksButton, toggleTimerButton,
@@ -226,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
         const missingElements = elementsToCheck.filter(el => !el);
         if (missingElements.length > 0) {
-            console.error("Missing draft elements:", missingElements.map(el => el?.id || 'unknown'));
+            console.error("Missing draft elements during check:", missingElements.map(el => el?.id || 'unknown'));
             return false;
         }
         return true;
@@ -238,55 +275,22 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("initializeAppDraft started");
         try {
 
-            // 1. Determine Role
-            if (!currentUserRole) {
-                currentUserRole = getRoleFromHash();
-                if (!currentUserRole) {
-                    console.error("No role determined. Navigating home.");
-                    navigateTo('home');
-                    return;
-                }
+            // 1. Determine Role (Crucial: ensure this happens *before* getting elements if role affects element visibility/existence, although not the case here)
+            // Role is determined either by admin click (sets currentUserRole before navigateTo)
+            // or by hash (getRoleFromHash called in Initial App Setup)
+            if (!currentUserRole) { // If somehow null (e.g., direct load of draft page without hash/admin)
+                currentUserRole = 'default'; // Assign a default role
+                console.warn("No role determined, assigning default.");
             }
             console.log(`Initializing draft with Role: ${currentUserRole}`);
 
-            // Assign team side
+            // Assign team side based on the determined role
             if (currentUserRole === 'team1') userTeamSide = 'blue';
             else if (currentUserRole === 'team2') userTeamSide = 'red';
-            else userTeamSide = null;
+            else userTeamSide = null; // judge, admin, default
 
-            // 2. Get Draft Page Elements
-            loadingIndicator = document.getElementById('loadingIndicator');
-            mainLayout = document.getElementById('mainLayout');
-            championGridElement = document.getElementById('championGrid');
-            startButton = document.getElementById('timerDisplay');
-            resetButton = document.getElementById('resetButton');
-            undoButton = document.getElementById('undoButton');
-            timerDisplay = document.getElementById('timerDisplay');
-            championSearch = document.getElementById('championSearch');
-            bluePicksContainer = document.querySelector('.blue-picks-container');
-            redPicksContainer = document.querySelector('.red-picks-container');
-            blueColumn = document.querySelector('.blue-column');
-            redColumn = document.querySelector('.red-column');
-            swapButton = document.getElementById('swapButton');
-            clearPicksButton = document.getElementById('clearPicksButton');
-            toggleTimerButton = document.getElementById('toggleTimerButton');
-            filterButtons = document.querySelectorAll('#roleFilterButtons .filter-button');
-            confirmPickBanButton = document.getElementById('confirmPickBanButton');
-            priorityFilterButton = document.getElementById('priorityFilterButton');
-            nextDraftButton = document.getElementById('nextDraftButton');
-            globallyBannedDisplay = document.getElementById('globallyBannedDisplay');
-            globalBansBlueContainer = document.getElementById('global-bans-blue');
-            globalBansRedContainer = document.getElementById('global-bans-red');
-            championTooltip = document.getElementById('championTooltip');
-            statusMessage = document.getElementById('statusMessage');
-            blueTeamNameH2 = document.getElementById('blue-team-name-h2');
-            redTeamNameH2 = document.getElementById('red-team-name-h2');
-            blueScoreEl = document.getElementById('blue-score');
-            redScoreEl = document.getElementById('red-score');
-            returnHomeButton = document.getElementById('returnHomeButton');
-
-            // 2.1 Check if elements were found
-            if (!checkDraftElements()) {
+            // 2. Get Draft Page Elements (and check)
+            if (!checkDraftElements()) { // Fetch and check elements
                 throw new Error("One or more draft page elements were not found during initialization!");
             }
             console.log("All draft elements found.");
@@ -302,13 +306,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 4. Initial Setup based on Role
             displayChampions();
-            resetDraftFull(true); // Initial reset, applies permissions internally
+            resetDraftFull(true); // Initial reset, applies permissions and calls updateDraftUI internally
 
             // Set initial team names
-            if(blueTeamNameH2 && localStorage.getItem('lobbyTeam1Name')) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name');
-            if(redTeamNameH2 && localStorage.getItem('lobbyTeam2Name')) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name');
+            if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || 'Синяя Команда';
+            if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
 
-            // 5. Attach Event Listeners
+            // 5. Attach Event Listeners (only if elements exist)
             console.log("Attaching event listeners...");
             if (timerDisplay) timerDisplay.addEventListener('click', handleStartDraft); else console.warn("Listener not attached: timerDisplay not found");
             if (resetButton) resetButton.addEventListener('click', () => { console.log("Reset button clicked"); resetDraftFull(false); }); else console.warn("Listener not attached: resetButton not found");
@@ -356,19 +360,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Role Permission Application ---
     function applyRolePermissions(role) {
-        console.log(`DEBUG: Applying permissions for role: ${role}`);
+        // console.log(`DEBUG: Applying permissions for role: ${role}`); // Reduced logging
         const can = (action, team = null) => hasPermission(action, team);
 
-        // Enable/Disable Buttons
+        // Enable/Disable Buttons based *only* on role permissions (state handled in updateDraftUI)
         if(timerDisplay) timerDisplay.disabled = !can('startDraft');
         if(resetButton) resetButton.disabled = !can('resetDraft');
         if(clearPicksButton) clearPicksButton.disabled = !can('clearDraft');
-        if(undoButton) undoButton.disabled = !can('undoAction'); // State checked later
-        if(swapButton) swapButton.disabled = !can('swapSides'); // State checked later
-        if(toggleTimerButton) toggleTimerButton.disabled = !can('toggleTimerDuration'); // State checked later
-        if(confirmPickBanButton) confirmPickBanButton.disabled = !can('confirmAction'); // State checked later
+        if(undoButton) undoButton.disabled = !can('undoAction');
+        if(swapButton) swapButton.disabled = !can('swapSides');
+        if(toggleTimerButton) toggleTimerButton.disabled = !can('toggleTimerDuration');
+        if(confirmPickBanButton) confirmPickBanButton.disabled = !can('confirmAction');
         if(priorityFilterButton) priorityFilterButton.disabled = !can('togglePriorityFilter');
-        if(nextDraftButton) nextDraftButton.disabled = !can('nextDraft'); // State checked later
+        if(nextDraftButton) nextDraftButton.disabled = !can('nextDraft');
         if(returnHomeButton) returnHomeButton.disabled = !can('returnHome');
 
         // Enable/Disable Filters
@@ -380,8 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(blueScoreEl) blueScoreEl.contentEditable = can('editScore');
         if(redScoreEl) redScoreEl.contentEditable = can('editScore');
 
-        // Disable Champion Grid/Slots based on role
-        if (championGridElement) championGridElement.style.pointerEvents = (role === 'judge') ? 'none' : 'auto';
+        // Disable Columns based on role (Admin overrides this)
         if (blueColumn) blueColumn.classList.toggle('role-disabled', role === 'team2');
         if (redColumn) redColumn.classList.toggle('role-disabled', role === 'team1');
         if (role === 'admin') {
@@ -389,9 +392,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if(redColumn) redColumn.classList.remove('role-disabled');
         }
 
-         updateNicknameEditability();
-         console.log(`DEBUG: Permissions applied for role: ${role}`);
+        updateNicknameEditability();
+        // console.log(`DEBUG: Permissions applied for role: ${role}`); // Reduced logging
     }
+
 
      // --- Update Nickname Editability based on Role ---
      function updateNicknameEditability() {
@@ -406,12 +410,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Data Fetching (Draft Specific) ---
     async function loadChampionData() {
          try {
-             console.log("Fetching DDragon versions...");
+             // console.log("Fetching DDragon versions..."); // Reduced logging
              const versionsResponse = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
              if (!versionsResponse.ok) throw new Error(`Версии: ${versionsResponse.statusText}`);
              const versions = await versionsResponse.json();
              ddragonVersion = versions[0];
-             console.log(`Using DDragon version: ${ddragonVersion}`);
+             // console.log(`Using DDragon version: ${ddragonVersion}`); // Reduced logging
              baseIconUrl = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/`;
              baseSplashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/`;
 
@@ -420,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
              const dataUrlEn = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`;
              const dataUrlRu = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/ru_RU/champion.json`;
-             console.log("Fetching champion data (EN & RU)...");
+             // console.log("Fetching champion data (EN & RU)..."); // Reduced logging
 
              const [enResponse, ruResponse] = await Promise.all([
                  fetch(dataUrlEn),
@@ -429,14 +433,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
              if (!enResponse.ok) throw new Error(`Данные EN: ${enResponse.statusText}`);
              allChampionsData.en = (await enResponse.json()).data;
-             console.log("EN data fetched.");
+             // console.log("EN data fetched."); // Reduced logging
 
              if (!ruResponse.ok) {
                  console.warn(`Не удалось загрузить данные RU: ${ruResponse.statusText}. Используются английские имена.`);
                  allChampionsData.ru = null;
              } else {
                  allChampionsData.ru = (await ruResponse.json()).data;
-                 console.log("RU data fetched.");
+                 // console.log("RU data fetched."); // Reduced logging
              }
 
              processedChampions = Object.keys(allChampionsData.en).map(champId => {
@@ -565,14 +569,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayChampions() { if(!championGridElement) { console.error("displayChampions: championGridElement not found"); return; } const fragment = document.createDocumentFragment(); processedChampions.forEach(champ => { fragment.appendChild(createChampionCard(champ)); }); championGridElement.innerHTML = ''; championGridElement.appendChild(fragment); filterChampions(); }
     function updateDraftUI() {
-        // console.log("DEBUG: updateDraftUI called. isDraftInitialized:", isDraftInitialized, "currentStep:", currentStep, "isDraftStarted:", isDraftStarted);
+        // console.log("DEBUG: updateDraftUI called. Role:", currentUserRole, "Side:", userTeamSide, "Step:", currentStep, "Started:", isDraftStarted); // Verbose Log
         if (!isDraftInitialized) return;
         document.querySelectorAll('.pick-slot, .ban-slot').forEach(el => { el.classList.remove('highlight-action', 'preview-flash', 'swap-selected'); });
 
-        applyRolePermissions(currentUserRole);
+        applyRolePermissions(currentUserRole); // Apply base role permissions first
 
         const draftOrder = getDraftOrder();
-        const canConfirm = hasPermission('confirmAction', draftOrder[currentStep]?.team);
+        let currentActionTeam = null;
+        if (currentStep < draftOrder.length) {
+            currentActionTeam = draftOrder[currentStep].team;
+        }
+        // console.log(`DEBUG: updateDraftUI - currentActionTeam: ${currentActionTeam}`); // Verbose Log
+
+        const canConfirm = hasPermission('confirmAction', currentActionTeam);
         if(confirmPickBanButton) confirmPickBanButton.disabled = !canConfirm || !previewedChampion || !isDraftStarted || isDraftComplete;
 
         const canUndo = hasPermission('undoAction', draftHistory[draftHistory.length - 1]?.team);
@@ -597,11 +607,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
             if(resetButton) resetButton.disabled = !canReset;
             if(timerDisplay) timerDisplay.disabled = !canStart;
+            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive before start
         } else if (currentStep < draftOrder.length) {
             isDraftComplete = false;
             const action = draftOrder[currentStep];
             const activeSlot = document.getElementById(action.slot);
-            const currentActionTeam = action.team;
+            // currentActionTeam is already defined above
 
             if (activeSlot) {
                 if (currentUserRole === 'admin' || currentUserRole === 'judge' || userTeamSide === currentActionTeam) {
@@ -623,7 +634,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if(priorityFilterButton) priorityFilterButton.disabled = true;
             if(clearPicksButton) clearPicksButton.disabled = !canClear;
             if(resetButton) resetButton.disabled = !canReset;
-            if (championGridElement) championGridElement.style.pointerEvents = (currentUserRole === 'admin' || userTeamSide === currentActionTeam) ? 'auto' : 'none';
+
+            // **Crucial:** Enable/Disable grid based on turn and role
+            const isGridInteractive = (currentUserRole === 'admin' || userTeamSide === currentActionTeam);
+            // console.log(`DEBUG: updateDraftUI - Grid Interaction Check: isAdmin=${currentUserRole === 'admin'}, isMyTurn=${userTeamSide === currentActionTeam} -> ${isGridInteractive}`); // Verbose Log
+            if (championGridElement) {
+                championGridElement.style.pointerEvents = isGridInteractive ? 'auto' : 'none';
+            }
 
         } else { // Draft Complete
             isDraftComplete = true;
@@ -642,7 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(toggleTimerButton) toggleTimerButton.disabled = true;
             if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
             if(resetButton) resetButton.disabled = !canReset;
-            if (championGridElement) championGridElement.style.pointerEvents = 'none';
+            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive after draft
         }
 
         updateChampionAvailability();
@@ -657,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function updateChampionAvailability() { if (!isDraftInitialized) return; const combinedDisabled = new Set([...selectedChampions, ...globallyDisabledChampions]); document.querySelectorAll('.champion-card').forEach(card => { const champId = card.dataset.championId; const isDisabled = combinedDisabled.has(champId); const isSelected = selectedChampions.has(champId); card.classList.toggle('selected', isSelected); card.classList.toggle('disabled', isDisabled); card.disabled = isDisabled; card.setAttribute('aria-disabled', isDisabled.toString()); }); }
     function handleChampionPreview(champion) {
-        console.log("handleChampionPreview called for:", champion.id);
+        // console.log("handleChampionPreview called for:", champion.id); // Reduced logging
         if (!isDraftStarted || isDraftComplete) { console.log("Preview denied: Draft not started or complete."); return; }
         const draftOrder = getDraftOrder();
         if (currentStep >= draftOrder.length) { console.log("Preview denied: Draft step out of bounds."); return; }
@@ -675,7 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const slotElement = document.getElementById(currentAction.slot);
         if (slotElement) {
-            console.log(`Previewing ${champion.id} in slot ${currentAction.slot}`);
+            // console.log(`Previewing ${champion.id} in slot ${currentAction.slot}`); // Reduced logging
             document.querySelectorAll('.preview-flash').forEach(el => el.classList.remove('preview-flash'));
             previewedChampion = champion;
             const existingNickname = pickNicknames[currentAction.slot] || '';
@@ -727,7 +744,7 @@ document.addEventListener('DOMContentLoaded', () => {
          if (canEdit) {
              nicknameInput.addEventListener('input', (e) => {
                  const slotId = e.target.dataset.slotId;
-                 if (slotId) { pickNicknames[slotId] = e.target.textContent.trim(); console.log("Nickname updated:", pickNicknames); }
+                 if (slotId) { pickNicknames[slotId] = e.target.textContent.trim(); /*console.log("Nickname updated:", pickNicknames);*/ } // Reduced logging
              });
              nicknameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
          }
@@ -870,14 +887,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function deselectSwapSlots() { if (selectedSwapSlotId) { const prevSelected = document.getElementById(selectedSwapSlotId); if (prevSelected) { prevSelected.classList.remove('swap-selected'); } selectedSwapSlotId = null; } }
     function handlePickContainerClick(event) {
-         console.log("handlePickContainerClick called on:", event.target);
+         // console.log("handlePickContainerClick called on:", event.target); // Reduced logging
          if (event.target.classList.contains('nickname-input')) { return; }
          if (!hasPermission('swapSides')) { console.log("Pick container click denied: No swap permission."); return; }
          const clickedSlot = event.target.closest('.pick-slot');
-         if (!isDraftComplete || !clickedSlot || !clickedSlot.dataset.championId) { console.log("Pick container click ignored: Draft not complete or empty slot."); deselectSwapSlots(); return; }
+         if (!isDraftComplete || !clickedSlot || !clickedSlot.dataset.championId) { /*console.log("Pick container click ignored: Draft not complete or empty slot.");*/ deselectSwapSlots(); return; } // Reduced logging
 
          const clickedSlotId = clickedSlot.id;
-         console.log("Clicked slot:", clickedSlotId);
+         // console.log("Clicked slot:", clickedSlotId); // Reduced logging
          if (!selectedSwapSlotId) {
              selectedSwapSlotId = clickedSlotId;
              clickedSlot.classList.add('swap-selected');
@@ -1053,10 +1070,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initial App Setup ---
      const initialRole = getRoleFromHash();
      if (initialRole) {
-         currentUserRole = initialRole;
+         currentUserRole = initialRole; // Set role from hash before navigating
          navigateTo('draft');
      } else {
          navigateTo('home');
      }
 
 }); // End DOMContentLoaded
+</script>
+
+</body>
+</html>
