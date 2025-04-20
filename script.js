@@ -1,10 +1,10 @@
-// script.js - v8.0 + Socket.IO Integration - Debugging
+// script.js - v8.0 + Socket.IO Integration - Debugging v2
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v8.0+socket-debug...");
+    console.log("DOM Fully Loaded. Initializing App v8.0+socket-debug-v2...");
 
     // --- Socket.IO Setup ---
-    const SERVER_URL = 'http://localhost:3000'; // 
-    let socket;
+    const SERVER_URL = 'http://localhost:3000'; //     
+let socket;
     try {
         // Attempt to connect to the server
         socket = io(SERVER_URL, {
@@ -177,13 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Request initial state from server when navigating back to draft?
                     if (socket?.connected) {
                         console.log("DEBUG: Requesting current state on draft navigation");
-                        socket.emit('request_current_state'); // Need server handler for this
+                        // Send a specific request event if needed, or rely on server sending on re-connection
+                        // socket.emit('request_current_state'); // Example: If server handles this
                     } else {
-                        // Handle case where socket isn't connected yet or failed
                         console.warn("Socket not connected, cannot request state for draft page.");
-                        // Maybe show loading or error?
                     }
-                    // updateDraftUI(); // UI update will be triggered by server response
+                    // updateDraftUI(); // UI update will be triggered by server response ('current_state' or 'draft_updated')
                  } else {
                      console.error("Draft elements not found when trying to re-apply permissions.");
                      showStatusMessage("Ошибка UI: Элементы драфта не найдены.", 5000);
@@ -213,7 +212,18 @@ document.addEventListener('DOMContentLoaded', () => {
         showStatusMessage("Лобби создано! Скопируйте ссылки.", 3000);
     }
 
-    function handleAdminClick() { /* ... unchanged ... */ }
+    function handleAdminClick() {
+        // DEBUG: Check if handler is called
+        console.log("--- handleAdminClick called ---");
+        console.log("Admin button clicked.");
+        currentUserRole = 'admin';
+        userTeamSide = null;
+        const team1Name = team1NameInput.value.trim() || "Синяя Команда";
+        const team2Name = team2NameInput.value.trim() || "Красная Команда";
+        localStorage.setItem('lobbyTeam1Name', team1Name);
+        localStorage.setItem('lobbyTeam2Name', team2Name);
+        navigateTo('draft');
+    }
 
     // --- Listeners for Home page ---
     if (createLobbyButton) {
@@ -318,10 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('current_state', (serverState) => {
             console.log("Получено начальное состояние 'current_state':", serverState);
             if (!isDraftInitialized && currentPage === 'draft') {
-                 // If we received state before draft UI is ready, wait briefly?
-                 // Or ensure initializeAppDraft is called first.
                  console.warn("Received state before draft UI initialized. Applying anyway.");
-                 // Make sure elements are available before updating
                  if (checkDraftElements()) {
                     updateDraftUI(serverState);
                  } else {
@@ -342,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         console.error("Socket object is not available. Real-time features disabled.");
-        // Maybe show a persistent error message?
     }
 
     // --- Initial App Setup ---
