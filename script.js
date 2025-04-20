@@ -1,4 +1,4 @@
-// script.js v6.8 - Environment Difference Debugging
+// script.js v6.8 - Restored Filter Data from v4.0
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Fully Loaded. Initializing App v6.8..."); // Version Updated
 
@@ -47,9 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let statusTimeout = null;
     let globallyDisabledChampions = new Set();
     let globalBanHistory = [];
-    // Sample priority champions
-    const priorityChampions = new Set(['Aatrox', 'Ahri', 'Jinx', 'LeeSin', 'Leona']);
-    console.log(`DEBUG: Initial priorityChampions size: ${priorityChampions.size}`); // DEBUG Priority List
+    // FIX: Use priority list from user's v4.0 file
+    const priorityChampions = new Set(['Aatrox', 'Ahri', 'Akali', 'Akshan', 'Alistar', 'Amumu', 'Annie', 'Ashe', 'AurelionSol', 'Blitzcrank', 'Brand', 'Braum', 'Caitlyn', 'Camille', 'Corki', 'Darius', 'Diana', 'DrMundo', 'Draven', 'Ekko', 'Evelynn', 'Ezreal', 'Fiddlesticks', 'Fiora', 'Fizz', 'Galio', 'Garen', 'Gnar', 'Gragas', 'Graves', 'Gwen', 'Hecarim', 'Heimerdinger', 'Irelia', 'Janna', 'JarvanIV', 'Jax', 'Jayce', 'Jhin', 'Jinx', 'Kaisa', 'Kalista', 'Karma', 'Kassadin', 'Katarina', 'Kayle', 'Kayn', 'Kennen', 'Khazix', 'Kindred', 'LeeSin', 'Leona', 'Lillia', 'Lissandra', 'Lucian', 'Lulu', 'Lux', 'Malphite', 'Maokai', 'MasterYi', 'Milio', 'MissFortune', 'Mordekaiser', 'Morgana', 'Nami', 'Nasus', 'Nautilus', 'Nilah', 'Nunu', 'Olaf', 'Orianna', 'Ornn', 'Pantheon', 'Poppy', 'Pyke', 'Rakan', 'Rammus', 'Renekton', 'Rengar', 'Riven', 'Rumble', 'Samira', 'Senna', 'Seraphine', 'Sett', 'Shen', 'Shyvana', 'Singed', 'Sion', 'Sivir', 'Sona', 'Soraka', 'Swain', 'Syndra', 'Talon', 'Teemo', 'Thresh', 'Tristana', 'Tryndamere', 'TwistedFate', 'Twitch', 'Urgot', 'Varus', 'Vayne', 'Veigar', 'Vex', 'Vi', 'Viego', 'Viktor', 'Vladimir', 'Volibear', 'Warwick', 'MonkeyKing', 'Xayah', 'XinZhao', 'Yasuo', 'Yone', 'Yuumi', 'Zac', 'Zed', 'Zeri', 'Ziggs', 'Zoe', 'Zyra', 'Ryze', 'Nocturne', 'Zilean', 'Renata', 'Belveth', 'Naafiri', 'Briar', 'Hwei', 'Smolder']);
 
     // --- Permissions Map ---
     const permissions = {
@@ -298,24 +297,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 3. Load Data
             if(loadingIndicator) loadingIndicator.classList.remove('hidden');
-            const dataLoaded = await loadChampionData(); // Wait for data
+            const dataLoaded = await loadChampionData();
             if (!dataLoaded) {
-                throw new Error("Failed to load champion data. Draft cannot proceed.");
+                throw new Error("Failed to load champion data.");
             }
-            // DEBUG: Log processed data after loading
-            console.log(`DEBUG: Processed ${processedChampions.length} champions after load.`);
-            if (processedChampions.length > 0) {
-                console.log(`DEBUG: Sample roles - ${processedChampions[0].id}: ${processedChampions[0].roles.join(',')}`);
-                if (processedChampions.length > 1) {
-                    console.log(`DEBUG: Sample roles - ${processedChampions[1].id}: ${processedChampions[1].roles.join(',')}`);
-                }
-            }
-
             if(loadingIndicator) loadingIndicator.classList.add('hidden');
             if(mainLayout) mainLayout.classList.remove('hidden');
 
             // 4. Initial Setup based on Role
-            displayChampions(); // Display based on loaded data
+            displayChampions();
             resetDraftFull(true); // Initial reset, applies permissions and calls updateDraftUI internally
 
             // Set initial team names
@@ -332,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (toggleTimerButton) toggleTimerButton.addEventListener('click', handleToggleTimer); else console.warn("Listener not attached: toggleTimerButton not found");
             if (confirmPickBanButton) confirmPickBanButton.addEventListener('click', handleConfirmPickBan); else console.warn("Listener not attached: confirmPickBanButton not found");
             if (priorityFilterButton) {
-                priorityFilterButton.addEventListener('click', handlePriorityFilterToggle); // DEBUG: Ensure listener attached
+                priorityFilterButton.addEventListener('click', handlePriorityFilterToggle);
             } else { console.warn("Listener not attached: priorityFilterButton not found"); }
             if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); else console.warn("Listener not attached: nextDraftButton not found");
             if (championSearch) championSearch.addEventListener('input', debouncedFilter); else console.warn("Listener not attached: championSearch not found");
@@ -373,9 +363,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Draft simulator page initialized successfully for role:", currentUserRole);
 
         } catch (error) {
-            console.error("CRITICAL Error during initializeAppDraft:", error); // More prominent error
+            console.error("Error during initializeAppDraft:", error);
             showStatusMessage(`Критическая ошибка инициализации: ${error.message}`, 10000);
-            if(loadingIndicator) loadingIndicator.textContent = `Критическая Ошибка! ${error.message}`;
+            if(loadingIndicator) loadingIndicator.textContent = `Ошибка! ${error.message}`;
             if(mainLayout) mainLayout.classList.add('hidden');
         }
 
@@ -443,50 +433,9 @@ document.addEventListener('DOMContentLoaded', () => {
              baseIconUrl = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/`;
              baseSplashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/`;
 
-             // FIX: Expanded sample role data
-             const championRolesMap = {
-                // Tanks
-                'Alistar': ['Support'], 'Amumu': ['Jungle', 'Support'], 'Blitzcrank': ['Support'], 'Braum': ['Support'],
-                'Chogath': ['Top', 'Mid'], 'DrMundo': ['Top', 'Jungle'], 'Galio': ['Mid', 'Support'], 'Gragas': ['Jungle', 'Top', 'Mid'],
-                'Leona': ['Support'], 'Malphite': ['Top', 'Support'], 'Maokai': ['Jungle', 'Support', 'Top'], 'Nautilus': ['Support', 'Top', 'Jungle'],
-                'Nunu': ['Jungle'], 'Ornn': ['Top'], 'Poppy': ['Top', 'Jungle', 'Support'], 'Rammus': ['Jungle'],
-                'Rell': ['Support'], 'Sejuani': ['Jungle'], 'Shen': ['Top', 'Support'], 'Singed': ['Top'], 'Sion': ['Top', 'Support'],
-                'Skarner': ['Jungle'], 'TahmKench': ['Top', 'Support'], 'Taric': ['Support'], 'Thresh': ['Support'], 'Zac': ['Jungle'],
-                // Fighters
-                'Aatrox': ['Top'], 'Briar': ['Jungle'], 'Camille': ['Top'], 'Darius': ['Top'], 'Fiora': ['Top'], 'Gangplank': ['Top', 'Mid'],
-                'Garen': ['Top'], 'Gnar': ['Top'], 'Gwen': ['Top', 'Jungle'], 'Hecarim': ['Jungle'], 'Illaoi': ['Top'], 'Irelia': ['Top', 'Mid'],
-                'JarvanIV': ['Jungle'], 'Jax': ['Top', 'Jungle'], 'KSante': ['Top'], 'Kayn': ['Jungle'], 'Kled': ['Top'], 'LeeSin': ['Jungle'],
-                'Lillia': ['Jungle'], 'MasterYi': ['Jungle'], 'Mordekaiser': ['Top'], 'Nasus': ['Top'], 'Olaf': ['Top', 'Jungle'],
-                'Pantheon': ['Mid', 'Support', 'Top', 'Jungle'], 'RekSai': ['Jungle'], 'Renekton': ['Top'], 'Riven': ['Top'], 'Sett': ['Top', 'Support'],
-                'Shyvana': ['Jungle'], 'Trundle': ['Jungle', 'Top', 'Support'], 'Tryndamere': ['Top'], 'Udyr': ['Jungle', 'Top'], 'Urgot': ['Top'],
-                'Vi': ['Jungle'], 'Viego': ['Jungle'], 'Volibear': ['Jungle', 'Top'], 'Warwick': ['Jungle', 'Top'], 'MonkeyKing': ['Jungle', 'Top'], // Wukong
-                'XinZhao': ['Jungle'], 'Yasuo': ['Mid', 'ADC', 'Top'], 'Yone': ['Mid', 'Top'], 'Yorick': ['Top'],
-                // Slayers (Assassins)
-                'Akali': ['Mid', 'Top'], 'Akshan': ['Mid', 'Top'], 'Diana': ['Jungle', 'Mid'], 'Ekko': ['Jungle', 'Mid'], 'Evelynn': ['Jungle'],
-                'Fizz': ['Mid'], 'Kassadin': ['Mid'], 'Katarina': ['Mid'], 'Kayn': ['Jungle'], // Kayn is Fighter/Assassin
-                'Khazix': ['Jungle'], 'LeBlanc': ['Mid'], 'Naafiri': ['Mid', 'Jungle'], 'Nocturne': ['Jungle', 'Mid', 'Top'], 'Pyke': ['Support'],
-                'Qiyana': ['Mid', 'Jungle'], 'Rengar': ['Jungle', 'Top'], 'Shaco': ['Jungle', 'Support'], 'Talon': ['Jungle', 'Mid'], 'Zed': ['Mid'],
-                // Mages
-                'Ahri': ['Mid'], 'Anivia': ['Mid'], 'Annie': ['Mid', 'Support'], 'AurelionSol': ['Mid'], 'Azir': ['Mid'], 'Brand': ['Support', 'Mid'],
-                'Cassiopeia': ['Mid', 'Top'], 'Fiddlesticks': ['Jungle', 'Support'], 'Heimerdinger': ['Mid', 'Top', 'Support'], 'Hwei': ['Mid', 'Support'],
-                'Karma': ['Support', 'Mid', 'Top'], 'Karthus': ['Jungle', 'Mid', 'ADC'], 'LeBlanc': ['Mid'], // Also Assassin
-                'Lissandra': ['Mid'], 'Lux': ['Mid', 'Support'], 'Malzahar': ['Mid'], 'Morgana': ['Support', 'Mid', 'Jungle'],
-                'Neeko': ['Mid', 'Support', 'Top'], 'Orianna': ['Mid'], 'Rumble': ['Mid', 'Top', 'Jungle'], 'Ryze': ['Mid', 'Top'],
-                'Seraphine': ['Support', 'ADC', 'Mid'], 'Swain': ['Support', 'ADC', 'Mid', 'Top'], 'Sylas': ['Mid', 'Jungle', 'Top'], 'Syndra': ['Mid'],
-                'Taliyah': ['Jungle', 'Mid'], 'TwistedFate': ['Mid', 'ADC'], 'Veigar': ['Mid', 'Support', 'ADC'], 'Velkoz': ['Mid', 'Support'],
-                'Vex': ['Mid'], 'Viktor': ['Mid'], 'Vladimir': ['Mid', 'Top'], 'Xerath': ['Mid', 'Support'], 'Ziggs': ['Mid', 'ADC'],
-                'Zilean': ['Support', 'Mid'], 'Zoe': ['Mid'], 'Zyra': ['Support', 'Mid'],
-                // Controllers (Enchanters/Catchers)
-                'Bard': ['Support'], 'Ivern': ['Jungle'], 'Janna': ['Support'], 'Lulu': ['Support'], 'Milio': ['Support'], 'Nami': ['Support'],
-                'Rakan': ['Support'], 'Renata': ['Support'], 'Senna': ['Support', 'ADC'], 'Sona': ['Support'], 'Soraka': ['Support'], 'Yuumi': ['Support'],
-                // Marksmen
-                'Aphelios': ['ADC'], 'Ashe': ['ADC', 'Support'], 'Caitlyn': ['ADC'], 'Corki': ['Mid'], 'Draven': ['ADC'], 'Ezreal': ['ADC'],
-                'Jhin': ['ADC'], 'Jinx': ['ADC'], 'Kaisa': ['ADC'], 'Kalista': ['ADC'], 'Kindred': ['Jungle'], 'KogMaw': ['ADC'],
-                'Lucian': ['ADC', 'Mid'], 'MissFortune': ['ADC', 'Support'], 'Nilah': ['ADC'], 'Samira': ['ADC'], 'Sivir': ['ADC'],
-                'Smolder': ['ADC'], 'Tristana': ['ADC', 'Mid'], 'Twitch': ['ADC', 'Jungle'], 'Varus': ['ADC', 'Mid'], 'Vayne': ['ADC', 'Top'],
-                'Xayah': ['ADC'], 'Zeri': ['ADC']
-             };
-             // priorityChampions defined globally now
+             // FIX: Use role map from user's v4.0 file
+             const championRolesMap = { 'Aatrox': ['Top'], 'Ahri': ['Mid'], 'Akali': ['Mid', 'Top'], 'Akshan': ['Mid', 'Top'], 'Alistar': ['Support'], 'Amumu': ['Jungle', 'Support'], 'Anivia': ['Mid'], 'Annie': ['Mid', 'Support'], 'Aphelios': ['ADC'], 'Ashe': ['ADC', 'Support'], 'AurelionSol': ['Mid'], 'Azir': ['Mid'], 'Bard': ['Support'], 'Belveth': ['Jungle'], 'Blitzcrank': ['Support'], 'Brand': ['Support', 'Mid', 'Jungle'], 'Braum': ['Support'], 'Briar': ['Jungle'], 'Caitlyn': ['ADC'], 'Camille': ['Top'], 'Cassiopeia': ['Top', 'Mid'], 'Chogath': ['Top', 'Mid'], 'Corki': ['Mid', 'ADC'], 'Darius': ['Top', 'Jungle'], 'Diana': ['Jungle', 'Mid'], 'DrMundo': ['Top', 'Jungle'], 'Draven': ['ADC'], 'Ekko': ['Jungle', 'Mid'], 'Elise': ['Jungle'], 'Evelynn': ['Jungle'], 'Ezreal': ['ADC'], 'Fiddlesticks': ['Jungle'], 'Fiora': ['Top'], 'Fizz': ['Mid'], 'Galio': ['Mid', 'Support'], 'Gangplank': ['Top'], 'Garen': ['Top'], 'Gnar': ['Top'], 'Gragas': ['Jungle', 'Top', 'Mid', 'Support'], 'Graves': ['Jungle'], 'Gwen': ['Top', 'Jungle'], 'Hecarim': ['Jungle'], 'Heimerdinger': ['Top', 'Mid', 'Support'], 'Hwei': ['Mid', 'Support'], 'Illaoi': ['Top'], 'Irelia': ['Top', 'Mid'], 'Ivern': ['Jungle', 'Support'], 'Janna': ['Support'], 'JarvanIV': ['Jungle'], 'Jax': ['Top', 'Jungle'], 'Jayce': ['Top', 'Mid'], 'Jhin': ['ADC'], 'Jinx': ['ADC'], 'Kaisa': ['ADC'], 'Kalista': ['ADC'], 'Karma': ['Support', 'Mid'], 'Karthus': ['Jungle', 'Mid'], 'Kassadin': ['Mid'], 'Katarina': ['Mid'], 'Kayle': ['Top', 'Mid'], 'Kayn': ['Jungle'], 'Kennen': ['Top', 'Mid'], 'Khazix': ['Jungle'], 'Kindred': ['Jungle'], 'Kled': ['Top', 'Mid'], 'KogMaw': ['ADC'], 'KSante': ['Top'], 'Leblanc': ['Mid'], 'LeeSin': ['Jungle'], 'Leona': ['Support'], 'Lillia': ['Jungle'], 'Lissandra': ['Mid'], 'Lucian': ['ADC'], 'Lulu': ['Support'], 'Lux': ['Mid', 'Support'], 'Malphite': ['Top', 'Support', 'Mid'], 'Malzahar': ['Mid'], 'Maokai': ['Jungle', 'Support'], 'MasterYi': ['Jungle'], 'Milio': ['Support'], 'MissFortune': ['ADC'], 'Mordekaiser': ['Top', 'Jungle'], 'Morgana': ['Support', 'Mid', 'Jungle'], 'Naafiri': ['Jungle', 'Mid'], 'Nami': ['Support'], 'Nasus': ['Top'], 'Nautilus': ['Support'], 'Neeko': ['Mid', 'Support'], 'Nidalee': ['Jungle'], 'Nilah': ['ADC'], 'Nocturne': ['Jungle'], 'Nunu': ['Jungle'], 'Olaf': ['Top', 'Jungle'], 'Orianna': ['Mid'], 'Ornn': ['Top'], 'Pantheon': ['Top', 'Mid', 'Support', 'Jungle'], 'Poppy': ['Top', 'Jungle', 'Support'], 'Pyke': ['Support', 'Mid'], 'Qiyana': ['Jungle', 'Mid'], 'Quinn': ['Top', 'Mid'], 'Rakan': ['Support'], 'Rammus': ['Jungle'], 'RekSai': ['Jungle'], 'Rell': ['Support', 'Jungle'], 'Renata': ['Support'], 'Renekton': ['Top'], 'Rengar': ['Jungle', 'Top'], 'Riven': ['Top'], 'Rumble': ['Top', 'Mid', 'Jungle'], 'Ryze': ['Top', 'Mid'], 'Samira': ['ADC'], 'Sejuani': ['Jungle'], 'Senna': ['Support', 'ADC'], 'Seraphine': ['Support', 'Mid', 'ADC'], 'Sett': ['Top', 'Support'], 'Shaco': ['Jungle', 'Support'], 'Shen': ['Top', 'Support'], 'Shyvana': ['Jungle'], 'Singed': ['Top'], 'Sion': ['Top', 'Mid'], 'Sivir': ['ADC'], 'Skarner': ['Jungle', 'Top'], 'Smolder': ['ADC', 'Mid'], 'Sona': ['Support'], 'Soraka': ['Support'], 'Swain': ['Support', 'Mid', 'ADC'], 'Sylas': ['Mid', 'Jungle'], 'Syndra': ['Mid'], 'TahmKench': ['Top', 'Support'], 'Taliyah': ['Jungle', 'Mid'], 'Talon': ['Jungle', 'Mid'], 'Taric': ['Support'], 'Teemo': ['Top'], 'Thresh': ['Support'], 'Tristana': ['ADC', 'Mid'], 'Trundle': ['Top', 'Jungle'], 'Tryndamere': ['Top'], 'TwistedFate': ['Mid', 'ADC'], 'Twitch': ['ADC', 'Jungle'], 'Udyr': ['Jungle', 'Top'], 'Urgot': ['Top'], 'Varus': ['ADC', 'Mid'], 'Vayne': ['ADC', 'Top'], 'Veigar': ['Mid', 'ADC', 'Support'], 'Velkoz': ['Mid', 'Support'], 'Vex': ['Mid'], 'Vi': ['Jungle'], 'Viego': ['Jungle'], 'Viktor': ['Mid'], 'Vladimir': ['Top', 'Mid'], 'Volibear': ['Top', 'Jungle'], 'Warwick': ['Jungle', 'Top'], 'MonkeyKing': ['Top', 'Jungle'], 'Xayah': ['ADC'], 'Xerath': ['Mid', 'Support'], 'XinZhao': ['Jungle'], 'Yasuo': ['Mid', 'Top', 'ADC'], 'Yone': ['Top', 'Mid'], 'Yorick': ['Top', 'Jungle'], 'Yuumi': ['Support'], 'Zac': ['Jungle'], 'Zed': ['Mid', 'Jungle'], 'Zeri': ['ADC'], 'Ziggs': ['Mid', 'ADC', 'Support'], 'Zilean': ['Support', 'Mid'], 'Zoe': ['Mid', 'Support'], 'Zyra': ['Support', 'Jungle', 'Mid'] };
+             // priorityChampions defined globally using v4.0 data
 
              const dataUrlEn = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`;
              const dataUrlRu = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/ru_RU/champion.json`;
@@ -516,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     id: enData.id,
                     name: { en: enData.name, ru: ruData ? ruData.name : enData.name },
                     title: { en: enData.title, ru: ruData ? ruData.title : enData.title },
-                    roles: championRolesMap[enData.id] || [], // Use expanded map
+                    roles: championRolesMap[enData.id] || [], // Use restored map
                     iconUrl: `${baseIconUrl}${enData.image.full}`,
                     splashUrl: `${baseSplashUrl}${enData.id}_0.jpg`
                 };
@@ -527,9 +476,9 @@ document.addEventListener('DOMContentLoaded', () => {
              return true;
 
          } catch (error) {
-             console.error("CRITICAL Error loading champion data:", error); // Enhanced log
-             showStatusMessage(`КРИТИЧЕСКАЯ ОШИБКА загрузки данных: ${error.message}`, 10000); // Enhanced message
-             if(loadingIndicator) loadingIndicator.textContent = `КРИТИЧЕСКАЯ ОШИБКА! ${error.message}`;
+             console.error("Error loading champion data:", error);
+             showStatusMessage(`Ошибка загрузки данных чемпионов: ${error.message}`, 5000);
+             if(loadingIndicator) loadingIndicator.textContent = `Ошибка загрузки! ${error.message}`;
              if(mainLayout) mainLayout.classList.add('hidden');
              return false;
          }
@@ -928,13 +877,13 @@ document.addEventListener('DOMContentLoaded', () => {
      }
     const debouncedFilter = debounce(() => { filterChampions(); }, 250);
 
-    // FIX: Filter logic updated + Debugging
+    // Filter logic using restored data
     function filterChampions() {
         if (!isDraftInitialized || !championSearch || !championGridElement) return;
         const searchTerm = championSearch.value.toLowerCase().trim();
         let visibleCount = 0;
-        let logCount = 0; // DEBUG: Limit logs
-        console.log(`DEBUG: filterChampions called. currentRoleFilter='${currentRoleFilter}', isPriorityFilterActive=${isPriorityFilterActive}`); // DEBUG
+        // let logCount = 0; // DEBUG: Limit logs - Removed for final version
+        // console.log(`DEBUG: filterChampions called. currentRoleFilter='${currentRoleFilter}', isPriorityFilterActive=${isPriorityFilterActive}`); // DEBUG - Removed
 
         championGridElement.querySelectorAll('.champion-card').forEach(card => {
             const champId = card.dataset.championId;
@@ -945,14 +894,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const searchMatch = nameEn.includes(searchTerm) || nameRu.includes(searchTerm) || champId.toLowerCase().includes(searchTerm);
             // Corrected roleMatch check
             const roleMatch = currentRoleFilter === 'All' || (champRoles.length > 0 && champRoles.includes(currentRoleFilter));
-            const isPriority = priorityChampions.has(champId);
+            const isPriority = priorityChampions.has(champId); // Uses restored priority list
             const hideByPriorityFilter = isPriorityFilterActive && !isPriority;
 
-            // DEBUG: Log filter checks for the first few champs
-            if (logCount < 5) {
-                 console.log(`  [${champId}]: Roles='${card.dataset.roles}', Filter='${currentRoleFilter}', RoleMatch=${roleMatch} | Priority=${isPriority}, HidePriority=${hideByPriorityFilter}, PriorityListHas=${priorityChampions.has(champId)}`); // Enhanced log
-                 logCount++;
-            }
+            // DEBUG: Log filter checks for the first few champs - Removed
+            // if (logCount < 5) {
+            //      console.log(`  [${champId}]: Roles='${card.dataset.roles}', Filter='${currentRoleFilter}', Match=${roleMatch} | Priority=${isPriority}, Hide=${hideByPriorityFilter}`);
+            //      logCount++;
+            // }
 
             const isVisible = searchMatch && roleMatch && !hideByPriorityFilter;
 
@@ -965,7 +914,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.setAttribute('aria-disabled', isDisabled.toString());
             card.classList.toggle('selected', selectedChampions.has(champId));
         });
-        console.log(`DEBUG: filterChampions finished. Visible count: ${visibleCount}`); // DEBUG
+        // console.log(`DEBUG: filterChampions finished. Visible count: ${visibleCount}`); // DEBUG - Removed
     }
 
     function deselectSwapSlots() { if (selectedSwapSlotId) { const prevSelected = document.getElementById(selectedSwapSlotId); if (prevSelected) { prevSelected.classList.remove('swap-selected'); } selectedSwapSlotId = null; } }
