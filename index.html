@@ -1495,12 +1495,13 @@
             if(timerDisplay) timerDisplay.disabled = !can('startDraft');
             if(resetButton) resetButton.disabled = !can('resetDraft');
             if(clearPicksButton) clearPicksButton.disabled = !can('clearDraft');
-            if(undoButton) undoButton.disabled = !can('undoAction'); // State checked later
-            if(swapButton) swapButton.disabled = !can('swapSides'); // State checked later
-            if(toggleTimerButton) toggleTimerButton.disabled = !can('toggleTimerDuration'); // State checked later
-            if(confirmPickBanButton) confirmPickBanButton.disabled = !can('confirmAction'); // State checked later
+            // Button state also depends on draft progress, handled in updateDraftUI
+            if(undoButton) undoButton.disabled = !can('undoAction');
+            if(swapButton) swapButton.disabled = !can('swapSides');
+            if(toggleTimerButton) toggleTimerButton.disabled = !can('toggleTimerDuration');
+            if(confirmPickBanButton) confirmPickBanButton.disabled = !can('confirmAction');
             if(priorityFilterButton) priorityFilterButton.disabled = !can('togglePriorityFilter');
-            if(nextDraftButton) nextDraftButton.disabled = !can('nextDraft'); // State checked later
+            if(nextDraftButton) nextDraftButton.disabled = !can('nextDraft');
             if(returnHomeButton) returnHomeButton.disabled = !can('returnHome');
 
             // Enable/Disable Filters
@@ -1512,8 +1513,7 @@
             if(blueScoreEl) blueScoreEl.contentEditable = can('editScore');
             if(redScoreEl) redScoreEl.contentEditable = can('editScore');
 
-            // Disable Champion Grid/Slots based on role
-            if (championGridElement) championGridElement.style.pointerEvents = (role === 'judge') ? 'none' : 'auto';
+            // Disable Columns based on role (Admin overrides this)
             if (blueColumn) blueColumn.classList.toggle('role-disabled', role === 'team2');
             if (redColumn) redColumn.classList.toggle('role-disabled', role === 'team1');
             if (role === 'admin') {
@@ -1521,9 +1521,10 @@
                 if(redColumn) redColumn.classList.remove('role-disabled');
             }
 
-             updateNicknameEditability();
-             console.log(`DEBUG: Permissions applied for role: ${role}`);
+            updateNicknameEditability();
+            console.log(`DEBUG: Permissions applied for role: ${role}`);
         }
+
 
          // --- Update Nickname Editability based on Role ---
          function updateNicknameEditability() {
@@ -1701,7 +1702,7 @@
             if (!isDraftInitialized) return;
             document.querySelectorAll('.pick-slot, .ban-slot').forEach(el => { el.classList.remove('highlight-action', 'preview-flash', 'swap-selected'); });
 
-            applyRolePermissions(currentUserRole);
+            applyRolePermissions(currentUserRole); // Apply base role permissions first
 
             const draftOrder = getDraftOrder();
             const canConfirm = hasPermission('confirmAction', draftOrder[currentStep]?.team);
@@ -1729,6 +1730,7 @@
                 if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
                 if(resetButton) resetButton.disabled = !canReset;
                 if(timerDisplay) timerDisplay.disabled = !canStart;
+                if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive before start
             } else if (currentStep < draftOrder.length) {
                 isDraftComplete = false;
                 const action = draftOrder[currentStep];
@@ -1755,6 +1757,7 @@
                 if(priorityFilterButton) priorityFilterButton.disabled = true;
                 if(clearPicksButton) clearPicksButton.disabled = !canClear;
                 if(resetButton) resetButton.disabled = !canReset;
+                // **Crucial:** Enable/Disable grid based on turn and role
                 if (championGridElement) championGridElement.style.pointerEvents = (currentUserRole === 'admin' || userTeamSide === currentActionTeam) ? 'auto' : 'none';
 
             } else { // Draft Complete
@@ -1774,7 +1777,7 @@
                 if(toggleTimerButton) toggleTimerButton.disabled = true;
                 if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
                 if(resetButton) resetButton.disabled = !canReset;
-                if (championGridElement) championGridElement.style.pointerEvents = 'none';
+                if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive after draft
             }
 
             updateChampionAvailability();
