@@ -1,6 +1,9 @@
-// script.js v6.2 - Debug Team Interaction
+// script.js v6.3 - Sync Start/Reset via localStorage
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v6.2..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v6.3..."); // Version Updated
+
+    // --- Constants ---
+    const DRAFT_STATUS_KEY = 'lolDrafterStatus_v6'; // Key for localStorage sync
 
     // --- Page Elements ---
     const appContainer = document.getElementById('app-container');
@@ -24,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDraftInitialized = false;
     let currentUserRole = null;
     let userTeamSide = null;
+    let draftStateListenerInterval = null; // Interval for localStorage polling
 
     // Draft specific state variables
     let allChampionsData = { en: null, ru: null };
@@ -36,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let draftHistory = [];
     let pickNicknames = {};
     let isDraftComplete = false;
-    let isDraftStarted = false;
+    let isDraftStarted = false; // This will now be synced for teams
     let selectedSwapSlotId = null;
     let timerInterval = null;
     let draftTimerDuration = 30;
@@ -124,6 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function navigateTo(pageName) {
         console.log(`Navigating to: ${pageName}`);
         currentPage = pageName;
+        // Stop listening for draft state changes when leaving draft page
+        stopListeningForDraftStateChanges();
 
         if(homePage) homePage.classList.add('hidden');
         if(draftPage) draftPage.classList.add('hidden');
@@ -149,8 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
                  // Ensure elements are available before applying permissions again
                  if (checkDraftElements()) {
                     // Re-determine role and side in case of refresh or direct navigation
-                    if (!currentUserRole) { // If role got lost somehow (e.g., refresh without hash)
-                       currentUserRole = getRoleFromHash() || 'default'; // Fallback to default if no hash
+                    if (!currentUserRole) {
+                       currentUserRole = getRoleFromHash() || 'default';
                     }
                     if (currentUserRole === 'team1') userTeamSide = 'blue';
                     else if (currentUserRole === 'team2') userTeamSide = 'red';
@@ -159,7 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyRolePermissions(currentUserRole);
                     if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || 'Синяя Команда';
                     if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
-                    updateDraftUI(); // Update UI based on current role and state
+
+                    // *** Crucial: Start listening for state changes *after* re-applying permissions ***
+                    if (currentUserRole === 'team1' || currentUserRole === 'team2') {
+                        listenForDraftStateChanges();
+                    }
+                    // Update UI based on potentially *synced* state
+                    checkSyncedDraftState(); // Check localStorage immediately on re-entering
+                    updateDraftUI();
                  } else {
                      console.error("Draft elements not found when trying to re-apply permissions.");
                      showStatusMessage("Ошибка UI: Элементы драфта не найдены.", 5000);
@@ -186,6 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const team2Name = team2NameInput.value.trim() || "Красная Команда";
         localStorage.setItem('lobbyTeam1Name', team1Name);
         localStorage.setItem('lobbyTeam2Name', team2Name);
+        // Reset draft status when creating a new lobby
+        localStorage.setItem(DRAFT_STATUS_KEY, 'stopped');
         const baseUrl = window.location.origin + window.location.pathname;
         const judgeLink = baseUrl + '#role=judge';
         const team1Link = baseUrl + '#role=team1';
@@ -206,6 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const team2Name = team2NameInput.value.trim() || "Красная Команда";
         localStorage.setItem('lobbyTeam1Name', team1Name);
         localStorage.setItem('lobbyTeam2Name', team2Name);
+        // Reset draft status when entering as admin (admin controls start)
+        localStorage.setItem(DRAFT_STATUS_KEY, 'stopped');
         navigateTo('draft');
     }
 
@@ -275,22 +292,20 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("initializeAppDraft started");
         try {
 
-            // 1. Determine Role (Crucial: ensure this happens *before* getting elements if role affects element visibility/existence, although not the case here)
-            // Role is determined either by admin click (sets currentUserRole before navigateTo)
-            // or by hash (getRoleFromHash called in Initial App Setup)
-            if (!currentUserRole) { // If somehow null (e.g., direct load of draft page without hash/admin)
-                currentUserRole = 'default'; // Assign a default role
-                console.warn("No role determined, assigning default.");
+            // 1. Determine Role
+            if (!currentUserRole) {
+                currentUserRole = getRoleFromHash() || 'default';
+                console.warn(`Role determined as: ${currentUserRole}`);
             }
             console.log(`Initializing draft with Role: ${currentUserRole}`);
 
-            // Assign team side based on the determined role
+            // Assign team side
             if (currentUserRole === 'team1') userTeamSide = 'blue';
             else if (currentUserRole === 'team2') userTeamSide = 'red';
-            else userTeamSide = null; // judge, admin, default
+            else userTeamSide = null;
 
             // 2. Get Draft Page Elements (and check)
-            if (!checkDraftElements()) { // Fetch and check elements
+            if (!checkDraftElements()) {
                 throw new Error("One or more draft page elements were not found during initialization!");
             }
             console.log("All draft elements found.");
@@ -312,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || 'Синяя Команда';
             if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
 
-            // 5. Attach Event Listeners (only if elements exist)
+            // 5. Attach Event Listeners
             console.log("Attaching event listeners...");
             if (timerDisplay) timerDisplay.addEventListener('click', handleStartDraft); else console.warn("Listener not attached: timerDisplay not found");
             if (resetButton) resetButton.addEventListener('click', () => { console.log("Reset button clicked"); resetDraftFull(false); }); else console.warn("Listener not attached: resetButton not found");
@@ -345,6 +360,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else { console.warn("Listener not attached: An editable H2/Score element was not found"); }
             });
             console.log("Event listeners attached.");
+
+            // 6. Start listening for state changes if user is a team
+            if (currentUserRole === 'team1' || currentUserRole === 'team2') {
+                listenForDraftStateChanges();
+            }
+             // 7. Check initial synced state immediately
+             checkSyncedDraftState();
+             updateDraftUI(); // Final UI update after setup
 
             console.log("Draft simulator page initialized successfully for role:", currentUserRole);
 
@@ -568,6 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayChampions() { if(!championGridElement) { console.error("displayChampions: championGridElement not found"); return; } const fragment = document.createDocumentFragment(); processedChampions.forEach(champ => { fragment.appendChild(createChampionCard(champ)); }); championGridElement.innerHTML = ''; championGridElement.appendChild(fragment); filterChampions(); }
+
     function updateDraftUI() {
         // console.log("DEBUG: updateDraftUI called. Role:", currentUserRole, "Side:", userTeamSide, "Step:", currentStep, "Started:", isDraftStarted); // Verbose Log
         if (!isDraftInitialized) return;
@@ -626,9 +650,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-            if (!timerInterval && hasPermission('startDraft')) startTimer();
+            // Start timer only if it's not already running and user has permission (judge/admin)
+            // Teams don't start the timer, they just react to it
+            if (!timerInterval && hasPermission('startDraft')) {
+                 startTimer();
+            }
             if(nextDraftButton) nextDraftButton.disabled = true;
-            if(timerDisplay) timerDisplay.disabled = true;
+            if(timerDisplay) timerDisplay.disabled = true; // Timer running or user is team
             if(swapButton) swapButton.disabled = true;
             if(toggleTimerButton) toggleTimerButton.disabled = true;
             if(priorityFilterButton) priorityFilterButton.disabled = true;
@@ -793,6 +821,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         console.log("resetDraftFull proceeding...");
+        // Update localStorage for other clients
+        localStorage.setItem(DRAFT_STATUS_KEY, 'stopped');
 
         currentStep = 0; selectedChampions.clear(); draftHistory = []; pickNicknames = {}; globallyDisabledChampions.clear(); globalBanHistory = []; isDraftComplete = false; isDraftStarted = false; previewedChampion = null; deselectSwapSlots(); stopTimer(); draftTimerDuration = 30; resetTimerDisplay();
         document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { restoreSlotPlaceholder(slot, slot.id, ''); slot.classList.remove('highlight-action', 'preview-flash'); });
@@ -818,6 +848,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         console.log("resetCurrentGamePicksBans proceeding...");
+        // Update localStorage for other clients
+        localStorage.setItem(DRAFT_STATUS_KEY, 'stopped');
 
         currentStep = 0;
         selectedChampions.clear(); // Clear current selections
@@ -852,7 +884,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleStartDraft() {
         console.log("handleStartDraft called");
         if (!hasPermission('startDraft')) { console.log("Start denied: No permission."); return; }
-        if (!isDraftStarted) { console.log("Starting draft..."); isDraftStarted = true; if(blueColumn) blueColumn.classList.remove('draft-disabled'); if(redColumn) redColumn.classList.remove('draft-disabled'); updateDraftUI(); }
+        if (!isDraftStarted) {
+            console.log("Starting draft...");
+            isDraftStarted = true;
+            // Update localStorage for other clients
+            localStorage.setItem(DRAFT_STATUS_KEY, 'started');
+            if(blueColumn) blueColumn.classList.remove('draft-disabled');
+            if(redColumn) redColumn.classList.remove('draft-disabled');
+            updateDraftUI(); // This will also call startTimer if needed
+        }
         else { console.log("Start denied: Draft already started."); }
      }
     const debouncedFilter = debounce(() => { filterChampions(); }, 250);
@@ -1067,6 +1107,71 @@ document.addEventListener('DOMContentLoaded', () => {
     function showChampionTooltip(event, champion) { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { if (!championTooltip || !champion) return; championTooltip.innerHTML = `<strong class="tooltip-title">${champion.name.ru}</strong><span class="tooltip-name">${champion.title.ru}</span>`; championTooltip.style.visibility = 'hidden'; championTooltip.style.display = 'block'; const tooltipRect = championTooltip.getBoundingClientRect(); championTooltip.style.visibility = ''; championTooltip.style.display = ''; const rect = event.target.getBoundingClientRect(); let top = rect.top - tooltipRect.height - 8; let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2); if (top < 0) { top = rect.bottom + 8; } if (left < 0) { left = 5; } else if (left + tooltipRect.width > window.innerWidth) { left = window.innerWidth - tooltipRect.width - 5; } championTooltip.style.left = `${left}px`; championTooltip.style.top = `${top}px`; championTooltip.classList.add('visible'); }, 100); }
     function hideChampionTooltip() { clearTimeout(tooltipTimeout); if (championTooltip) { championTooltip.classList.remove('visible'); } }
 
+    // --- localStorage Sync Logic ---
+    function checkSyncedDraftState() {
+        if (currentUserRole === 'judge' || currentUserRole === 'admin') return; // Only teams need to sync state
+
+        const syncedStatus = localStorage.getItem(DRAFT_STATUS_KEY);
+        // console.log(`DEBUG: checkSyncedDraftState - Role: ${currentUserRole}, Synced Status: ${syncedStatus}, Local isDraftStarted: ${isDraftStarted}`); // Verbose Log
+
+        if (syncedStatus === 'started' && !isDraftStarted) {
+            console.log(`SYNC: Draft started detected in localStorage. Updating local state for ${currentUserRole}.`);
+            isDraftStarted = true;
+            // Potentially reset local step/history if needed, but start should be enough
+            updateDraftUI(); // Update UI to reflect started state
+            showStatusMessage("Драфт начат судьей.", 2000);
+            stopListeningForDraftStateChanges(); // Stop polling once started
+        } else if (syncedStatus === 'stopped' && isDraftStarted) {
+            console.log(`SYNC: Draft stopped/reset detected in localStorage. Updating local state for ${currentUserRole}.`);
+            // Reset the local state more thoroughly if stopped
+            isDraftStarted = false;
+            isDraftComplete = false;
+            currentStep = 0;
+            // Keep selectedChampions/history? For now, let's reset them locally too for consistency
+            // If judge used "Clear Picks", the picks should clear visually.
+            // If judge used "Reset", everything should clear.
+            // Let updateDraftUI handle the visual reset based on isDraftStarted = false
+            updateDraftUI();
+            showStatusMessage("Драфт сброшен судьей.", 2000);
+            // Restart listening in case judge starts again
+            listenForDraftStateChanges();
+        }
+    }
+
+    function handleStorageChange(event) {
+        // console.log("DEBUG: Storage event detected", event); // Verbose Log
+        if (event.key === DRAFT_STATUS_KEY) {
+            console.log(`SYNC: Storage event for ${DRAFT_STATUS_KEY} detected. New value: ${event.newValue}`);
+            checkSyncedDraftState(); // Re-check and update based on the new value
+        }
+    }
+
+    function listenForDraftStateChanges() {
+        if (currentUserRole !== 'team1' && currentUserRole !== 'team2') return; // Only teams listen
+        if (draftStateListenerInterval) return; // Already listening
+
+        console.log(`SYNC: Starting to listen for draft state changes for role ${currentUserRole}`);
+        // Initial check
+        checkSyncedDraftState();
+
+        // Listen to storage events from other tabs/windows
+        window.addEventListener('storage', handleStorageChange);
+
+        // Poll localStorage periodically as a fallback for different browsers/devices
+        // (Note: This won't work across different devices, only different tabs/windows in the same browser)
+        draftStateListenerInterval = setInterval(checkSyncedDraftState, 2000); // Check every 2 seconds
+    }
+
+    function stopListeningForDraftStateChanges() {
+        if (draftStateListenerInterval) {
+            console.log(`SYNC: Stopping listening for draft state changes for role ${currentUserRole}`);
+            clearInterval(draftStateListenerInterval);
+            draftStateListenerInterval = null;
+        }
+        window.removeEventListener('storage', handleStorageChange);
+    }
+
+
     // --- Initial App Setup ---
      const initialRole = getRoleFromHash();
      if (initialRole) {
@@ -1077,7 +1182,3 @@ document.addEventListener('DOMContentLoaded', () => {
      }
 
 }); // End DOMContentLoaded
-</script>
-
-</body>
-</html>
