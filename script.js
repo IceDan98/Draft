@@ -1,6 +1,6 @@
-// script.js v7.16 - Bug fixes for timer, filters, admin priority state
+// script.js v7.17 - Fixed role filter logic
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v7.16..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v7.17..."); // Version Updated
 
     // --- Language State & Translations ---
     let currentLanguage = localStorage.getItem('language') || 'ru'; // Default to Russian
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         draftTimerDuration: 30,
         blueScore: '',
         redScore: '',
-        currentRoleFilter: 'All',
+        currentRoleFilter: 'All', // Default role filter
         isPriorityFilterActive: false,
         previewedChampionId: null // Store ID instead of full object
     };
@@ -330,72 +330,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- MODIFIED: localStorage Helper Functions handle admin_view correctly ---
     function getLobbyStorageKey(key) {
-        if (!currentLobbyId) {
-            console.error("Attempted to get storage key without a currentLobbyId");
-            return null;
-        }
+        if (!currentLobbyId) { console.error("Attempted to get storage key without a currentLobbyId"); return null; }
         // --- FIX: Allow admin_view to have its own keys ---
         return `lobby_${currentLobbyId}_${key}`;
     }
-
     function getLobbyItem(key, defaultValue) {
         const storageKey = getLobbyStorageKey(key);
         // --- FIX: Read normally even if admin_view ---
-        if (!storageKey) { // Should only happen if currentLobbyId is null somehow
-             console.warn("getLobbyItem called without valid storage key");
-             return defaultValue;
-        }
-
-        try {
-            const item = localStorage.getItem(storageKey);
-            return item != null ? JSON.parse(item) : defaultValue;
-        } catch (e) {
-            console.error(`Error parsing localStorage item "${storageKey}":`, e);
-            return defaultValue;
-        }
+        if (!storageKey) { console.warn("getLobbyItem called without valid storage key"); return defaultValue; }
+        try { const item = localStorage.getItem(storageKey); return item != null ? JSON.parse(item) : defaultValue; } catch (e) { console.error(`Error parsing localStorage item "${storageKey}":`, e); return defaultValue; }
     }
-
     function setLobbyItem(key, value) {
         const storageKey = getLobbyStorageKey(key);
          // --- FIX: Allow saving for admin_view ---
-        if (!storageKey) {
-             console.warn("setLobbyItem called without valid storage key");
-             return;
-        }
-
-        try {
-            let valueToStore = value;
-            if (value instanceof Set) {
-                valueToStore = Array.from(value);
-            }
-            localStorage.setItem(storageKey, JSON.stringify(valueToStore));
-        } catch (e) {
-            console.error(`Error setting localStorage item "${storageKey}":`, e);
-            showStatusMessage("Ошибка сохранения состояния лобби!", 5000);
-        }
+        if (!storageKey) { console.warn("setLobbyItem called without valid storage key"); return; }
+        try { let valueToStore = value; if (value instanceof Set) { valueToStore = Array.from(value); } localStorage.setItem(storageKey, JSON.stringify(valueToStore)); } catch (e) { console.error(`Error setting localStorage item "${storageKey}":`, e); showStatusMessage("Ошибка сохранения состояния лобби!", 5000); }
     }
-
     function removeLobbyItem(key) {
          const storageKey = getLobbyStorageKey(key);
          // --- FIX: Allow removing for admin_view ---
          if (!storageKey) return;
          localStorage.removeItem(storageKey);
     }
-
     function clearLobbyState() {
         // --- FIX: Allow clearing for admin_view ---
         if (!currentLobbyId) return;
         console.log(`Clearing state for lobby: ${currentLobbyId}`);
-        for (const key in defaultLobbyState) {
-            removeLobbyItem(key); // Uses getLobbyStorageKey which now works for admin
-        }
+        for (const key in defaultLobbyState) { removeLobbyItem(key); }
         // Also remove team names associated with this lobby (if not admin_view)
-        if (currentLobbyId !== 'admin_view') {
-            localStorage.removeItem(currentLobbyId + '_team1Name');
-            localStorage.removeItem(currentLobbyId + '_team2Name');
-        } else {
-             // Optionally clear admin-specific name/score if stored separately
-        }
+        if (currentLobbyId !== 'admin_view') { localStorage.removeItem(currentLobbyId + '_team1Name'); localStorage.removeItem(currentLobbyId + '_team2Name'); }
     }
     // --- END MODIFIED localStorage Helpers ---
 
@@ -482,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function restoreDraftStateFromStorage() { /* ... (Already added) ... */
         if (!currentLobbyId) return; console.log(`Restoring state for lobby: ${currentLobbyId}`); const loadedStep = getLobbyItem('currentStep', 0); const loadedIsStarted = getLobbyItem('isDraftStarted', false); const loadedIsComplete = getLobbyItem('isDraftComplete', false); const loadedTimerDuration = getLobbyItem('draftTimerDuration', 30); const loadedTimerSeconds = getLobbyItem('timerSeconds', loadedTimerDuration); const loadedRoleFilter = getLobbyItem('currentRoleFilter', 'All'); const loadedPriorityFilter = getLobbyItem('isPriorityFilterActive', false); const loadedBlueScore = getLobbyItem('blueScore', ''); const loadedRedScore = getLobbyItem('redScore', ''); const loadedSelectedChamps = new Set(getLobbyItem('selectedChampions', [])); const loadedDraftHistory = getLobbyItem('draftHistory', []); const loadedPickNicknames = getLobbyItem('pickNicknames', {}); const loadedGloballyDisabled = new Set(getLobbyItem('globallyDisabledChampions', [])); const loadedGlobalBanHistory = getLobbyItem('globalBanHistory', []); const loadedPreviewedChampionId = getLobbyItem('previewedChampionId', null);
         document.querySelectorAll('.pick-slot, .ban-slot').forEach(slot => { restoreSlotPlaceholder(slot, slot.id, ''); }); loadedDraftHistory.forEach(action => { const champ = getChampionById(action.championId); const slotElement = document.getElementById(action.slotId); const nickname = loadedPickNicknames[action.slotId] || ''; if (champ && slotElement) { fillSlot(slotElement, champ, action.type, nickname); } });
-        if (blueScoreEl) blueScoreEl.textContent = loadedBlueScore; if (redScoreEl) redScoreEl.textContent = loadedRedScore; if (championSearch) championSearch.value = ''; currentRoleFilter = loadedRoleFilter; if (filterButtons) { filterButtons.forEach(btn => { btn.classList.toggle('active', btn.dataset.role === currentRoleFilter); }); } isPriorityFilterActive = loadedPriorityFilter; if (newPriorityFilterButton) { newPriorityFilterButton.setAttribute('aria-pressed', isPriorityFilterActive.toString()); } filterChampions();
+        if (blueScoreEl) blueScoreEl.textContent = loadedBlueScore; if (redScoreEl) redScoreEl.textContent = loadedRedScore; if (championSearch) championSearch.value = ''; currentRoleFilter = loadedRoleFilter; if (filterButtons) { filterButtons.forEach(btn => { btn.classList.toggle('active', btn.dataset.role === currentRoleFilter); }); } isPriorityFilterActive = loadedPriorityFilter; if (newPriorityFilterButton) { newPriorityFilterButton.setAttribute('aria-pressed', isPriorityFilterActive.toString()); } filterChampions(); // Call filterChampions without argument to use loaded state
         previewedChampion = loadedPreviewedChampionId ? getChampionById(loadedPreviewedChampionId) : null; if (previewedChampion) { const draftOrder = getDraftOrder(); if (loadedStep < draftOrder.length) { const previewSlotId = draftOrder[loadedStep].slot; const previewSlotElement = document.getElementById(previewSlotId); if (previewSlotElement) { previewSlotElement.classList.add('preview-flash'); } } }
         draftTimerDuration = loadedTimerDuration; timerSeconds = loadedTimerSeconds; if(timerDisplay){ timerDisplay.textContent = formatTime(timerSeconds); } console.log(`State restored for lobby ${currentLobbyId}. Step: ${loadedStep}`);
     }
@@ -517,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => handleChampionPreview(champ)); card.addEventListener('mouseover', (event) => showChampionTooltip(event, champ)); card.addEventListener('mouseout', hideChampionTooltip); card.addEventListener('focus', (event) => showChampionTooltip(event, champ)); card.addEventListener('blur', hideChampionTooltip); return card;
     }
      function displayChampions() { /* ... (Already fixed) ... */
-        console.log('Inside displayChampions. createChampionCard type:', typeof createChampionCard); if(!championGridElement) { console.error("displayChampions: championGridElement not found"); return; } const fragment = document.createDocumentFragment(); processedChampions.sort((a, b) => a.name[currentLanguage].localeCompare(b.name[currentLanguage], currentLanguage)); processedChampions.forEach(champ => { if (typeof createChampionCard === 'function') { fragment.appendChild(createChampionCard(champ)); } else { console.error('CRITICAL: createChampionCard is not defined or not a function when called from displayChampions!'); } }); championGridElement.innerHTML = ''; championGridElement.appendChild(fragment); filterChampions();
+        console.log('Inside displayChampions. createChampionCard type:', typeof createChampionCard); if(!championGridElement) { console.error("displayChampions: championGridElement not found"); return; } const fragment = document.createDocumentFragment(); processedChampions.sort((a, b) => a.name[currentLanguage].localeCompare(b.name[currentLanguage], currentLanguage)); processedChampions.forEach(champ => { if (typeof createChampionCard === 'function') { fragment.appendChild(createChampionCard(champ)); } else { console.error('CRITICAL: createChampionCard is not defined or not a function when called from displayChampions!'); } }); championGridElement.innerHTML = ''; championGridElement.appendChild(fragment); filterChampions(); // Call filter without args initially
     }
     // --- MODIFIED: updateDraftUI reads lobby state ---
     function updateDraftUI() {
@@ -583,7 +546,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("resetDraftFull called, force:", force); if (!hasPermission('resetDraft')) { showStatusMessage("permDeniedReset", 2000); return; } const confirmationMessage = translations[currentLanguage].resetFullConfirmation; if (!force && !confirm(confirmationMessage)) { console.log("Full reset cancelled by user."); return; }
         console.log(`Resetting FULL state for lobby: ${currentLobbyId}`); clearLobbyState(); // Clears lobby state from localStorage
         document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { restoreSlotPlaceholder(slot, slot.id, ''); slot.classList.remove('highlight-action', 'preview-flash'); });
-        const lobbyTeam1Key = currentLobbyId + '_team1Name'; const lobbyTeam2Key = currentLobbyId + '_team2Name'; if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName; if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName; if (blueScoreEl) blueScoreEl.textContent = ''; if (redScoreEl) redScoreEl.textContent = ''; if(blueColumn) blueColumn.classList.add('draft-disabled'); if(redColumn) redColumn.classList.add('draft-disabled'); if(championSearch) championSearch.value = ''; currentRoleFilter = 'All'; if(filterButtons) { filterButtons.forEach(btn => btn.classList.remove('active')); filterButtons[0]?.classList.add('active'); } isPriorityFilterActive = false; if (newPriorityFilterButton) { newPriorityFilterButton.setAttribute('aria-pressed', 'false'); }
+        const lobbyTeam1Key = currentLobbyId + '_team1Name'; const lobbyTeam2Key = currentLobbyId + '_team2Name'; if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName; if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName; if (blueScoreEl) blueScoreEl.textContent = ''; if (redScoreEl) redScoreEl.textContent = ''; if(blueColumn) blueColumn.classList.add('draft-disabled'); if(redColumn) redColumn.classList.add('draft-disabled'); if(championSearch) championSearch.value = '';
+        // Reset filters in state
+        setLobbyItem('currentRoleFilter', 'All');
+        setLobbyItem('isPriorityFilterActive', false);
+        // Update UI for filters
+        if(filterButtons) { filterButtons.forEach(btn => btn.classList.remove('active')); filterButtons[0]?.classList.add('active'); }
+        if (newPriorityFilterButton) { newPriorityFilterButton.setAttribute('aria-pressed', 'false'); }
         stopTimer(); resetTimerDisplay(); displayGloballyBanned(); updateChampionAvailability(); filterChampions(); updateDraftUI(); updateUIText(currentLanguage); showStatusMessage("resetFullComplete", 2000);
     }
     function resetCurrentGamePicksBans(force = false, keepGlobal = false) {
@@ -592,18 +561,53 @@ document.addEventListener('DOMContentLoaded', () => {
          setLobbyItem('currentStep', 0); setLobbyItem('draftHistory', []); setLobbyItem('pickNicknames', {}); setLobbyItem('isDraftComplete', false); setLobbyItem('isDraftStarted', false); setLobbyItem('previewedChampionId', null); setLobbyItem('previewedSlotId', null); setLobbyItem('timerSeconds', getLobbyItem('draftTimerDuration', 30));
          let currentSelected = new Set(); let currentGlobalDisabled = new Set(getLobbyItem('globallyDisabledChampions', [])); let currentGlobalHistory = getLobbyItem('globalBanHistory', []);
          if (!keepGlobal) { setLobbyItem('globallyDisabledChampions', []); setLobbyItem('globalBanHistory', []); console.log("Global bans cleared for lobby."); } else { currentGlobalDisabled.forEach(id => currentSelected.add(id)); console.log("Keeping global bans for next draft in lobby."); } setLobbyItem('selectedChampions', Array.from(currentSelected));
-         deselectSwapSlots(); stopTimer(); resetTimerDisplay(); document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { restoreSlotPlaceholder(slot, slot.id, ''); slot.classList.remove('highlight-action', 'preview-flash'); }); if(blueColumn) blueColumn.classList.add('draft-disabled'); if(redColumn) redColumn.classList.add('draft-disabled'); displayGloballyBanned(); updateChampionAvailability(); filterChampions(); updateDraftUI(); const statusKey = keepGlobal ? "resetCurrentCompleteKeptGlobal" : "resetCurrentComplete"; showStatusMessage(statusKey, 2000, { global: globalPart });
+         deselectSwapSlots(); stopTimer(); resetTimerDisplay(); document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => { restoreSlotPlaceholder(slot, slot.id, ''); slot.classList.remove('highlight-action', 'preview-flash'); }); if(blueColumn) blueColumn.classList.add('draft-disabled'); if(redColumn) redColumn.classList.add('draft-disabled'); displayGloballyBanned(); updateChampionAvailability();
+         filterChampions(); // Call filterChampions without args to use lobby state
+         updateDraftUI(); const statusKey = keepGlobal ? "resetCurrentCompleteKeptGlobal" : "resetCurrentComplete"; showStatusMessage(statusKey, 2000, { global: globalPart });
     }
 
     // --- Other Handlers (Refactored for Lobby State) ---
     function handleStartDraft() {
         console.log("handleStartDraft called"); if (!hasPermission('startDraft')) { showStatusMessage("permDeniedStartDraft", 2000); return; } if (!getLobbyItem('isDraftStarted', false)) { console.log(`Starting draft for lobby ${currentLobbyId}...`); setLobbyItem('isDraftStarted', true); setLobbyItem('isDraftComplete', false); if(blueColumn) blueColumn.classList.remove('draft-disabled'); if(redColumn) redColumn.classList.remove('draft-disabled'); resetTimerDisplay(); startTimer(); updateDraftUI(); }
      }
-    const debouncedFilter = debounce(() => { filterChampions(); }, 250);
-    function filterChampions() { /* ... (Already modified) ... */
-        if (!isDraftInitialized || !championSearch || !championGridElement) return; const searchTerm = championSearch.value.toLowerCase().trim(); let visibleCount = 0; const roleFilter = getLobbyItem('currentRoleFilter', 'All'); const priorityFilterActive = getLobbyItem('isPriorityFilterActive', false); const lobbySelectedChamps = new Set(getLobbyItem('selectedChampions', [])); const lobbyGloballyDisabled = new Set(getLobbyItem('globallyDisabledChampions', [])); const combinedDisabled = new Set([...lobbySelectedChamps, ...lobbyGloballyDisabled]);
-        championGridElement.querySelectorAll('.champion-card').forEach(card => { const champId = card.dataset.championId; const nameEn = card.dataset.championNameEn || ''; const nameRu = card.dataset.championNameRu || ''; const champRoles = card.dataset.roles ? card.dataset.roles.split(',') : []; const searchMatch = nameEn.includes(searchTerm) || nameRu.includes(searchTerm) || champId.toLowerCase().includes(searchTerm); const roleMatch = roleFilter === 'All' || (champRoles.length > 0 && champRoles.includes(roleFilter)); const isPriority = priorityChampions.has(champId); const hideByPriorityFilter = priorityFilterActive && !isPriority; const isVisible = searchMatch && roleMatch && !hideByPriorityFilter; card.style.display = isVisible ? 'flex' : 'none'; if (isVisible) visibleCount++; const isDisabled = combinedDisabled.has(champId); card.classList.toggle('disabled', isDisabled); card.disabled = isDisabled; card.setAttribute('aria-disabled', isDisabled.toString()); card.classList.toggle('selected', lobbySelectedChamps.has(champId)); });
+    const debouncedFilter = debounce(() => { filterChampions(); }, 250); // Call without args
+
+    // --- MODIFIED: filterChampions uses argument OR lobby state ---
+    function filterChampions(roleFilterValue = null) {
+        if (!isDraftInitialized || !championSearch || !championGridElement) return;
+        const searchTerm = championSearch.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        // Use passed argument if available, otherwise get from lobby state
+        const roleFilter = roleFilterValue !== null ? roleFilterValue : getLobbyItem('currentRoleFilter', 'All');
+        const priorityFilterActive = getLobbyItem('isPriorityFilterActive', false);
+        const lobbySelectedChamps = new Set(getLobbyItem('selectedChampions', []));
+        const lobbyGloballyDisabled = new Set(getLobbyItem('globallyDisabledChampions', []));
+        const combinedDisabled = new Set([...lobbySelectedChamps, ...lobbyGloballyDisabled]);
+
+        console.log(`Filtering champions with Role: ${roleFilter}, Priority: ${priorityFilterActive}, Search: "${searchTerm}"`); // Debug log
+
+        championGridElement.querySelectorAll('.champion-card').forEach(card => {
+            const champId = card.dataset.championId;
+            const nameEn = card.dataset.championNameEn || '';
+            const nameRu = card.dataset.championNameRu || '';
+            const champRoles = card.dataset.roles ? card.dataset.roles.split(',') : [];
+            const searchMatch = nameEn.includes(searchTerm) || nameRu.includes(searchTerm) || champId.toLowerCase().includes(searchTerm);
+            const roleMatch = roleFilter === 'All' || (champRoles.length > 0 && champRoles.includes(roleFilter));
+            const isPriority = priorityChampions.has(champId);
+            const hideByPriorityFilter = priorityFilterActive && !isPriority;
+            const isVisible = searchMatch && roleMatch && !hideByPriorityFilter;
+            card.style.display = isVisible ? 'flex' : 'none';
+            if (isVisible) visibleCount++;
+            const isDisabled = combinedDisabled.has(champId);
+            card.classList.toggle('disabled', isDisabled);
+            card.disabled = isDisabled;
+            card.setAttribute('aria-disabled', isDisabled.toString());
+            card.classList.toggle('selected', lobbySelectedChamps.has(champId));
+        });
     }
+    // --- END MODIFIED filterChampions ---
+
     function deselectSwapSlots() { /* ... (no changes needed) ... */ if (selectedSwapSlotId) { const prevSelected = document.getElementById(selectedSwapSlotId); if (prevSelected) { prevSelected.classList.remove('swap-selected'); } selectedSwapSlotId = null; } }
     function handlePickContainerClick(event) { /* ... (uses lobby state for nicknames) ... */
          if (event.target.classList.contains('nickname-input')) { return; } if (!hasPermission('swapSides')) { return; } const clickedSlot = event.target.closest('.pick-slot'); const isComplete = getLobbyItem('isDraftComplete', false); if (!isComplete || !clickedSlot || !clickedSlot.dataset.championId) { deselectSwapSlots(); return; } const clickedSlotId = clickedSlot.id;
@@ -634,13 +638,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleToggleTimer() {
          console.log("handleToggleTimer called"); if (!hasPermission('toggleTimerDuration')) { showStatusMessage("permDeniedToggleTimer", 2000); return; } if (getLobbyItem('isDraftStarted', false)) { return; } let currentDuration = getLobbyItem('draftTimerDuration', 30); currentDuration = currentDuration === 30 ? 45 : 30; setLobbyItem('draftTimerDuration', currentDuration); resetTimerDisplay(); toggleTimerButton.title = translations[currentLanguage].toggleTimerTitle; showStatusMessage("timerToggled", 1500, { duration: currentDuration }); console.log("Timer duration set to:", currentDuration);
      }
-     // --- MODIFIED: handleRoleFilterClick uses lobby state ---
+     // --- MODIFIED: handleRoleFilterClick passes role to filterChampions ---
     function handleRoleFilterClick(event) {
          const clickedButton = event.currentTarget; if (!clickedButton || clickedButton.disabled) return; const role = clickedButton.dataset.role; if (!role) return; if (!hasPermission('useRoleFilters')) { showStatusMessage("permDeniedRoleFilter", 2000); return; }
-         // Pass role directly to filterChampions instead of setting/getting state immediately
-         // setLobbyItem('currentRoleFilter', role); // No longer needed here
+         setLobbyItem('currentRoleFilter', role); // Save state for persistence
          if (filterButtons) { filterButtons.forEach(btn => { btn.classList.remove('active'); }); clickedButton.classList.add('active'); }
-         filterChampions(role); // Pass role to filter function
+         filterChampions(role); // Pass the clicked role directly
      }
      // --- MODIFIED: handleNewPriorityFilterToggle uses lobby state ---
     function handleNewPriorityFilterToggle() {
