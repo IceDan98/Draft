@@ -1,0 +1,1584 @@
+/* style.css - v11.7 - Light theme column background less transparent */
+:root {
+    /* Base Sizes */
+    --gap-size: 0.5rem;
+    --gap-half: calc(var(--gap-size) / 2);
+    --gap-double: calc(var(--gap-size) * 2);
+
+    /* Sizes (vmin/vh for scalability) */
+    --ban-size: 5.5vmin;
+    /* --- MODIFIED: Increased champion card size by 50% --- */
+    --card-size: 12vh; /* Was 8vh */
+    --nick-height: 3.5vh;
+    --nick-font-size: 2.8vh;
+    --button-size: 4.2vh; /* Base button height/width */
+    --timer-font-size: 2vh;
+    --score-size: 4.2vh;
+    --score-font-size: 2vh;
+    --filter-button-size: 3.8vh;
+    /* --- MODIFIED: Fixed global ban icon size (based on original 8vh card size) --- */
+    --global-ban-icon-size: 6.4vh; /* Was calc(var(--card-size) * 0.8), now fixed 8vh * 0.8 */
+    --top-right-button-size: 2.5rem; /* 40px, consistent size for top-right buttons */
+
+
+    /* Minimum Sizes */
+    --ban-min-size: 28px;
+    --pick-min-height: 55px;
+    /* --- MODIFIED: Increased champion card min size by 50% --- */
+    --card-min-size: 63px; /* Was 42px */
+    --nick-min-height: 16px;
+    --button-min-size: 28px;
+    --score-min-size: 28px;
+    --team-name-min-height: 30px;
+    --team-col-min-width: 240px;
+    /* --- MODIFIED: Kept original global ban min size --- */
+    --global-ban-icon-min-size: 35px; /* Kept original */
+    --top-right-button-min-size: 36px; /* Slightly smaller min size */
+
+
+    /* Colors - Dark Theme (Default) */
+    /* These define the base look (Dark Mode) */
+    --color-background: #0a0f1f;
+    --color-background-gradient-end: #0f0a1a; /* No longer used for body bg */
+    --color-surface-1: #10182f; /* Darker Gray */
+    --color-surface-2: #1a2340; /* Lighter Gray */
+    --color-text-primary: #e0e8f0;
+    --color-text-secondary: #8095b0;
+    --color-text-placeholder: #556a88;
+    --color-border: #2a3858;
+    --color-border-medium: #405075;
+    --color-accent-gold: #c8aa6e;
+    --color-accent-blue: #50a0f0; /* Default light blue */
+    --color-accent-red: #f05050;
+    --color-accent-green: #40f0a0;
+    --color-accent-purple: #a070f0;
+    --color-accent-blue-dark: #313850; /* Dark blue */
+
+    --color-blue-team: var(--color-accent-blue);
+    --color-red-team: var(--color-accent-red);
+
+    /* Adjusted Transparency */
+    --color-blue-bg-transparent: rgba(80, 160, 240, 0.4); /* More opaque */
+    --color-red-bg-transparent: rgba(240, 80, 80, 0.4); /* More opaque */
+
+    --color-tooltip-bg: rgba(10, 15, 31, 0.9);
+    --color-tooltip-text: var(--color-text-primary);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.15);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.2);
+    --shadow-glow-gold: 0 0 10px 0px rgba(200, 170, 110, 0.5);
+    --shadow-glow-blue: 0 0 10px 0px rgba(80, 160, 240, 0.5);
+    --shadow-glow-red: 0 0 8px 0px rgba(240, 80, 80, 0.4);
+}
+
+/* --- Light Theme Variable Definitions (New Palette - For Reference Only) --- */
+/* Note: Styles below apply colors directly, bypassing these variables for light theme */
+html[data-theme='light'] :root {
+    --color-background: #FFFFFF;
+    --color-background-gradient-end: #F9FAFB; /* Tailwind gray-50 */
+    --color-surface-1: #F3F4F6; /* Tailwind gray-100 */
+    --color-surface-2: #E5E7EB; /* Tailwind gray-200 */
+    --color-text-primary: #111827; /* Tailwind gray-900 */
+    --color-text-secondary: #6B7280; /* Tailwind gray-500 */
+    --color-text-placeholder: #9CA3AF; /* Tailwind gray-400 */
+    --color-border: #D1D5DB; /* Tailwind gray-300 */
+    --color-border-medium: #9CA3AF; /* Tailwind gray-400 */
+    --color-accent-gold: #D97706; /* Tailwind amber-600 */
+    --color-accent-blue: #2563EB; /* Tailwind blue-600 */
+    --color-accent-red: #DC2626; /* Tailwind red-600 */
+    --color-accent-green: #16A34A; /* Tailwind green-600 */
+    --color-accent-purple: #7C3AED; /* Tailwind violet-600 */
+    --color-accent-blue-dark: #1E40AF; /* Tailwind blue-800 (for lobby labels) */
+
+    /* Update dependent variables for light theme */
+    --color-blue-team: var(--color-accent-blue);
+    --color-red-team: var(--color-accent-red);
+
+    /* --- MODIFIED: Increased alpha for light theme column backgrounds --- */
+    --color-blue-bg-transparent: rgba(37, 99, 235, 0.4); /* Was 0.2 */
+    --color-red-bg-transparent: rgba(220, 38, 38, 0.4); /* Was 0.2 */
+
+    --color-tooltip-bg: rgba(243, 244, 246, 0.95); /* Adjusted based on light surface-1 */
+    --color-tooltip-text: var(--color-text-primary);
+
+    /* Lighter shadows for light theme */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.07);
+    --shadow-glow-gold: 0 0 10px 0px rgba(217, 119, 6, 0.3); /* Adjusted based on light gold */
+    --shadow-glow-blue: 0 0 10px 0px rgba(37, 99, 235, 0.3); /* Adjusted based on light blue */
+    --shadow-glow-red: 0 0 8px 0px rgba(220, 38, 38, 0.3); /* Adjusted based on light red */
+}
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Use variables here, as they should work for scrollbar */
+    scrollbar-color: var(--color-border-medium) var(--color-surface-1);
+    scrollbar-width: thin;
+}
+body::-webkit-scrollbar { width: 8px; }
+body::-webkit-scrollbar-track { background: var(--color-surface-1); }
+body::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; border: 2px solid var(--color-surface-1); }
+/* Light theme scrollbar */
+html[data-theme='light'] body::-webkit-scrollbar-track { background: #F3F4F6; }
+html[data-theme='light'] body::-webkit-scrollbar-thumb { background-color: #9CA3AF; border-color: #F3F4F6; }
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* Base styles using variables (Dark theme default) */
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* transition: background-color 0.3s ease, color 0.3s ease; /* Re-add transition if desired */
+}
+
+/* Direct override for light theme body background */
+html[data-theme='light'] body {
+    background-color: #FFFFFF; /* Directly set white for light theme */
+    color: #111827; /* Directly set light theme text color */
+}
+
+
+#app-container {
+    width: 100%;
+    height: 100%;
+    max-width: 2600px;
+    padding: var(--gap-size);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Needed for absolute positioning */
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Ensure loading indicator is hidden by default */
+#loadingIndicator {
+    display: none; /* Hide by default */
+    /* Styles below apply when .visible is added by JS */
+    position: fixed;
+    inset: 0;
+    background-color: rgba(10, 15, 31, 0.85); /* Dark theme overlay */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease-out;
+}
+#loadingIndicator.visible { /* Added for clarity, using class now */
+    display: flex; /* Show when needed */
+}
+/* Light theme loading indicator */
+html[data-theme='light'] #loadingIndicator {
+    background-color: rgba(243, 244, 246, 0.85); /* Use light surface-1 */
+    color: #111827; /* Use light text */
+}
+/* Ensure hidden class takes precedence */
+#loadingIndicator.hidden {
+    display: none !important;
+}
+
+
+/* --- Home Page Styles --- */
+#homePage {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+#homeTitle {
+    font-family: 'Cinzel', serif;
+    color: var(--color-accent-gold); /* Use variable */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Adjusted shadow */
+    font-size: clamp(2rem, 6vmin, 3.5rem);
+    margin-bottom: 2rem;
+}
+html[data-theme='light'] #homeTitle {
+    color: #D97706; /* Direct light gold */
+}
+
+/* Styles for new home page elements */
+.lobby-input {
+    /* Use variable mix for transparency */
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 65%); /* Dark theme */
+    border: 1px solid var(--color-border); /* Dark theme */
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
+    text-shadow: none;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 2.5vh, 1.3rem);
+    font-weight: 700; /* Bolder weight */
+}
+/* Specific colors for team inputs */
+#team1NameInput {
+    color: var(--color-blue-team); /* Dark theme */
+}
+#team2NameInput {
+    color: var(--color-red-team); /* Dark theme */
+}
+
+/* ***** MODIFIED: Direct Light Theme Styles for Home Page Inputs (New Palette) ***** */
+html[data-theme='light'] .lobby-input {
+     background-color: transparent;
+     border-color: #D1D5DB; /* New light border */
+     color: #111827; /* New light text */
+}
+html[data-theme='light'] #team1NameInput {
+     color: #2563EB; /* New light blue */
+}
+html[data-theme='light'] #team2NameInput {
+     color: #DC2626; /* New light red */
+}
+
+
+.lobby-input::placeholder {
+    color: var(--color-text-placeholder); /* Dark theme */
+    text-shadow: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+/* ***** MODIFIED: Direct Light Theme Placeholder (New Palette) ***** */
+html[data-theme='light'] .lobby-input::placeholder {
+    color: #9CA3AF; /* New light placeholder */
+}
+
+#createLobbyButton {
+    background-color: var(--color-accent-blue-dark); /* Dark blue default */
+    border-color: var(--color-accent-blue-dark);
+    color: #FFFFFF;
+    padding: 0.8rem 2rem;
+    font-size: clamp(1rem, 2.5vh, 1.3rem);
+    min-width: 150px;
+    font-weight: 600;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    box-shadow: var(--shadow-md);
+    margin-top: 1rem;
+}
+#createLobbyButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 10%);
+    border-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 15%);
+    box-shadow: var(--shadow-lg);
+}
+#createLobbyButton:active:not(:disabled) {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+}
+/* Light theme override for Create Lobby Button */
+html[data-theme='light'] #createLobbyButton {
+     background-color: #2563EB; /* New light blue */
+     border-color: #2563EB;
+     color: #FFFFFF;
+}
+html[data-theme='light'] #createLobbyButton:hover:not(:disabled) {
+     background-color: color-mix(in srgb, #2563EB, #000 10%); /* Darken new light blue */
+     border-color: color-mix(in srgb, #2563EB, #000 10%);
+}
+
+ #lobbyLinksDisplay {
+    margin-top: 2rem;
+    background-color: var(--color-surface-1); /* Dark theme */
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border); /* Dark theme */
+    max-width: 90%;
+    word-wrap: break-word;
+    text-align: left;
+ }
+ /* Light theme override for Lobby Links Display */
+ html[data-theme='light'] #lobbyLinksDisplay {
+     background-color: #F3F4F6; /* New light surface-1 */
+     border-color: #D1D5DB; /* New light border */
+ }
+
+ #lobbyLinksDisplay p {
+    margin-bottom: 0.75rem;
+    font-size: clamp(0.8rem, 2vmin, 1rem);
+ }
+ #lobbyLinksDisplay strong {
+    color: var(--color-accent-blue); /* Default light blue for dark theme */
+    display: inline-block;
+    min-width: 100px;
+ }
+ /* Light theme override for label color */
+ html[data-theme='light'] #lobbyLinksDisplay strong {
+     color: #1E40AF; /* Use dark blue for light theme */
+ }
+
+ #lobbyLinksDisplay a, #lobbyLinksDisplay span {
+     color: var(--color-accent-blue); /* Dark theme */
+     display: inline-block;
+     margin-left: 0.5rem;
+     word-break: break-all;
+     background-color: var(--color-surface-2); /* Dark theme */
+     padding: 0.2rem 0.4rem;
+     border-radius: 0.25rem;
+     cursor: pointer;
+     border: 1px solid var(--color-border-medium); /* Dark theme */
+ }
+  /* Light theme override for Lobby Links */
+ html[data-theme='light'] #lobbyLinksDisplay a,
+ html[data-theme='light'] #lobbyLinksDisplay span {
+     color: #2563EB; /* New light blue */
+     background-color: #E5E7EB; /* New light surface-2 */
+     border-color: #9CA3AF; /* New light border-medium */
+ }
+
+ #lobbyLinksDisplay a:hover {
+     text-decoration: none;
+     background-color: var(--color-border-medium); /* Dark theme */
+     color: var(--color-text-primary); /* Dark theme */
+ }
+  /* Light theme override for Lobby Links Hover */
+ html[data-theme='light'] #lobbyLinksDisplay a:hover {
+     background-color: #9CA3AF; /* New light border-medium */
+     color: #111827; /* New light text */
+ }
+
+ .copy-button {
+    background-color: var(--color-accent-purple); /* Dark theme */
+    color: #FFFFFF;
+    border: none;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.75em;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: background-color 0.2s;
+ }
+ /* Light theme override for Copy Button */
+ html[data-theme='light'] .copy-button {
+     background-color: #7C3AED; /* New light purple */
+     color: #FFFFFF;
+ }
+ .copy-button:hover {
+    background-color: color-mix(in srgb, var(--color-accent-purple), #000 10%);
+ }
+ html[data-theme='light'] .copy-button:hover {
+     background-color: color-mix(in srgb, #7C3AED, #000 10%); /* Darken new light purple */
+ }
+
+/* --- Top Right Buttons Container --- */
+#topRightButtons {
+    position: absolute;
+    top: var(--gap-double);
+    right: var(--gap-double);
+    z-index: 10;
+    display: flex;
+    gap: var(--gap-size);
+    align-items: center;
+}
+
+/* --- Admin Button & Theme Button Styles (within container) --- */
+#adminButton, #themeToggleButton, #languageToggleButton { /* Added language button */
+    width: var(--top-right-button-size);
+    height: var(--top-right-button-size);
+    min-width: var(--top-right-button-min-size);
+    min-height: var(--top-right-button-min-size);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border); /* Dark theme */
+}
+
+#adminButton {
+    background-color: var(--color-accent-blue-dark); /* Dark blue default */
+    border-color: var(--color-accent-blue-dark);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: auto; /* Keep auto width for Admin text */
+    padding: 0 1rem;
+}
+#adminButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 10%);
+    border-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 15%);
+    box-shadow: var(--shadow-lg);
+}
+#adminButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+}
+/* Light theme override for Admin Button */
+html[data-theme='light'] #adminButton {
+    background-color: #2563EB; /* New light blue */
+    border-color: #2563EB;
+    color: white;
+}
+html[data-theme='light'] #adminButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, #2563EB, #000 10%); /* Darken new light blue */
+    border-color: color-mix(in srgb, #2563EB, #000 10%);
+}
+
+
+/* Theme Toggle Button Specifics */
+#themeToggleButton {
+    background-color: var(--color-surface-2); /* Dark theme */
+    color: var(--color-text-secondary); /* Dark theme */
+    font-size: 1.1rem; /* Icon size */
+    line-height: 1;
+}
+/* Light theme override for Theme Toggle Button */
+html[data-theme='light'] #themeToggleButton {
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #6B7280; /* New light text-secondary */
+    border-color: #D1D5DB; /* New light border */
+}
+
+#themeToggleButton:hover {
+    background-color: var(--color-surface-1); /* Dark theme */
+    color: var(--color-text-primary); /* Dark theme */
+    box-shadow: var(--shadow-lg);
+}
+/* Light theme override for Theme Toggle Hover */
+html[data-theme='light'] #themeToggleButton:hover {
+    background-color: #F3F4F6; /* New light surface-1 */
+    color: #111827; /* New light text-primary */
+    border-color: #9CA3AF; /* New light border-medium */
+}
+
+#themeToggleButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Language Toggle Button Specifics */
+#languageToggleButton {
+    background-color: var(--color-surface-2); /* Dark theme */
+    color: var(--color-text-secondary); /* Dark theme */
+    font-size: 0.75rem; /* Smaller text */
+    font-weight: 600;
+    line-height: 1;
+    width: auto; /* Auto width for text */
+    padding: 0 0.6rem; /* Adjust padding */
+}
+/* Light theme override for Language Toggle Button */
+html[data-theme='light'] #languageToggleButton {
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #6B7280; /* New light text-secondary */
+    border-color: #D1D5DB; /* New light border */
+}
+#languageToggleButton:hover {
+    background-color: var(--color-surface-1); /* Dark theme */
+    color: var(--color-text-primary); /* Dark theme */
+    box-shadow: var(--shadow-lg);
+}
+/* Light theme override for Language Toggle Hover */
+html[data-theme='light'] #languageToggleButton:hover {
+    background-color: #F3F4F6; /* New light surface-1 */
+    color: #111827; /* New light text-primary */
+    border-color: #9CA3AF; /* New light border-medium */
+}
+#languageToggleButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* --- Draft Page Styles --- */
+#draftPage {
+     height: 100%;
+     overflow: hidden;
+}
+
+
+.team-name {
+    font-family: 'Cinzel', serif;
+    text-shadow: none; /* Removed text-shadow */
+    text-align: center; /* Center alignment */
+    font-size: clamp(1.2rem, 3.5vmin, 1.8rem);
+    font-weight: 600;
+    flex-shrink: 1;
+    min-height: var(--team-name-min-height);
+    line-height: var(--team-name-min-height);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.375rem;
+    background-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: default;
+}
+#blue-team-name-h2 {
+    justify-self: center; /* Center within grid cell */
+    color: var(--color-blue-team); /* Default blue */
+}
+#red-team-name-h2 {
+    justify-self: center; /* Center within grid cell */
+    color: var(--color-red-team); /* Default red */
+}
+/* Light theme override for Team Names */
+html[data-theme='light'] .team-name {
+     /* text-shadow: none; /* Already removed */
+     color: var(--color-blue-team); /* Use light theme blue var */
+}
+html[data-theme='light'] #red-team-name-h2 {
+    color: var(--color-red-team); /* Use light theme red var */
+}
+
+/* --- MODIFIED NICKNAME STYLES --- */
+/* Base Nickname Input Styles (Used by Both Themes) */
+.nickname-input {
+     font-family: 'Inter', sans-serif;
+     background-color: transparent !important;
+     color: #fff; /* White text */
+     border-radius: 0.25rem;
+     padding: 2px 6px;
+     /* --- MODIFIED: Thicker 2px black stroke --- */
+     text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000, /* Diagonals */
+        -2px  0   0 #000,
+         2px  0   0 #000,
+         0   -2px 0 #000,
+         0    2px 0 #000; /* Cardinals */
+}
+
+/* Base Placeholder Styles (Used by Both Themes) */
+.nickname-input[contenteditable="true"]:empty::before {
+    /* --- MODIFIED: Use data-placeholder attribute for content --- */
+    content: attr(data-placeholder);
+    color: #fff; /* White placeholder text */
+    font-style: normal;
+    opacity: 0.7; /* Make placeholder slightly transparent */
+    /* --- REMOVED: text-shadow: none; --- */
+    /* --- ADDED: Same thicker 2px black stroke for placeholder --- */
+     text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000, /* Diagonals */
+        -2px  0   0 #000,
+         2px  0   0 #000,
+         0   -2px 0 #000,
+         0    2px 0 #000; /* Cardinals */
+}
+/* --- END OF MODIFIED NICKNAME STYLES --- */
+
+
+#mainLayout {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: auto minmax(300px, 1fr) auto;
+    gap: var(--gap-size);
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+#mainLayout:not(.hidden) {
+    opacity: 1;
+}
+
+#topRowContainer {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: var(--gap-size);
+    align-items: center;
+    margin-bottom: var(--gap-size);
+    min-height: calc(var(--button-size) + var(--gap-size));
+}
+
+.top-row-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-size);
+    min-width: 0;
+}
+.top-row-cell.blue-info { grid-column: 1; justify-content: flex-start; }
+.top-row-cell.center-controls { grid-column: 2; justify-content: center; }
+.top-row-cell.red-info { grid-column: 3; justify-content: flex-end; }
+
+.center-controls-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content max-content max-content minmax(0, 1fr);
+    align-items: center;
+    gap: var(--gap-size);
+    width: 100%;
+}
+
+.team-name[contenteditable="true"]:hover {
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 50%);
+}
+html[data-theme='light'] .team-name[contenteditable="true"]:hover {
+    background-color: color-mix(in srgb, #F3F4F6, transparent 50%); /* New light surface-1 */
+}
+
+.team-name[contenteditable="true"]:focus {
+    outline: 2px solid var(--color-accent-gold);
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 30%);
+    white-space: normal;
+    overflow: visible;
+    box-shadow: var(--shadow-glow-gold);
+}
+html[data-theme='light'] .team-name[contenteditable="true"]:focus {
+    outline-color: #D97706; /* New light gold */
+    background-color: color-mix(in srgb, #E5E7EB, transparent 30%); /* New light surface-2 */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
+
+.score-input {
+    width: var(--score-size);
+    height: var(--score-size);
+    min-width: var(--score-min-size);
+    min-height: var(--score-min-size);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--score-font-size);
+    font-weight: 600;
+    flex-shrink: 0;
+    justify-self: center;
+    background-color: var(--color-surface-2);
+    cursor: default;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+/* Light theme override for Score Input */
+html[data-theme='light'] .score-input {
+    border-color: #D1D5DB; /* New light border */
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #111827; /* New light text */
+}
+
+ .score-input[contenteditable="true"] {
+     cursor: text;
+ }
+.score-input[contenteditable="true"]:hover {
+     background-color: var(--color-surface-1);
+     border-color: var(--color-border-medium);
+}
+/* Light theme override for Score Input Hover */
+html[data-theme='light'] .score-input[contenteditable="true"]:hover {
+     background-color: #F3F4F6; /* New light surface-1 */
+     border-color: #9CA3AF; /* New light border-medium */
+}
+
+.score-input[contenteditable="true"]:focus {
+    outline: none;
+    border-color: var(--color-accent-gold);
+    background-color: var(--color-surface-1);
+    box-shadow: var(--shadow-glow-gold);
+}
+/* Light theme override for Score Input Focus */
+html[data-theme='light'] .score-input[contenteditable="true"]:focus {
+    border-color: #D97706; /* New light gold */
+    background-color: #F3F4F6; /* New light surface-1 */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
+
+.score-input:empty::before {
+    content: "0";
+    color: var(--color-text-placeholder);
+    font-style: normal;
+}
+/* Light theme override for Score Placeholder */
+html[data-theme='light'] .score-input:empty::before {
+    color: #9CA3AF; /* New light placeholder */
+}
+
+#blue-score { color: var(--color-blue-team); }
+#red-score { color: var(--color-red-team); }
+/* Light theme override for Score Text uses variables */
+
+
+.timer-display-button {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--timer-font-size);
+    font-weight: 600;
+    color: #FFFFFF; /* Keep white */
+    min-width: 6ch;
+    text-align: center;
+    background-color: var(--color-accent-green);
+    border: none;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.375rem;
+    height: var(--button-size);
+    min-height: var(--button-min-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+/* Light theme override for Timer Button */
+html[data-theme='light'] .timer-display-button {
+    background-color: #16A34A; /* New light green */
+    color: #FFFFFF; /* Keep white */
+}
+
+.timer-display-button:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-green), #000 10%);
+    box-shadow: var(--shadow-md);
+}
+html[data-theme='light'] .timer-display-button:hover:not(:disabled) {
+    background-color: color-mix(in srgb, #16A34A, #000 10%); /* Darken new light green */
+}
+
+.timer-display-button:disabled,
+.timer-display-button.timer-disabled {
+    cursor: default;
+    background-color: var(--color-surface-2);
+    color: var(--color-text-secondary);
+    opacity: 0.8;
+    box-shadow: none;
+}
+html[data-theme='light'] .timer-display-button:disabled,
+html[data-theme='light'] .timer-display-button.timer-disabled {
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #6B7280; /* New light text-secondary */
+}
+
+.timer-display-button.timer-running {
+    background-color: var(--color-surface-2);
+    color: var(--color-text-primary);
+    cursor: default;
+    opacity: 1;
+    box-shadow: none;
+}
+html[data-theme='light'] .timer-display-button.timer-running {
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #111827; /* New light text-primary */
+}
+
+.timer-display-button.timer-ending {
+    color: var(--color-accent-red);
+    animation: pulse-red 1s infinite;
+}
+html[data-theme='light'] .timer-display-button.timer-ending {
+    color: #DC2626; /* New light red */
+    /* Animation uses accent-red variable, which is overridden */
+}
+
+@keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-red), transparent 60%); }
+    50% { box-shadow: 0 0 5px 2px color-mix(in srgb, var(--color-accent-red), transparent 80%); }
+}
+
+
+.bans-container {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-half);
+    flex-shrink: 0;
+}
+
+#draftArea {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: var(--gap-size);
+    overflow: hidden;
+    min-height: 0;
+    align-items: stretch;
+}
+
+.team-column {
+    min-width: var(--team-col-min-width);
+    width: auto;
+    max-width: 480px;
+    flex: 0 1 var(--team-col-min-width);
+    padding: var(--gap-size);
+    border-radius: 0.5rem;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: opacity 0.3s ease, filter 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid var(--color-border);
+    background-color: transparent;
+}
+/* Light theme override for Team Column */
+html[data-theme='light'] .team-column {
+    border-color: #D1D5DB; /* New light border */
+}
+.team-column.blue-column { background-color: var(--color-blue-bg-transparent); border-color: color-mix(in srgb, var(--color-blue-team), transparent 70%); }
+.team-column.red-column { background-color: var(--color-red-bg-transparent); border-color: color-mix(in srgb, var(--color-red-team), transparent 70%);}
+
+/* --- MODIFIED: Light theme override for Team Column BG/Border --- */
+html[data-theme='light'] .team-column.blue-column { background-color: rgba(37, 99, 235, 0.4); border-color: color-mix(in srgb, #2563EB, transparent 70%); } /* Alpha was 0.2 */
+html[data-theme='light'] .team-column.red-column { background-color: rgba(220, 38, 38, 0.4); border-color: color-mix(in srgb, #DC2626, transparent 70%);} /* Alpha was 0.2 */
+
+.team-column::-webkit-scrollbar { display: none; }
+
+.team-column.draft-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    filter: grayscale(60%);
+}
+.team-column.role-disabled {
+     opacity: 0.7;
+     filter: grayscale(30%);
+     pointer-events: none;
+}
+.team-column.role-disabled .pick-slot,
+.team-column.role-disabled .ban-slot {
+     pointer-events: none;
+     cursor: not-allowed;
+}
+.team-column.role-disabled .nickname-input {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+
+.picks-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-size);
+    flex-grow: 1;
+    justify-content: space-around;
+    width: 100%;
+    min-height: 0;
+    margin-top: var(--gap-size);
+}
+
+.pick-slot, .ban-slot {
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    border-radius: 0.375rem;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+/* Light theme override for Slots */
+html[data-theme='light'] .pick-slot,
+html[data-theme='light'] .ban-slot {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+}
+
+
+.ban-slot {
+    width: var(--ban-size);
+    height: var(--ban-size);
+    min-width: var(--ban-min-size);
+    min-height: var(--ban-min-size);
+    border-radius: 0.25rem;
+}
+.pick-slot {
+    min-height: var(--pick-min-height);
+    width: 100%;
+    height: auto;
+    flex-grow: 1;
+    position: relative;
+}
+.pick-slot img, .ban-slot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.highlight-action {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-glow-gold);
+    background-color: color-mix(in srgb, var(--color-surface-2), var(--color-accent-gold) 10%);
+}
+/* Light theme override for Highlight */
+html[data-theme='light'] .highlight-action {
+    border-color: #D97706; /* New light gold */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+    background-color: color-mix(in srgb, #E5E7EB, #D97706 10%); /* Mix new light colors */
+}
+
+
+.swap-selected {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue);
+}
+/* Light theme override for Swap Selected */
+html[data-theme='light'] .swap-selected {
+    border-color: #2563EB; /* New light blue */
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+}
+
+
+@keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.preview-flash > img { animation: flash 1s infinite ease-in-out; }
+
+.nickname-input[contenteditable="true"] {
+    position: absolute;
+    bottom: 5px;
+    width: auto;
+    max-width: calc(100% - 16px);
+    z-index: 1;
+    font-size: calc(var(--nick-font-size) * 0.9);
+    font-weight: 500;
+    height: auto;
+    min-height: var(--nick-min-height);
+    pointer-events: auto;
+    cursor: text;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent;
+}
+
+ .nickname-input:not([contenteditable="true"]) {
+     cursor: default;
+     pointer-events: none;
+ }
+
+
+[id^="blue-pick-"] .nickname-input { right: 8px; left: auto; text-align: right; }
+[id^="red-pick-"] .nickname-input { left: 8px; right: auto; text-align: left; }
+
+.nickname-input[contenteditable="true"]:focus {
+    outline: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    border: 1px solid var(--color-accent-gold);
+    box-shadow: var(--shadow-glow-gold);
+}
+/* Light theme override for nickname focus */
+html[data-theme='light'] .nickname-input[contenteditable="true"]:focus {
+    border-color: #D97706; /* New light gold */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
+
+
+#championGridContainer {
+    grid-column: 2;
+    background-color: transparent;
+    border-radius: 0.5rem;
+    padding: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 300px;
+    border: none;
+}
+
+#globallyBannedDisplay {
+    flex-shrink: 0;
+    margin-bottom: var(--gap-size);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-half);
+    width: 100%;
+    min-height: calc(var(--global-ban-icon-min-size) + var(--gap-half));
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--gap-half);
+    transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+}
+/* Light theme override for Global Ban Display */
+html[data-theme='light'] #globallyBannedDisplay {
+    border-bottom-color: #D1D5DB; /* New light border */
+}
+
+#globallyBannedDisplay.hidden { opacity: 0; max-height: 0; margin-bottom: 0; padding-bottom: 0; border-bottom: none; overflow: hidden; }
+
+.global-bans-row { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; gap: var(--gap-size); }
+#global-bans-blue, #global-bans-red { display: grid; grid-template-columns: repeat(5, auto); gap: var(--gap-half); align-items: center; min-height: var(--global-ban-icon-min-size); }
+#global-bans-blue { justify-items: start; }
+#global-bans-red { justify-items: end; }
+
+.global-ban-icon {
+    width: var(--global-ban-icon-size); /* Uses the fixed size */
+    height: var(--global-ban-icon-size); /* Uses the fixed size */
+    min-width: var(--global-ban-icon-min-size); /* Uses the fixed min size */
+    min-height: var(--global-ban-icon-min-size); /* Uses the fixed min size */
+    background-size: cover;
+    background-position: center;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-surface-1);
+    border: 1px solid var(--color-border);
+    opacity: 0.6;
+    cursor: not-allowed;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+/* Light theme override for Global Ban Icon */
+html[data-theme='light'] .global-ban-icon {
+    background-color: #F3F4F6; /* New light surface-1 */
+    border-color: #D1D5DB; /* New light border */
+}
+
+.global-ban-icon img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(90%) brightness(60%); }
+
+.search-controls-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-half);
+    margin-bottom: var(--gap-size);
+    flex-shrink: 0;
+    overflow-x: auto;
+    padding: var(--gap-half);
+    background-color: var(--color-surface-1);
+    border-radius: 0.375rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+    flex-wrap: wrap;
+}
+/* Light theme override for Search Controls Wrapper */
+html[data-theme='light'] .search-controls-wrapper {
+    background-color: #F3F4F6; /* New light surface-1 */
+    border-color: #D1D5DB; /* New light border */
+}
+
+.search-controls-wrapper::-webkit-scrollbar { height: 4px; }
+.search-controls-wrapper::-webkit-scrollbar-track { background: transparent; }
+.search-controls-wrapper::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 2px; }
+html[data-theme='light'] .search-controls-wrapper::-webkit-scrollbar-thumb { background-color: #9CA3AF; } /* New light border-medium */
+
+#championSearch {
+    flex-grow: 1;
+    flex-shrink: 1;
+    font-size: clamp(0.85rem, 2vmin, 1rem);
+    min-width: 100px;
+    height: var(--filter-button-size);
+    min-height: 30px;
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+    padding: 0 0.5rem;
+    color: var(--color-text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+/* Light theme override for Search Input */
+html[data-theme='light'] #championSearch {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+    color: #111827; /* New light text */
+}
+
+#championSearch::placeholder { color: var(--color-text-placeholder); }
+html[data-theme='light'] #championSearch::placeholder { color: #9CA3AF; } /* New light placeholder */
+
+#championSearch:focus {
+    outline: none;
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue);
+    background-color: var(--color-surface-1);
+}
+html[data-theme='light'] #championSearch:focus {
+    border-color: #2563EB; /* New light blue */
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+    background-color: #F3F4F6; /* New light surface-1 */
+}
+
+
+#roleFilterButtons { display: flex; gap: var(--gap-half); flex-shrink: 0; }
+
+.search-controls-wrapper .action-button { flex-shrink: 0; }
+
+.action-button {
+    color: var(--color-text-primary);
+    width: var(--button-size);
+    height: var(--button-size);
+    min-width: var(--button-min-size);
+    min-height: var(--button-min-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    font-size: calc(var(--button-size) * 0.45);
+    line-height: 1;
+    flex-shrink: 0;
+    background-color: var(--color-surface-2);
+    box-shadow: var(--shadow-sm);
+}
+/* Light theme override for Action Button */
+html[data-theme='light'] .action-button {
+    color: #111827; /* New light text */
+    border-color: #D1D5DB; /* New light border */
+    background-color: #E5E7EB; /* New light surface-2 */
+}
+
+.action-button:hover:not(:disabled) {
+    background-color: var(--color-border-medium);
+    border-color: var(--color-text-secondary);
+    color: #fff;
+    box-shadow: var(--shadow-md);
+}
+html[data-theme='light'] .action-button:hover:not(:disabled) {
+    background-color: #9CA3AF; /* New light border-medium */
+    border-color: #6B7280; /* New light text-secondary */
+    color: #111827; /* New light text */
+}
+
+.action-button:active:not(:disabled) {
+    transform: scale(0.95);
+    background-color: var(--color-border);
+    box-shadow: none;
+}
+html[data-theme='light'] .action-button:active:not(:disabled) {
+    background-color: #D1D5DB; /* New light border */
+}
+
+.action-button:focus-visible {
+    outline: 2px solid var(--color-accent-blue);
+    outline-offset: 1px;
+    box-shadow: var(--shadow-glow-blue);
+    border-color: var(--color-accent-blue);
+}
+html[data-theme='light'] .action-button:focus-visible {
+    outline-color: #2563EB; /* New light blue */
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+    border-color: #2563EB; /* New light blue */
+}
+
+.action-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+    background-color: var(--color-surface-2);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+}
+html[data-theme='light'] .action-button:disabled {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+    color: #6B7280; /* New light text-secondary */
+}
+
+
+.icon-button { font-size: calc(var(--button-size) * 0.55); width: var(--button-size); }
+
+/* Confirm button specific styles - Wider, Inline */
+#confirmPickBanButton {
+     width: auto;
+     min-width: calc(var(--button-size) * 3);
+     padding-left: 1.5rem;
+     padding-right: 1.5rem;
+     height: var(--button-size);
+     min-height: var(--button-min-size);
+     font-size: calc(var(--button-size) * 0.55);
+     background-color: var(--color-accent-green);
+     color: #FFFFFF;
+     border-color: var(--color-accent-green);
+}
+/* Light theme override for Confirm Button */
+html[data-theme='light'] #confirmPickBanButton {
+     background-color: #16A34A; /* New light green */
+     border-color: #16A34A;
+     color: #FFFFFF;
+}
+
+#confirmPickBanButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-green), #000 10%);
+}
+html[data-theme='light'] #confirmPickBanButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, #16A34A, #000 10%); /* Darken new light green */
+}
+
+
+/* Other Specific Button Overrides */
+#resetButton { background-color: var(--color-accent-red); color: #FFFFFF; border-color: var(--color-accent-red);}
+/* Light theme override for Reset Button */
+html[data-theme='light'] #resetButton { background-color: #DC2626; border-color: #DC2626; color: #FFFFFF; } /* New light red */
+
+#resetButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-red), #000 10%); }
+html[data-theme='light'] #resetButton:hover:not(:disabled) { background-color: color-mix(in srgb, #DC2626, #000 10%); } /* Darken new light red */
+
+#nextDraftButton { background-color: var(--color-accent-gold); color: #FFFFFF; border-color: var(--color-accent-gold); }
+/* Light theme override for Next Button */
+html[data-theme='light'] #nextDraftButton { background-color: #D97706; border-color: #D97706; color: #FFFFFF; } /* New light gold */
+
+#nextDraftButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-gold), #000 10%); }
+html[data-theme='light'] #nextDraftButton:hover:not(:disabled) { background-color: color-mix(in srgb, #D97706, #000 10%); } /* Darken new light gold */
+
+
+.filter-button {
+    background-color: var(--color-surface-2);
+    width: var(--filter-button-size);
+    height: var(--filter-button-size);
+    font-size: calc(var(--filter-button-size) * 0.4);
+    font-weight: 600;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 0 2px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+}
+/* Light theme override for Filter Button */
+html[data-theme='light'] .filter-button {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+    color: #6B7280; /* New light text-secondary */
+}
+
+.filter-button:hover:not(:disabled) {
+    background-color: var(--color-border-medium);
+    color: var(--color-text-primary);
+}
+/* Light theme override for Filter Button Hover */
+html[data-theme='light'] .filter-button:hover:not(:disabled) {
+    background-color: #9CA3AF; /* New light border-medium */
+    color: #111827; /* New light text-primary */
+}
+
+.filter-button.active {
+    background-color: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
+    color: #FFFFFF;
+    box-shadow: var(--shadow-glow-blue);
+}
+/* Light theme override for Filter Button Active */
+html[data-theme='light'] .filter-button.active {
+    background-color: #2563EB; /* New light blue */
+    border-color: #2563EB;
+    color: #FFFFFF;
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+}
+
+#championGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap-half);
+    overflow-y: auto;
+    align-content: flex-start;
+    flex-grow: 1;
+    min-height: 0;
+    transition: opacity 0.3s ease;
+    padding: var(--gap-size);
+    background-color: var(--color-surface-1);
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+}
+/* Light theme override for Champion Grid */
+html[data-theme='light'] #championGrid {
+    background-color: #F3F4F6; /* New light surface-1 */
+    border-color: #D1D5DB; /* New light border */
+}
+
+#championGrid::-webkit-scrollbar { width: 6px; }
+#championGrid::-webkit-scrollbar-track { background: transparent; }
+#championGrid::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 3px; }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb { background-color: #D1D5DB; } /* New light border */
+#championGrid::-webkit-scrollbar-thumb:hover { background-color: var(--color-border-medium); }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb:hover { background-color: #9CA3AF; } /* New light border-medium */
+#championGrid { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
+html[data-theme='light'] #championGrid { scrollbar-color: #D1D5DB transparent; } /* New light border */
+
+.champion-card {
+    width: var(--card-size); /* Uses the updated, larger size */
+    height: var(--card-size); /* Uses the updated, larger size */
+    min-width: var(--card-min-size); /* Uses the updated, larger min size */
+    min-height: var(--card-min-size); /* Uses the updated, larger min size */
+    border-radius: 0.25rem;
+    overflow: hidden;
+    background-color: var(--color-surface-2);
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+/* Light theme override for Champion Card */
+html[data-theme='light'] .champion-card {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+}
+
+.champion-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.2s ease, transform 0.2s ease; }
+.champion-card:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-medium);
+}
+/* Light theme override for Champion Card Hover */
+html[data-theme='light'] .champion-card:hover {
+    border-color: #9CA3AF; /* New light border-medium */
+}
+
+ .champion-card:hover img {
+     transform: scale(1.03);
+ }
+.champion-card:focus-visible {
+     outline: 2px solid var(--color-accent-blue);
+     outline-offset: 1px;
+     box-shadow: var(--shadow-glow-blue);
+     border-color: var(--color-accent-blue);
+     transform: scale(1.03);
+}
+/* Light theme override for Champion Card Focus */
+html[data-theme='light'] .champion-card:focus-visible {
+     outline-color: #2563EB; /* New light blue */
+     box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+     border-color: #2563EB; /* New light blue */
+}
+
+.champion-card.selected { border-color: var(--color-accent-gold); }
+/* Light theme override for Champion Card Selected */
+html[data-theme='light'] .champion-card.selected { border-color: #D97706; } /* New light gold */
+
+.champion-card.selected img { filter: grayscale(80%) brightness(50%) sepia(30%); opacity: 0.7; }
+html[data-theme='light'] .champion-card.selected img { filter: grayscale(50%) brightness(80%) sepia(10%); opacity: 0.8; }
+
+.champion-card.disabled { pointer-events: none; opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.champion-card.disabled img { filter: grayscale(100%) brightness(40%); transform: none; }
+html[data-theme='light'] .champion-card.disabled img { filter: grayscale(100%) brightness(70%); }
+.champion-card.disabled:hover { transform: none; border-color: var(--color-border); }
+/* Light theme override for Champion Card Disabled Hover */
+html[data-theme='light'] .champion-card.disabled:hover { border-color: #D1D5DB; } /* New light border */
+
+
+.tooltip {
+    position: fixed;
+    background-color: var(--color-tooltip-bg);
+    color: var(--color-tooltip-text);
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border-medium);
+}
+/* Light theme override for Tooltip */
+html[data-theme='light'] .tooltip {
+    background-color: rgba(243, 244, 246, 0.95); /* Use light tooltip bg */
+    color: #111827; /* Use light text */
+    border-color: #9CA3AF; /* Use light border-medium */
+}
+
+.tooltip.visible { opacity: 1; }
+.tooltip-title { font-weight: 600; display: block; margin-bottom: 0.1rem; color: var(--color-accent-gold); } /* Keep gold variable */
+html[data-theme='light'] .tooltip-title { color: #D97706; } /* New light gold */
+.tooltip-name { font-weight: 400; color: var(--color-text-secondary); font-size: 0.8rem; }
+html[data-theme='light'] .tooltip-name { color: #6B7280; } /* New light text-secondary */
+
+
+#statusMessage {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-surface-1);
+    color: var(--color-text-primary);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.375rem;
+    z-index: 90;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid var(--color-border-medium);
+    box-shadow: var(--shadow-md);
+    transform: translate(-50%, 10px);
+}
+/* Light theme override for Status Message */
+html[data-theme='light'] #statusMessage {
+     background-color: #F3F4F6; /* New light surface-1 */
+     color: #111827; /* New light text */
+     border-color: #9CA3AF; /* New light border-medium */
+}
+
+#statusMessage.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* --- Light Theme Direct Overrides --- */
+/* Most direct overrides are now included above */
+
+/* ****************************************************** */
+/* ****** Стили для новой кнопки приоритета (Иконка) **** */
+/* ****************************************************** */
+#newPriorityFilterButton {
+    color: var(--color-accent-gold);
+    width: var(--button-size);
+    height: var(--button-size);
+    padding: 0;
+    font-size: calc(var(--button-size) * 0.55);
+}
+/* Light theme override for Priority Button */
+html[data-theme='light'] #newPriorityFilterButton {
+    color: #D97706; /* New light gold */
+}
+
+
+#newPriorityFilterButton:hover:not(:disabled) {
+    background-color: var(--color-border-medium);
+    border-color: var(--color-accent-gold);
+    color: color-mix(in srgb, var(--color-accent-gold), #fff 30%);
+}
+/* Light theme override for Priority Button Hover */
+html[data-theme='light'] #newPriorityFilterButton:hover:not(:disabled) {
+    background-color: #9CA3AF; /* New light border-medium */
+    border-color: #D97706; /* New light gold */
+    color: color-mix(in srgb, #D97706, #fff 30%); /* Lighter new light gold */
+}
+
+#newPriorityFilterButton[aria-pressed="true"] {
+    background-color: var(--color-accent-gold);
+    border-color: var(--color-accent-gold);
+    color: #0a0f1f; /* Dark theme background */
+    box-shadow: var(--shadow-glow-gold);
+}
+/* Light theme override for Priority Button Active */
+html[data-theme='light'] #newPriorityFilterButton[aria-pressed="true"] {
+    background-color: #D97706; /* New light gold */
+    border-color: #D97706;
+    color: #FFFFFF; /* White icon on light gold */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
+/* ****************************************************** */
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1280px) {
+     .search-controls-wrapper { flex-wrap: wrap; }
+     #championSearch { min-width: 180px; }
+}
+
+@media (max-width: 1024px) {
+    :root {
+        /* --- MODIFIED: Increased responsive card size --- */
+        --card-size: 11.25vh; /* Was 7.5vh */
+        --ban-size: 5vh;
+        --button-size: 4vh;
+        --filter-button-size: 3.5vh;
+        --score-size: 4vh;
+        --nick-font-size: 2.5vh;
+        --gap-size: 0.3rem;
+        --team-col-min-width: 220px;
+    }
+     .team-name { font-size: clamp(1rem, 3vmin, 1.4rem); max-width: 200px;}
+     .search-controls-wrapper { margin-bottom: var(--gap-size); padding: var(--gap-half); }
+     #championSearch { min-width: 150px; }
+}
+
+@media (max-width: 768px) {
+     :root {
+        /* --- MODIFIED: Increased responsive card size --- */
+        --card-size: 10.5vh; /* Was 7vh */
+        --ban-size: 4.5vh;
+        --button-size: 3.8vh;
+        --filter-button-size: 3.2vh;
+        --score-size: 3.8vh;
+        --nick-font-size: 2.2vh;
+        --team-col-min-width: 180px;
+     }
+    #mainLayout {
+        grid-template-columns: auto minmax(150px, 1fr) auto;
+        gap: var(--gap-half);
+    }
+     .center-controls-wrapper {
+        grid-template-columns: 1fr auto auto auto 1fr;
+        gap: var(--gap-half);
+    }
+    .team-name { max-width: 150px; font-size: clamp(0.9rem, 2.8vmin, 1.2rem);}
+    .bans-container { gap: 2px; }
+    .search-controls-wrapper { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    #championSearch { width: auto; flex-grow: 1; min-width: 120px; }
+    #roleFilterButtons { justify-content: flex-start; }
+    .picks-container { gap: 2px; }
+}
+
+@media (max-width: 480px) {
+    body { padding: 2px; }
+     #app-container { padding: 2px; } /* Reduce padding on small screens */
+    :root {
+        /* --- MODIFIED: Increased responsive card size --- */
+        --card-size: 9.75vh; /* Was 6.5vh */
+        --ban-size: 4vh;
+        --button-size: 3.5vh;
+        --filter-button-size: 3vh;
+        --score-size: 3.5vh;
+        --nick-font-size: 2vh;
+        /* --- MODIFIED: Increased responsive card min size --- */
+        --card-min-size: 57px; /* Was 38px */
+        --ban-min-size: 25px;
+        --button-min-size: 28px;
+        --score-min-size: 28px;
+        --team-col-min-width: 90px;
+    }
+     #mainLayout {
+        grid-template-columns: auto minmax(100px, 1fr) auto;
+        gap: 2px;
+    }
+     #topRowContainer { grid-template-columns: 1fr auto 1fr; }
+     .top-row-cell.blue-info { grid-column: 1; }
+     .top-row-cell.center-controls { grid-column: 2; }
+     .top-row-cell.red-info { grid-column: 3; }
+     .center-controls-wrapper { display: flex; flex-wrap: wrap; justify-content: center; }
+     #timerDisplay { order: -1; margin-bottom: var(--gap-half); }
+     .team-name { max-width: 100px; font-size: clamp(0.8rem, 2.5vmin, 1rem); }
+     .bans-container { display: grid; grid-template-columns: repeat(3, 1fr); }
+     #blue-ban-4, #blue-ban-5, #red-ban-4, #red-ban-5 { margin-top: 2px; }
+     .filter-button { min-width: 28px; min-height: 28px; font-size: 0.6rem; }
+     #championGrid { gap: 2px; }
+     .team-column { padding: var(--gap-half); }
+     .picks-container { gap: 1px; }
+     .nickname-input {
+        /* --- ADDED: Hide nicknames on small screens --- */
+        display: none;
+     }
+     .search-controls-wrapper { overflow-x: visible; flex-wrap: wrap; }
+     #championSearch { min-width: 100px; }
+     /* Adjust top right buttons for very small screens */
+     #topRightButtons { top: var(--gap-size); right: var(--gap-size); }
+}
