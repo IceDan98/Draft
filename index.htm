@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoL and Wild Rift Drafter - v7.3</title> <script src="https://cdn.tailwindcss.com"></script>
+    <title>LoL and Wild Rift Drafter - v7.7 (Button Order Update)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,9 +18,9 @@
 <body>
 
 <div id="app-container">
-    <div id="topRightButtons"> <button id="themeToggleButton" title="Переключить на светлую тему" class="action-button icon-button hidden"> 🌙 </button>
-        <button id="adminButton" class="action-button hidden"> Админ
-        </button>
+    <div id="topRightButtons">
+        <button id="themeToggleButton" title="Переключить на светлую тему" class="action-button icon-button hidden"> 🌙 </button>
+        <button id="adminButton" class="action-button hidden"> Админ </button>
     </div>
 
 
@@ -27,13 +28,13 @@
       <h1 id="homeTitle" class="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 text-center">
         LoL and Wild Rift Drafter
       </h1>
-      <input type="text" id="team1NameInput" class="lobby-input" placeholder="Название Команды 1 (Синие)">
-      <input type="text" id="team2NameInput" class="lobby-input" placeholder="Название Команды 2 (Красные)">
+      <input type="text" id="team1NameInput" class="lobby-input" placeholder="Команда 1">
+      <input type="text" id="team2NameInput" class="lobby-input" placeholder="Команда 2">
       <button id="createLobbyButton">Создать Лобби</button>
       <div id="lobbyLinksDisplay" class="hidden">
           <p><strong>Судья:</strong> <span id="judgeLinkText"></span> <button class="copy-button" data-link-id="judgeLinkText">Копировать</button></p>
-          <p><strong>Команда 1 (Синие):</strong> <span id="team1LinkText"></span> <button class="copy-button" data-link-id="team1LinkText">Копировать</button></p>
-          <p><strong>Команда 2 (Красные):</strong> <span id="team2LinkText"></span> <button class="copy-button" data-link-id="team2LinkText">Копировать</button></p>
+          <p><strong>Команда 1:</strong> <span id="team1LinkText"></span> <button class="copy-button" data-link-id="team1LinkText">Копировать</button></p>
+          <p><strong>Команда 2:</strong> <span id="team2LinkText"></span> <button class="copy-button" data-link-id="team2LinkText">Копировать</button></p>
       </div>
     </div>
 
@@ -95,6 +96,8 @@
                      </div>
                      <div class="search-controls-wrapper">
                          <input type="text" id="championSearch" placeholder="Поиск..." aria-label="Поиск чемпиона" class="p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500">
+                         <button id="clearPicksButton" class="action-button icon-button" title="Очистить пики/баны текущей игры (вкл. глоб.)" aria-label="Очистить пики/баны текущей игры">🧹</button>
+                         <button id="resetButton" class="action-button reset-button icon-button" title="Полный сброс" aria-label="Полный сброс">🔄</button>
                          <button id="confirmPickBanButton" class="action-button confirm-button icon-button" title="Подтвердить выбор/бан" aria-label="Подтвердить выбор/бан" disabled>✔️</button>
                          <div id="roleFilterButtons" class="flex justify-center gap-2" role="group" aria-label="Фильтр по ролям">
                              <button type="button" class="action-button filter-button active" data-role="All" title="Фильтр: Все">ВСЕ</button>
@@ -104,13 +107,13 @@
                              <button type="button" class="action-button filter-button" data-role="ADC" title="Фильтр: АДК">АДК</button>
                              <button type="button" class="action-button filter-button" data-role="Support" title="Фильтр: Поддержка">САП</button>
                          </div>
-                         <button id="priorityFilterButton" class="action-button icon-button" title="Показать только приоритетных чемпионов" aria-label="Показать только приоритетных чемпионов">⭐</button>
+                         <button id="newPriorityFilterButton" type="button" class="action-button icon-button" title="Показать только приоритетных чемпионов" aria-label="Переключить фильтр приоритетных чемпионов" aria-pressed="false">
+                            ⭐
+                         </button>
                          <button id="nextDraftButton" class="action-button next-draft-button icon-button" title="Следующий драфт (Fearless)" aria-label="Следующий драфт (Fearless)" disabled>▶️</button>
                          <button id="swapButton" class="action-button icon-button" title="Поменять команды местами" aria-label="Поменять команды местами">⇄</button>
-                         <button id="clearPicksButton" class="action-button icon-button" title="Очистить пики/баны текущей игры (вкл. глоб.)" aria-label="Очистить пики/баны текущей игры">🧹</button>
                          <button id="toggleTimerButton" class="action-button icon-button" title="Сменить время таймера (30/45с)" aria-label="Сменить время таймера">⏱️</button>
                          <button id="undoButton" class="action-button undo-button icon-button" title="Отменить действие" aria-label="Отменить действие" disabled>↩</button>
-                         <button id="resetButton" class="action-button reset-button icon-button" title="Полный сброс" aria-label="Полный сброс">🔄</button>
                          <button id="returnHomeButton" class="action-button icon-button" title="Вернуться на главную" aria-label="Вернуться на главную">🏠</button>
                      </div>
                      <div id="championGrid" role="grid" aria-label="Сетка выбора чемпионов">
