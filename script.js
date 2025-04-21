@@ -1,6 +1,6 @@
-// script.js v7.11 - Reordered function definitions to potentially fix "not defined" error
+// script.js v7.12 - Added console logs for debugging "createChampionCard is not defined"
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v7.11..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v7.12..."); // Version Updated
 
     // --- Language State & Translations ---
     let currentLanguage = localStorage.getItem('language') || 'ru'; // Default to Russian
@@ -388,7 +388,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Draft Simulator Logic (all inside initializeAppDraft) ---
     async function initializeAppDraft() { /* ... (calls updateUIText) ... */
-        console.log("initializeAppDraft started"); try { if (!currentUserRole) { currentUserRole = getRoleFromHash() || 'default'; console.warn(`Role determined as: ${currentUserRole}`); } console.log(`Initializing draft with Role: ${currentUserRole}`); if (currentUserRole === 'team1') userTeamSide = 'blue'; else if (currentUserRole === 'team2') userTeamSide = 'red'; else userTeamSide = null; if (!checkDraftElements()) { throw new Error("One or more draft page elements were not found during initialization!"); } console.log("All draft elements found."); if(loadingIndicator) loadingIndicator.classList.remove('hidden'); updateUIText(currentLanguage); const dataLoaded = await loadChampionData(); if (!dataLoaded) { throw new Error("Failed to load champion data."); } if(loadingIndicator) loadingIndicator.classList.add('hidden'); if(mainLayout) mainLayout.classList.remove('hidden'); displayChampions(); resetDraftFull(true); if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || translations[currentLanguage].blueTeamDefaultName; if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || translations[currentLanguage].redTeamDefaultName; console.log("Attaching draft page event listeners...");
+        console.log("initializeAppDraft started"); try { if (!currentUserRole) { currentUserRole = getRoleFromHash() || 'default'; console.warn(`Role determined as: ${currentUserRole}`); } console.log(`Initializing draft with Role: ${currentUserRole}`); if (currentUserRole === 'team1') userTeamSide = 'blue'; else if (currentUserRole === 'team2') userTeamSide = 'red'; else userTeamSide = null; if (!checkDraftElements()) { throw new Error("One or more draft page elements were not found during initialization!"); } console.log("All draft elements found."); if(loadingIndicator) loadingIndicator.classList.remove('hidden'); updateUIText(currentLanguage); const dataLoaded = await loadChampionData(); if (!dataLoaded) { throw new Error("Failed to load champion data."); } if(loadingIndicator) loadingIndicator.classList.add('hidden'); if(mainLayout) mainLayout.classList.remove('hidden');
+        // --- DEBUG LOG ---
+        console.log('initializeAppDraft: About to call displayChampions. createChampionCard type:', typeof createChampionCard);
+        displayChampions();
+        resetDraftFull(true); if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem('lobbyTeam1Name') || translations[currentLanguage].blueTeamDefaultName; if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || translations[currentLanguage].redTeamDefaultName; console.log("Attaching draft page event listeners...");
         if (timerDisplay) timerDisplay.addEventListener('click', handleStartDraft); else console.warn("Listener not attached: timerDisplay not found"); if (resetButton) resetButton.addEventListener('click', () => { console.log("Reset button clicked"); resetDraftFull(false); }); else console.warn("Listener not attached: resetButton not found"); if (clearPicksButton) clearPicksButton.addEventListener('click', () => { console.log("Clear Picks button clicked"); resetCurrentGamePicksBans(false, false); }); else console.warn("Listener not attached: clearPicksButton not found"); if (undoButton) undoButton.addEventListener('click', handleUndo); else console.warn("Listener not attached: undoButton not found"); if (swapButton) swapButton.addEventListener('click', handleSwapTeams); else console.warn("Listener not attached: swapButton not found"); if (toggleTimerButton) toggleTimerButton.addEventListener('click', handleToggleTimer); else console.warn("Listener not attached: toggleTimerButton not found"); if (confirmPickBanButton) confirmPickBanButton.addEventListener('click', handleConfirmPickBan); else console.warn("Listener not attached: confirmPickBanButton not found"); if (newPriorityFilterButton) { newPriorityFilterButton.addEventListener('click', handleNewPriorityFilterToggle); } else { console.warn("Listener not attached: newPriorityFilterButton not found"); } if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); else console.warn("Listener not attached: nextDraftButton not found"); if (championSearch) championSearch.addEventListener('input', debouncedFilter); else console.warn("Listener not attached: championSearch not found"); if (filterButtons) { filterButtons.forEach((button, index) => { if (button) { button.addEventListener('click', handleRoleFilterClick); } else { console.warn(`Listener not attached: filter button at index ${index} was null`); } }); } else { console.warn("Listener not attached: filterButtons collection is null/empty"); } if (blueColumn) blueColumn.addEventListener('click', handlePickContainerClick); else console.warn("Listener not attached: blueColumn not found"); if (redColumn) redColumn.addEventListener('click', handlePickContainerClick); else console.warn("Listener not attached: redColumn not found"); if (returnHomeButton) returnHomeButton.addEventListener('click', () => { console.log("Return Home button clicked"); navigateTo('home'); }); else console.warn("Listener not attached: returnHomeButton not found"); [blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl].forEach(el => { if (el) { el.addEventListener('blur', (e) => { const permissionNeeded = el.id.includes('name') ? 'editTeamName' : 'editScore'; if (!hasPermission(permissionNeeded)) return; e.target.textContent = e.target.textContent.trim(); }); el.addEventListener('keydown', (e) => { const permissionNeeded = el.id.includes('name') ? 'editTeamName' : 'editScore'; if (!hasPermission(permissionNeeded)) return; if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }); } else { console.warn("Listener not attached: An editable H2/Score element was not found"); } }); console.log("Draft page event listeners attached."); updateUIText(currentLanguage); updateDraftUI(); console.log("Draft simulator page initialized successfully for role:", currentUserRole); } catch (error) { console.error("Error during initializeAppDraft:", error); showStatusMessage("errorInitCritical", 10000, { error: error.message }); if(loadingIndicator) loadingIndicator.textContent = `Ошибка! ${error.message}`; if(mainLayout) mainLayout.classList.add('hidden'); }
     }
 
@@ -416,6 +420,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Draft Logic Functions (Draft Specific - with permission checks added) ---
+     // --- DEBUG LOG ---
+     console.log('Defining createChampionCard');
      // --- MOVED: createChampionCard definition before displayChampions ---
      function createChampionCard(champ) {
         const card = document.createElement('button');
@@ -445,8 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
      // --- END MOVED createChampionCard ---
 
+     // --- DEBUG LOG ---
+     console.log('Defining displayChampions');
      // --- FIXED: displayChampions function ---
      function displayChampions() {
+        // --- DEBUG LOG ---
+        console.log('Inside displayChampions. createChampionCard type:', typeof createChampionCard);
         if(!championGridElement) { console.error("displayChampions: championGridElement not found"); return; }
         const fragment = document.createDocumentFragment();
         // Sort based on current language
@@ -457,7 +467,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof createChampionCard === 'function') {
                  fragment.appendChild(createChampionCard(champ));
             } else {
-                console.error('createChampionCard is not defined when called from displayChampions');
+                // This log should now clearly indicate if the function is missing at the exact call time
+                console.error('CRITICAL: createChampionCard is not defined or not a function when called from displayChampions!');
             }
         });
         // --- END CORRECTION ---
