@@ -1,6 +1,6 @@
-// script.js v7.15 - Fixed Admin button navigation and state handling
+// script.js v7.16 - Bug fixes for timer, filters, admin priority state
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v7.15..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v7.16..."); // Version Updated
 
     // --- Language State & Translations ---
     let currentLanguage = localStorage.getItem('language') || 'ru'; // Default to Russian
@@ -282,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let userTeamSide = null;
     let currentTheme = localStorage.getItem('theme') || 'dark';
     let currentLobbyId = null; // To store the current lobby ID
+    let timerInterval = null; // FIX: Declare timerInterval globally
 
     // Global Data (Not lobby specific)
     let allChampionsData = { en: null, ru: null };
@@ -327,24 +328,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const getChampionById = (id) => processedChampions.find(champ => champ.id === id);
     function generateLobbyId(length = 6) { /* ... (Already added) ... */ const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; let result = ''; for (let i = 0; i < length; i++) { result += characters.charAt(Math.floor(Math.random() * characters.length)); } return result; }
 
-    // --- MODIFIED: localStorage Helper Functions handle admin_view ---
+    // --- MODIFIED: localStorage Helper Functions handle admin_view correctly ---
     function getLobbyStorageKey(key) {
-        // --- MODIFIED: Return null if admin view, preventing state interaction ---
-        if (!currentLobbyId || currentLobbyId === 'admin_view') {
-            // console.log("Admin view detected or no lobby ID, returning null key.");
+        if (!currentLobbyId) {
+            console.error("Attempted to get storage key without a currentLobbyId");
             return null;
         }
+        // --- FIX: Allow admin_view to have its own keys ---
         return `lobby_${currentLobbyId}_${key}`;
     }
 
     function getLobbyItem(key, defaultValue) {
         const storageKey = getLobbyStorageKey(key);
-        // --- MODIFIED: Return default if key is null (admin view) ---
-        if (!storageKey) return defaultValue;
+        // --- FIX: Read normally even if admin_view ---
+        if (!storageKey) { // Should only happen if currentLobbyId is null somehow
+             console.warn("getLobbyItem called without valid storage key");
+             return defaultValue;
+        }
 
         try {
             const item = localStorage.getItem(storageKey);
-            // Provide default if item is null or undefined
             return item != null ? JSON.parse(item) : defaultValue;
         } catch (e) {
             console.error(`Error parsing localStorage item "${storageKey}":`, e);
@@ -354,8 +357,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setLobbyItem(key, value) {
         const storageKey = getLobbyStorageKey(key);
-        // --- MODIFIED: Do nothing if key is null (admin view) ---
-        if (!storageKey) return;
+         // --- FIX: Allow saving for admin_view ---
+        if (!storageKey) {
+             console.warn("setLobbyItem called without valid storage key");
+             return;
+        }
 
         try {
             let valueToStore = value;
@@ -371,20 +377,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function removeLobbyItem(key) {
          const storageKey = getLobbyStorageKey(key);
-         // --- MODIFIED: Do nothing if key is null (admin view) ---
+         // --- FIX: Allow removing for admin_view ---
          if (!storageKey) return;
          localStorage.removeItem(storageKey);
     }
 
     function clearLobbyState() {
-        // --- MODIFIED: Do nothing if admin view ---
-        if (!currentLobbyId || currentLobbyId === 'admin_view') return;
+        // --- FIX: Allow clearing for admin_view ---
+        if (!currentLobbyId) return;
         console.log(`Clearing state for lobby: ${currentLobbyId}`);
         for (const key in defaultLobbyState) {
-            removeLobbyItem(key);
+            removeLobbyItem(key); // Uses getLobbyStorageKey which now works for admin
         }
-        localStorage.removeItem(currentLobbyId + '_team1Name');
-        localStorage.removeItem(currentLobbyId + '_team2Name');
+        // Also remove team names associated with this lobby (if not admin_view)
+        if (currentLobbyId !== 'admin_view') {
+            localStorage.removeItem(currentLobbyId + '_team1Name');
+            localStorage.removeItem(currentLobbyId + '_team2Name');
+        } else {
+             // Optionally clear admin-specific name/score if stored separately
+        }
     }
     // --- END MODIFIED localStorage Helpers ---
 
@@ -425,8 +436,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function navigateTo(pageName) { /* ... (Already modified) ... */
         console.log(`Navigating to: ${pageName}`); currentPage = pageName; if(homePage) homePage.classList.add('hidden'); if(draftPage) draftPage.classList.add('hidden'); const currentAdminButton = document.getElementById('adminButton'); const currentThemeButton = document.getElementById('themeToggleButton'); const currentLangButton = document.getElementById('languageToggleButton'); if(currentAdminButton) currentAdminButton.classList.add('hidden'); if(currentThemeButton) currentThemeButton.classList.add('hidden'); if(currentLangButton) currentLangButton.classList.add('hidden');
         if (pageName === 'home') { if(homePage) homePage.classList.remove('hidden'); if(currentAdminButton) currentAdminButton.classList.remove('hidden'); if(currentThemeButton) currentThemeButton.classList.remove('hidden'); if(currentLangButton) currentLangButton.classList.remove('hidden'); console.log("DEBUG navigateTo: Showing buttons for home page"); if (window.location.hash) { currentUserRole = null; userTeamSide = null; currentLobbyId = null; history.pushState("", document.title, window.location.pathname + window.location.search); } updateUIText(currentLanguage); }
-        else if (pageName === 'draft') { if(draftPage) draftPage.classList.remove('hidden'); console.log("DEBUG navigateTo: Hiding buttons for draft page"); const params = getParamsFromHash(); if (params) { console.log(`Draft Navigation - Lobby: ${params.lobbyId}, Role: ${params.role}`); currentLobbyId = params.lobbyId; currentUserRole = params.role; if (currentUserRole === 'team1') userTeamSide = 'blue'; else if (currentUserRole === 'team2') userTeamSide = 'red'; else userTeamSide = null; } else if (currentUserRole === 'admin' && currentLobbyId === 'admin_view') { console.log("Navigating as Admin to admin_view"); /* Lobby ID already set */ } else { console.error("Cannot navigate to draft: Missing or invalid lobbyId/role in hash."); showStatusMessage("errorInitCritical", 5000, {error: "Invalid lobby link."}); navigateTo('home'); return; }
-             if (!isDraftInitialized || !document.getElementById('championGrid')) { console.log(`Initializing draft simulator for lobby ${currentLobbyId}...`); initializeAppDraft(); isDraftInitialized = true; } else { console.log(`Draft already initialized for lobby ${currentLobbyId}, re-applying permissions for role: ${currentUserRole}`); if (checkDraftElements()) { applyRolePermissions(currentUserRole); const lobbyTeam1Key = currentLobbyId + '_team1Name'; const lobbyTeam2Key = currentLobbyId + '_team2Name'; if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName; if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName; updateUIText(currentLanguage); console.warn("TODO: Implement loading draft state for lobby:", currentLobbyId); updateDraftUI(); } else { console.error("Draft elements not found when trying to re-apply permissions."); showStatusMessage("errorInitDraftElements", 5000); } } }
+        else if (pageName === 'draft') { if(draftPage) draftPage.classList.remove('hidden'); console.log("DEBUG navigateTo: Hiding buttons for draft page"); const params = getParamsFromHash(); if (params) { console.log(`Draft Navigation - Lobby: ${params.lobbyId}, Role: ${params.role}`); currentLobbyId = params.lobbyId; currentUserRole = params.role; if (currentUserRole === 'team1') userTeamSide = 'blue'; else if (currentUserRole === 'team2') userTeamSide = 'red'; else userTeamSide = null; } else if (currentUserRole === 'admin' && currentLobbyId === 'admin_view') { console.log("Navigating as Admin to admin_view"); /* Lobby ID already set by handleAdminClick */ } else { console.error("Cannot navigate to draft: Missing or invalid lobbyId/role in hash."); showStatusMessage("errorInitCritical", 5000, {error: "Invalid lobby link."}); navigateTo('home'); return; }
+             if (!isDraftInitialized || !document.getElementById('championGrid')) { console.log(`Initializing draft simulator for lobby ${currentLobbyId}...`); initializeAppDraft(); isDraftInitialized = true; } else { console.log(`Draft already initialized for lobby ${currentLobbyId}, re-applying permissions for role: ${currentUserRole}`); if (checkDraftElements()) { applyRolePermissions(currentUserRole); const lobbyTeam1Key = currentLobbyId + '_team1Name'; const lobbyTeam2Key = currentLobbyId + '_team2Name'; if(blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName; if(redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName; updateUIText(currentLanguage); restoreDraftStateFromStorage(); /* Load state before updating UI */ updateDraftUI(); } else { console.error("Draft elements not found when trying to re-apply permissions."); showStatusMessage("errorInitDraftElements", 5000); } } }
     }
 
     // --- Home Page Logic ---
@@ -441,7 +452,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentLobbyId = 'admin_view'; // Use a special ID for admin view
         isDraftInitialized = false; // Force re-initialization for admin view if needed
         navigateTo('draft'); // Navigate directly
-        // No need to change hash or show lobby created message
     }
     // --- END MODIFIED handleAdminClick ---
 
@@ -493,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
      }
 
     // --- Timer Functions (Draft Specific) ---
-    function stopTimer() { /* ... (no changes needed) ... */ clearInterval(timerInterval); timerInterval = null; if(timerDisplay) timerDisplay.classList.remove('timer-running', 'timer-ending'); }
+    function stopTimer() { /* FIX: Check if timerInterval exists before clearing */ if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } if(timerDisplay) timerDisplay.classList.remove('timer-running', 'timer-ending'); }
     function formatTime(seconds) { /* ... (no changes needed) ... */ const minutes = Math.floor(seconds / 60); const remainingSeconds = seconds % 60; return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`; }
     // --- MODIFIED: resetTimerDisplay uses lobby state ---
     function resetTimerDisplay() { stopTimer(); const duration = getLobbyItem('draftTimerDuration', 30); setLobbyItem('timerSeconds', duration); if(timerDisplay) { timerDisplay.textContent = formatTime(duration); timerDisplay.disabled = !hasPermission('startDraft'); timerDisplay.classList.remove('timer-disabled', 'timer-running', 'timer-ending'); timerDisplay.title = translations[currentLanguage].timerStartDraftTitle; timerDisplay.setAttribute('aria-label', translations[currentLanguage].timerAriaLabelStart); } }
@@ -626,11 +636,17 @@ document.addEventListener('DOMContentLoaded', () => {
      }
      // --- MODIFIED: handleRoleFilterClick uses lobby state ---
     function handleRoleFilterClick(event) {
-         const clickedButton = event.currentTarget; if (!clickedButton || clickedButton.disabled) return; const role = clickedButton.dataset.role; if (!role) return; if (!hasPermission('useRoleFilters')) { showStatusMessage("permDeniedRoleFilter", 2000); return; } setLobbyItem('currentRoleFilter', role); if (filterButtons) { filterButtons.forEach(btn => { btn.classList.remove('active'); }); clickedButton.classList.add('active'); } filterChampions();
+         const clickedButton = event.currentTarget; if (!clickedButton || clickedButton.disabled) return; const role = clickedButton.dataset.role; if (!role) return; if (!hasPermission('useRoleFilters')) { showStatusMessage("permDeniedRoleFilter", 2000); return; }
+         // Pass role directly to filterChampions instead of setting/getting state immediately
+         // setLobbyItem('currentRoleFilter', role); // No longer needed here
+         if (filterButtons) { filterButtons.forEach(btn => { btn.classList.remove('active'); }); clickedButton.classList.add('active'); }
+         filterChampions(role); // Pass role to filter function
      }
      // --- MODIFIED: handleNewPriorityFilterToggle uses lobby state ---
     function handleNewPriorityFilterToggle() {
-        if (!hasPermission('togglePriorityFilter')) { showStatusMessage("permDeniedPriorityFilter", 2000); return; } let currentPriorityState = getLobbyItem('isPriorityFilterActive', false); currentPriorityState = !currentPriorityState; setLobbyItem('isPriorityFilterActive', currentPriorityState); if (newPriorityFilterButton) { newPriorityFilterButton.setAttribute('aria-pressed', currentPriorityState.toString()); newPriorityFilterButton.title = currentPriorityState ? translations[currentLanguage].priorityFilterShowAllTitle : translations[currentLanguage].priorityFilterShowPriorityTitle; } filterChampions(); showStatusMessage(currentPriorityState ? "priorityFilterOn" : "priorityFilterOff", 2000);
+        if (!hasPermission('togglePriorityFilter')) { showStatusMessage("permDeniedPriorityFilter", 2000); return; } let currentPriorityState = getLobbyItem('isPriorityFilterActive', false); currentPriorityState = !currentPriorityState; setLobbyItem('isPriorityFilterActive', currentPriorityState); if (newPriorityFilterButton) { newPriorityFilterButton.setAttribute('aria-pressed', currentPriorityState.toString()); newPriorityFilterButton.title = currentPriorityState ? translations[currentLanguage].priorityFilterShowAllTitle : translations[currentLanguage].priorityFilterShowPriorityTitle; }
+        filterChampions(); // Reads lobby state for priority, role filter read separately
+        showStatusMessage(currentPriorityState ? "priorityFilterOn" : "priorityFilterOff", 2000);
     }
     // --- MODIFIED: displayGloballyBanned uses lobby state ---
     function displayGloballyBanned() {
