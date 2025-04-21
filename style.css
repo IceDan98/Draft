@@ -1,4 +1,4 @@
-/* style.css - v8.6 - Remove Input Text Shadow */
+/* style.css - v11.4 - Larger champion cards, fixed global ban size */
 :root {
     /* Base Sizes */
     --gap-size: 0.5rem;
@@ -7,7 +7,8 @@
 
     /* Sizes (vmin/vh for scalability) */
     --ban-size: 5.5vmin;
-    --card-size: 8vh;
+    /* --- MODIFIED: Increased champion card size by 50% --- */
+    --card-size: 12vh; /* Was 8vh */
     --nick-height: 3.5vh;
     --nick-font-size: 2.8vh;
     --button-size: 4.2vh; /* Base button height/width */
@@ -15,26 +16,30 @@
     --score-size: 4.2vh;
     --score-font-size: 2vh;
     --filter-button-size: 3.8vh;
-    --global-ban-icon-size: calc(var(--card-size) * 0.8);
+    /* --- MODIFIED: Fixed global ban icon size (based on original 8vh card size) --- */
+    --global-ban-icon-size: 6.4vh; /* Was calc(var(--card-size) * 0.8), now fixed 8vh * 0.8 */
     --top-right-button-size: 2.5rem; /* 40px, consistent size for top-right buttons */
 
 
     /* Minimum Sizes */
     --ban-min-size: 28px;
     --pick-min-height: 55px;
-    --card-min-size: 42px;
+    /* --- MODIFIED: Increased champion card min size by 50% --- */
+    --card-min-size: 63px; /* Was 42px */
     --nick-min-height: 16px;
     --button-min-size: 28px;
     --score-min-size: 28px;
     --team-name-min-height: 30px;
     --team-col-min-width: 240px;
-    --global-ban-icon-min-size: 35px;
+    /* --- MODIFIED: Kept original global ban min size --- */
+    --global-ban-icon-min-size: 35px; /* Kept original */
     --top-right-button-min-size: 36px; /* Slightly smaller min size */
 
 
     /* Colors - Dark Theme (Default) */
+    /* These define the base look (Dark Mode) */
     --color-background: #0a0f1f;
-    --color-background-gradient-end: #0f0a1a;
+    --color-background-gradient-end: #0f0a1a; /* No longer used for body bg */
     --color-surface-1: #10182f; /* Darker Gray */
     --color-surface-2: #1a2340; /* Lighter Gray */
     --color-text-primary: #e0e8f0;
@@ -43,10 +48,11 @@
     --color-border: #2a3858;
     --color-border-medium: #405075;
     --color-accent-gold: #c8aa6e;
-    --color-accent-blue: #50a0f0;
+    --color-accent-blue: #50a0f0; /* Default light blue */
     --color-accent-red: #f05050;
     --color-accent-green: #40f0a0;
     --color-accent-purple: #a070f0;
+    --color-accent-blue-dark: #313850; /* Dark blue */
 
     --color-blue-team: var(--color-accent-blue);
     --color-red-team: var(--color-accent-red);
@@ -54,7 +60,6 @@
     /* Adjusted Transparency */
     --color-blue-bg-transparent: rgba(80, 160, 240, 0.4); /* More opaque */
     --color-red-bg-transparent: rgba(240, 80, 80, 0.4); /* More opaque */
-    /* --color-surface-1-transparent: rgba(16, 24, 47, 0.6); /* Removed - use opaque surface */
 
     --color-tooltip-bg: rgba(10, 15, 31, 0.9);
     --color-tooltip-text: var(--color-text-primary);
@@ -68,43 +73,42 @@
     --shadow-glow-red: 0 0 8px 0px rgba(240, 80, 80, 0.4);
 }
 
-/* Light Theme Variable Overrides (Keep these for reference and potential use) */
+/* --- Light Theme Variable Definitions (New Palette - For Reference Only) --- */
+/* Note: Styles below apply colors directly, bypassing these variables for light theme */
 html[data-theme='light'] :root {
     --color-background: #FFFFFF;
-    --color-background-gradient-end: #F9FAFB; /* gray-50 */
-    --color-surface-1: #F3F4F6; /* gray-100 */
-    --color-surface-2: #E5E7EB; /* gray-200 */
-    --color-text-primary: #111827; /* gray-900 */
-    --color-text-secondary: #6B7280; /* gray-500 */
-    --color-text-placeholder: #9CA3AF; /* gray-400 */
-    --color-border: #D1D5DB; /* gray-300 */
-    --color-border-medium: #9CA3AF; /* gray-400 */
-    /* Adjusted accents for better contrast on light bg */
-    --color-accent-gold: #B45309; /* amber-700 */
-    --color-accent-blue: #2563EB; /* blue-600 */
-    --color-accent-red: #DC2626; /* red-600 */
-    --color-accent-green: #16A34A; /* green-600 */
-    --color-accent-purple: #7C3AED; /* violet-600 */
+    --color-background-gradient-end: #F9FAFB; /* Tailwind gray-50 */
+    --color-surface-1: #F3F4F6; /* Tailwind gray-100 */
+    --color-surface-2: #E5E7EB; /* Tailwind gray-200 */
+    --color-text-primary: #111827; /* Tailwind gray-900 */
+    --color-text-secondary: #6B7280; /* Tailwind gray-500 */
+    --color-text-placeholder: #9CA3AF; /* Tailwind gray-400 */
+    --color-border: #D1D5DB; /* Tailwind gray-300 */
+    --color-border-medium: #9CA3AF; /* Tailwind gray-400 */
+    --color-accent-gold: #D97706; /* Tailwind amber-600 */
+    --color-accent-blue: #2563EB; /* Tailwind blue-600 */
+    --color-accent-red: #DC2626; /* Tailwind red-600 */
+    --color-accent-green: #16A34A; /* Tailwind green-600 */
+    --color-accent-purple: #7C3AED; /* Tailwind violet-600 */
+    --color-accent-blue-dark: #1E40AF; /* Tailwind blue-800 (for lobby labels) */
 
+    /* Update dependent variables for light theme */
     --color-blue-team: var(--color-accent-blue);
     --color-red-team: var(--color-accent-red);
 
-    /* Adjusted Transparency for Light Theme */
-    --color-blue-bg-transparent: rgba(59, 130, 246, 0.3); /* More opaque */
-    --color-red-bg-transparent: rgba(239, 68, 68, 0.3); /* More opaque */
-    /* --color-surface-1-transparent: rgba(243, 244, 246, 0.75); /* Removed - use opaque surface */
+    --color-blue-bg-transparent: rgba(37, 99, 235, 0.2); /* Adjusted based on light blue */
+    --color-red-bg-transparent: rgba(220, 38, 38, 0.2); /* Adjusted based on light red */
 
-
-    --color-tooltip-bg: rgba(243, 244, 246, 0.95); /* gray-100 opacity 95% */
+    --color-tooltip-bg: rgba(243, 244, 246, 0.95); /* Adjusted based on light surface-1 */
     --color-tooltip-text: var(--color-text-primary);
 
     /* Lighter shadows for light theme */
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
     --shadow-lg: 0 10px 15px rgba(0,0,0,0.07);
-    --shadow-glow-gold: 0 0 10px 0px rgba(180, 83, 9, 0.3); /* amber-700 */
-    --shadow-glow-blue: 0 0 10px 0px rgba(37, 99, 235, 0.3); /* blue-600 */
-    --shadow-glow-red: 0 0 8px 0px rgba(220, 38, 38, 0.3); /* red-600 */
+    --shadow-glow-gold: 0 0 10px 0px rgba(217, 119, 6, 0.3); /* Adjusted based on light gold */
+    --shadow-glow-blue: 0 0 10px 0px rgba(37, 99, 235, 0.3); /* Adjusted based on light blue */
+    --shadow-glow-red: 0 0 8px 0px rgba(220, 38, 38, 0.3); /* Adjusted based on light red */
 }
 
 
@@ -112,33 +116,35 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    /* Use variables here, as they should work for scrollbar */
     scrollbar-color: var(--color-border-medium) var(--color-surface-1);
     scrollbar-width: thin;
 }
 body::-webkit-scrollbar { width: 8px; }
 body::-webkit-scrollbar-track { background: var(--color-surface-1); }
 body::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; border: 2px solid var(--color-surface-1); }
+/* Light theme scrollbar */
+html[data-theme='light'] body::-webkit-scrollbar-track { background: #F3F4F6; }
+html[data-theme='light'] body::-webkit-scrollbar-thumb { background-color: #9CA3AF; border-color: #F3F4F6; }
 
 
 body {
     font-family: 'Inter', sans-serif;
-    /* Base styles using variables */
+    /* Base styles using variables (Dark theme default) */
     background-color: var(--color-background);
-    background-image: linear-gradient(45deg, var(--color-background), var(--color-background-gradient-end));
     color: var(--color-text-primary);
     height: 100vh;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Add transition */
+    /* transition: background-color 0.3s ease, color 0.3s ease; /* Re-add transition if desired */
 }
 
-/* Direct override for light theme body background (fallback) */
+/* Direct override for light theme body background */
 html[data-theme='light'] body {
-    background-color: #FFFFFF; /* Direct white background */
-    background-image: linear-gradient(45deg, #FFFFFF, #F9FAFB); /* Light gradient */
-    color: #111827; /* Direct dark text */
+    background-color: #FFFFFF; /* Directly set white for light theme */
+    color: #111827; /* Directly set light theme text color */
 }
 
 
@@ -171,7 +177,7 @@ html[data-theme='light'] body {
     /* Styles below apply when .visible is added by JS */
     position: fixed;
     inset: 0;
-    background-color: rgba(10, 15, 31, 0.85);
+    background-color: rgba(10, 15, 31, 0.85); /* Dark theme overlay */
     align-items: center;
     justify-content: center;
     z-index: 1000;
@@ -180,9 +186,10 @@ html[data-theme='light'] body {
 #loadingIndicator.visible { /* Added for clarity, using class now */
     display: flex; /* Show when needed */
 }
+/* Light theme loading indicator */
 html[data-theme='light'] #loadingIndicator {
-    background-color: rgba(229, 231, 235, 0.85); /* Lighter overlay */
-    color: var(--color-text-primary); /* Ensure text is visible */
+    background-color: rgba(243, 244, 246, 0.85); /* Use light surface-1 */
+    color: #111827; /* Use light text */
 }
 /* Ensure hidden class takes precedence */
 #loadingIndicator.hidden {
@@ -198,64 +205,68 @@ html[data-theme='light'] #loadingIndicator {
 }
 #homeTitle {
     font-family: 'Cinzel', serif;
-    color: var(--color-accent-gold);
+    color: var(--color-accent-gold); /* Use variable */
     text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Adjusted shadow */
     font-size: clamp(2rem, 6vmin, 3.5rem);
     margin-bottom: 2rem;
 }
+html[data-theme='light'] #homeTitle {
+    color: #D97706; /* Direct light gold */
+}
+
 /* Styles for new home page elements */
 .lobby-input {
     /* Use variable mix for transparency */
-    background-color: color-mix(in srgb, var(--color-surface-2), transparent 65%); /* 35% opaque */
-    border: 1px solid var(--color-border);
-    /* color: var(--color-text-primary); /* Color set by specific ID below */
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 65%); /* Dark theme */
+    border: 1px solid var(--color-border); /* Dark theme */
     padding: 0.5rem 1rem;
     border-radius: 0.375rem;
     margin-bottom: 1rem;
     width: 80%;
     max-width: 300px;
     text-align: center;
-    /* Text stroke/shadow REMOVED */
     text-shadow: none;
-    /* Font to match draft page team names */
     font-family: 'Cinzel', serif;
-    font-size: clamp(1rem, 2.5vh, 1.3rem); /* Adjust size if needed */
-    font-weight: 600; /* Match weight */
+    font-size: clamp(1rem, 2.5vh, 1.3rem);
+    font-weight: 700; /* Bolder weight */
 }
 /* Specific colors for team inputs */
 #team1NameInput {
-    color: var(--color-blue-team);
+    color: var(--color-blue-team); /* Dark theme */
 }
 #team2NameInput {
-    color: var(--color-red-team);
+    color: var(--color-red-team); /* Dark theme */
 }
 
+/* ***** MODIFIED: Direct Light Theme Styles for Home Page Inputs (New Palette) ***** */
 html[data-theme='light'] .lobby-input {
-     /* Text stroke/shadow REMOVED */
-     text-shadow: none;
-     /* Make background transparent */
      background-color: transparent;
-     border-color: var(--color-border);
+     border-color: #D1D5DB; /* New light border */
+     color: #111827; /* New light text */
 }
-/* Darken text colors for light theme */
 html[data-theme='light'] #team1NameInput {
-     color: color-mix(in srgb, var(--color-blue-team), #000 15%);
+     color: #2563EB; /* New light blue */
 }
 html[data-theme='light'] #team2NameInput {
-     color: color-mix(in srgb, var(--color-red-team), #000 15%);
+     color: #DC2626; /* New light red */
 }
 
 
 .lobby-input::placeholder {
-    color: var(--color-text-placeholder);
-    text-shadow: none; /* Remove stroke from placeholder */
-    font-family: 'Inter', sans-serif; /* Use standard font for placeholder */
+    color: var(--color-text-placeholder); /* Dark theme */
+    text-shadow: none;
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
 }
+/* ***** MODIFIED: Direct Light Theme Placeholder (New Palette) ***** */
+html[data-theme='light'] .lobby-input::placeholder {
+    color: #9CA3AF; /* New light placeholder */
+}
+
 #createLobbyButton {
-    background-color: var(--color-accent-blue);
-    color: #FFFFFF; /* Explicit white for contrast */
-    border-color: var(--color-accent-blue);
+    background-color: var(--color-accent-blue-dark); /* Dark blue default */
+    border-color: var(--color-accent-blue-dark);
+    color: #FFFFFF;
     padding: 0.8rem 2rem;
     font-size: clamp(1rem, 2.5vh, 1.3rem);
     min-width: 150px;
@@ -266,57 +277,89 @@ html[data-theme='light'] #team2NameInput {
     box-shadow: var(--shadow-md);
     margin-top: 1rem;
 }
-html[data-theme='light'] #createLobbyButton {
-     color: #FFFFFF; /* Keep white text for light theme too */
-     background-color: var(--color-accent-blue);
-     border-color: var(--color-accent-blue);
-}
 #createLobbyButton:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--color-accent-blue), #000 10%); /* Darken slightly */
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 10%);
+    border-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 15%);
     box-shadow: var(--shadow-lg);
 }
- #createLobbyButton:active:not(:disabled) {
+#createLobbyButton:active:not(:disabled) {
     transform: scale(0.98);
     box-shadow: var(--shadow-sm);
 }
+/* Light theme override for Create Lobby Button */
+html[data-theme='light'] #createLobbyButton {
+     background-color: #2563EB; /* New light blue */
+     border-color: #2563EB;
+     color: #FFFFFF;
+}
+html[data-theme='light'] #createLobbyButton:hover:not(:disabled) {
+     background-color: color-mix(in srgb, #2563EB, #000 10%); /* Darken new light blue */
+     border-color: color-mix(in srgb, #2563EB, #000 10%);
+}
+
  #lobbyLinksDisplay {
     margin-top: 2rem;
-    background-color: var(--color-surface-1);
+    background-color: var(--color-surface-1); /* Dark theme */
     padding: 1rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border); /* Dark theme */
     max-width: 90%;
-    word-wrap: break-word; /* Ensure long links wrap */
-    text-align: left; /* Align text left */
+    word-wrap: break-word;
+    text-align: left;
  }
+ /* Light theme override for Lobby Links Display */
+ html[data-theme='light'] #lobbyLinksDisplay {
+     background-color: #F3F4F6; /* New light surface-1 */
+     border-color: #D1D5DB; /* New light border */
+ }
+
  #lobbyLinksDisplay p {
-    margin-bottom: 0.75rem; /* Increased spacing */
-    font-size: clamp(0.8rem, 2vmin, 1rem); /* Responsive font size */
+    margin-bottom: 0.75rem;
+    font-size: clamp(0.8rem, 2vmin, 1rem);
  }
  #lobbyLinksDisplay strong {
-    color: var(--color-accent-gold);
+    color: var(--color-accent-blue); /* Default light blue for dark theme */
     display: inline-block;
-    min-width: 100px; /* Align labels */
+    min-width: 100px;
  }
- #lobbyLinksDisplay a, #lobbyLinksDisplay span { /* Style generated links/text */
-     color: var(--color-accent-blue);
+ /* Light theme override for label color */
+ html[data-theme='light'] #lobbyLinksDisplay strong {
+     color: #1E40AF; /* Use dark blue for light theme */
+ }
+
+ #lobbyLinksDisplay a, #lobbyLinksDisplay span {
+     color: var(--color-accent-blue); /* Dark theme */
      display: inline-block;
      margin-left: 0.5rem;
-     word-break: break-all; /* Break long URLs */
-     background-color: var(--color-surface-2); /* Add background */
-     padding: 0.2rem 0.4rem; /* Add padding */
-     border-radius: 0.25rem; /* Rounded corners */
-     cursor: pointer; /* Indicate clickability */
-     border: 1px solid var(--color-border-medium);
+     word-break: break-all;
+     background-color: var(--color-surface-2); /* Dark theme */
+     padding: 0.2rem 0.4rem;
+     border-radius: 0.25rem;
+     cursor: pointer;
+     border: 1px solid var(--color-border-medium); /* Dark theme */
  }
+  /* Light theme override for Lobby Links */
+ html[data-theme='light'] #lobbyLinksDisplay a,
+ html[data-theme='light'] #lobbyLinksDisplay span {
+     color: #2563EB; /* New light blue */
+     background-color: #E5E7EB; /* New light surface-2 */
+     border-color: #9CA3AF; /* New light border-medium */
+ }
+
  #lobbyLinksDisplay a:hover {
      text-decoration: none;
-     background-color: var(--color-border-medium);
-     color: var(--color-text-primary);
+     background-color: var(--color-border-medium); /* Dark theme */
+     color: var(--color-text-primary); /* Dark theme */
  }
+  /* Light theme override for Lobby Links Hover */
+ html[data-theme='light'] #lobbyLinksDisplay a:hover {
+     background-color: #9CA3AF; /* New light border-medium */
+     color: #111827; /* New light text */
+ }
+
  .copy-button {
-    background-color: var(--color-accent-purple);
-    color: #FFFFFF; /* Explicit white for contrast */
+    background-color: var(--color-accent-purple); /* Dark theme */
+    color: #FFFFFF;
     border: none;
     padding: 0.1rem 0.4rem;
     font-size: 0.75em;
@@ -325,12 +368,16 @@ html[data-theme='light'] #createLobbyButton {
     margin-left: 0.5rem;
     transition: background-color 0.2s;
  }
+ /* Light theme override for Copy Button */
  html[data-theme='light'] .copy-button {
-     color: #FFFFFF; /* Keep white text for light theme too */
-     background-color: var(--color-accent-purple);
+     background-color: #7C3AED; /* New light purple */
+     color: #FFFFFF;
  }
  .copy-button:hover {
-    background-color: color-mix(in srgb, var(--color-accent-purple), #000 10%); /* Darken slightly */
+    background-color: color-mix(in srgb, var(--color-accent-purple), #000 10%);
+ }
+ html[data-theme='light'] .copy-button:hover {
+     background-color: color-mix(in srgb, #7C3AED, #000 10%); /* Darken new light purple */
  }
 
 /* --- Top Right Buttons Container --- */
@@ -341,18 +388,16 @@ html[data-theme='light'] #createLobbyButton {
     z-index: 10;
     display: flex;
     gap: var(--gap-size);
-    align-items: center; /* Added alignment */
+    align-items: center;
 }
 
 /* --- Admin Button & Theme Button Styles (within container) --- */
 #adminButton, #themeToggleButton {
-    /* Use shared styles defined in .action-button where possible */
-    /* Define specific size using variables */
     width: var(--top-right-button-size);
     height: var(--top-right-button-size);
     min-width: var(--top-right-button-min-size);
     min-height: var(--top-right-button-min-size);
-    padding: 0; /* Remove padding if using fixed size and centering content */
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -360,40 +405,65 @@ html[data-theme='light'] #createLobbyButton {
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, color 0.2s ease, border-color 0.2s ease;
     box-shadow: var(--shadow-md);
-    border: 1px solid var(--color-border); /* Add border for consistency */
+    border: 1px solid var(--color-border); /* Dark theme */
 }
 
-/* Admin Button Specifics */
 #adminButton {
-    background-color: var(--color-accent-blue);
-    color: white; /* Ensure contrast */
-    font-size: 0.75rem; /* Adjust font size if needed */
+    background-color: var(--color-accent-blue-dark); /* Dark blue default */
+    border-color: var(--color-accent-blue-dark);
+    color: white;
+    font-size: 0.75rem;
     font-weight: 600;
-    width: auto; /* Allow text to define width */
-    padding: 0 1rem; /* Add padding back for text */
-    border-color: var(--color-accent-blue); /* Match border */
+    width: auto;
+    padding: 0 1rem;
 }
-#adminButton:hover {
-    background-color: color-mix(in srgb, var(--color-accent-blue), #000 10%);
+#adminButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 10%);
+    border-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 15%);
     box-shadow: var(--shadow-lg);
 }
 #adminButton:active {
     transform: scale(0.98);
     box-shadow: var(--shadow-sm);
 }
+/* Light theme override for Admin Button */
+html[data-theme='light'] #adminButton {
+    background-color: #2563EB; /* New light blue */
+    border-color: #2563EB;
+    color: white;
+}
+html[data-theme='light'] #adminButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, #2563EB, #000 10%); /* Darken new light blue */
+    border-color: color-mix(in srgb, #2563EB, #000 10%);
+}
+
 
 /* Theme Toggle Button Specifics */
 #themeToggleButton {
-    background-color: var(--color-surface-2); /* Neutral Gray */
-    color: var(--color-text-secondary);
-    font-size: 1.1rem; /* Adjust icon size */
+    background-color: var(--color-surface-2); /* Dark theme */
+    color: var(--color-text-secondary); /* Dark theme */
+    font-size: 1.1rem;
     line-height: 1;
 }
+/* Light theme override for Theme Toggle Button */
+html[data-theme='light'] #themeToggleButton {
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #6B7280; /* New light text-secondary */
+    border-color: #D1D5DB; /* New light border */
+}
+
 #themeToggleButton:hover {
-    background-color: var(--color-surface-1);
-    color: var(--color-text-primary);
+    background-color: var(--color-surface-1); /* Dark theme */
+    color: var(--color-text-primary); /* Dark theme */
     box-shadow: var(--shadow-lg);
 }
+/* Light theme override for Theme Toggle Hover */
+html[data-theme='light'] #themeToggleButton:hover {
+    background-color: #F3F4F6; /* New light surface-1 */
+    color: #111827; /* New light text-primary */
+    border-color: #9CA3AF; /* New light border-medium */
+}
+
 #themeToggleButton:active {
     transform: scale(0.98);
     box-shadow: var(--shadow-sm);
@@ -409,35 +479,78 @@ html[data-theme='light'] #createLobbyButton {
 
 .team-name {
     font-family: 'Cinzel', serif;
-    /* Add text stroke */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    text-shadow: none; /* Removed text-shadow */
+    text-align: center; /* Center alignment */
+    font-size: clamp(1.2rem, 3.5vmin, 1.8rem);
+    font-weight: 600;
+    flex-shrink: 1;
+    min-height: var(--team-name-min-height);
+    line-height: var(--team-name-min-height);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.375rem;
+    background-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: default;
 }
+#blue-team-name-h2 {
+    justify-self: center; /* Center within grid cell */
+    color: var(--color-blue-team); /* Default blue */
+}
+#red-team-name-h2 {
+    justify-self: center; /* Center within grid cell */
+    color: var(--color-red-team); /* Default red */
+}
+/* Light theme override for Team Names */
 html[data-theme='light'] .team-name {
-    /* Keep dark stroke for light theme */
-     text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Slightly softer dark */
-     color: var(--color-blue-team); /* Ensure color uses theme variable */
+     /* text-shadow: none; /* Already removed */
+     color: var(--color-blue-team); /* Use light theme blue var */
 }
 html[data-theme='light'] #red-team-name-h2 {
-    color: var(--color-red-team);
+    color: var(--color-red-team); /* Use light theme red var */
 }
 
-
+/* --- MODIFIED NICKNAME STYLES --- */
+/* Base Nickname Input Styles (Used by Both Themes) */
 .nickname-input {
      font-family: 'Inter', sans-serif;
-     /* Remove background, add stroke */
-     background-color: transparent !important; /* Force transparent */
-     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+     background-color: transparent !important;
+     color: #fff; /* White text */
+     border-radius: 0.25rem;
+     padding: 2px 6px;
+     /* --- MODIFIED: Thicker 2px black stroke --- */
+     text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000, /* Diagonals */
+        -2px  0   0 #000,
+         2px  0   0 #000,
+         0   -2px 0 #000,
+         0    2px 0 #000; /* Cardinals */
 }
-html[data-theme='light'] .nickname-input {
-    /* Keep black stroke for light theme */
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    color: var(--color-text-primary); /* Ensure text is dark */
+
+/* Base Placeholder Styles (Used by Both Themes) */
+.nickname-input[contenteditable="true"]:empty::before {
+    content: "\0418\0433\0440\043E\043A"; /* Unicode for "Игрок" */
+    color: #fff; /* White placeholder text */
+    font-style: normal;
+    opacity: 0.7; /* Make placeholder slightly transparent */
+    /* --- REMOVED: text-shadow: none; --- */
+    /* --- ADDED: Same thicker 2px black stroke for placeholder --- */
+     text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000, /* Diagonals */
+        -2px  0   0 #000,
+         2px  0   0 #000,
+         0   -2px 0 #000,
+         0    2px 0 #000; /* Cardinals */
 }
-html[data-theme='light'] .nickname-input:empty::before {
-     color: var(--color-text-secondary); /* Lighter placeholder */
-     opacity: 0.8;
-     text-shadow: none; /* Remove stroke from placeholder */
-}
+/* --- END OF MODIFIED NICKNAME STYLES --- */
 
 
 #mainLayout {
@@ -483,39 +596,25 @@ html[data-theme='light'] .nickname-input:empty::before {
     width: 100%;
 }
 
-.team-name {
-    width: auto;
-    max-width: 300px;
-    text-align: center;
-    font-size: clamp(1.2rem, 3.5vmin, 1.8rem);
-    font-weight: 600;
-    flex-shrink: 1;
-    min-height: var(--team-name-min-height);
-    line-height: var(--team-name-min-height);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.375rem;
-    background-color: transparent;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    cursor: default; /* Default cursor */
-}
-.team-name[contenteditable="true"] { /* Only editable when true */
-     cursor: text;
-}
 .team-name[contenteditable="true"]:hover {
-    background-color: color-mix(in srgb, var(--color-surface-1), transparent 50%); /* Use surface color */
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 50%);
 }
+html[data-theme='light'] .team-name[contenteditable="true"]:hover {
+    background-color: color-mix(in srgb, #F3F4F6, transparent 50%); /* New light surface-1 */
+}
+
 .team-name[contenteditable="true"]:focus {
     outline: 2px solid var(--color-accent-gold);
-    background-color: color-mix(in srgb, var(--color-surface-2), transparent 30%); /* Use surface color */
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 30%);
     white-space: normal;
     overflow: visible;
     box-shadow: var(--shadow-glow-gold);
 }
-#blue-team-name-h2 { justify-self: end; text-align: right; color: var(--color-blue-team); }
-#red-team-name-h2 { justify-self: start; text-align: left; color: var(--color-red-team); }
+html[data-theme='light'] .team-name[contenteditable="true"]:focus {
+    outline-color: #D97706; /* New light gold */
+    background-color: color-mix(in srgb, #E5E7EB, transparent 30%); /* New light surface-2 */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
 
 .score-input {
     width: var(--score-size);
@@ -531,40 +630,66 @@ html[data-theme='light'] .nickname-input:empty::before {
     font-weight: 600;
     flex-shrink: 0;
     justify-self: center;
-    background-color: var(--color-surface-2); /* Neutral Gray */
-    cursor: default; /* Default cursor */
+    background-color: var(--color-surface-2);
+    cursor: default;
     transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
- .score-input[contenteditable="true"] { /* Only editable when true */
+/* Light theme override for Score Input */
+html[data-theme='light'] .score-input {
+    border-color: #D1D5DB; /* New light border */
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #111827; /* New light text */
+}
+
+ .score-input[contenteditable="true"] {
      cursor: text;
  }
 .score-input[contenteditable="true"]:hover {
-     background-color: var(--color-surface-1); /* Hover uses surface-1 */
+     background-color: var(--color-surface-1);
      border-color: var(--color-border-medium);
 }
+/* Light theme override for Score Input Hover */
+html[data-theme='light'] .score-input[contenteditable="true"]:hover {
+     background-color: #F3F4F6; /* New light surface-1 */
+     border-color: #9CA3AF; /* New light border-medium */
+}
+
 .score-input[contenteditable="true"]:focus {
     outline: none;
     border-color: var(--color-accent-gold);
-    background-color: var(--color-surface-1); /* Focus uses surface-1 */
+    background-color: var(--color-surface-1);
     box-shadow: var(--shadow-glow-gold);
 }
+/* Light theme override for Score Input Focus */
+html[data-theme='light'] .score-input[contenteditable="true"]:focus {
+    border-color: #D97706; /* New light gold */
+    background-color: #F3F4F6; /* New light surface-1 */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
+
 .score-input:empty::before {
     content: "0";
     color: var(--color-text-placeholder);
     font-style: normal;
 }
+/* Light theme override for Score Placeholder */
+html[data-theme='light'] .score-input:empty::before {
+    color: #9CA3AF; /* New light placeholder */
+}
+
 #blue-score { color: var(--color-blue-team); }
 #red-score { color: var(--color-red-team); }
+/* Light theme override for Score Text uses variables */
+
 
 .timer-display-button {
     font-family: 'Inter', sans-serif;
     font-size: var(--timer-font-size);
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: #FFFFFF; /* Keep white */
     min-width: 6ch;
     text-align: center;
     background-color: var(--color-accent-green);
-    color: #FFFFFF; /* Explicit white for contrast */
     border: none;
     padding: 0.2rem 0.6rem;
     border-radius: 0.375rem;
@@ -578,32 +703,55 @@ html[data-theme='light'] .nickname-input:empty::before {
     flex-shrink: 0;
     box-shadow: var(--shadow-sm);
 }
+/* Light theme override for Timer Button */
 html[data-theme='light'] .timer-display-button {
-    color: #FFFFFF; /* Keep white text */
+    background-color: #16A34A; /* New light green */
+    color: #FFFFFF; /* Keep white */
 }
+
 .timer-display-button:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--color-accent-green), #000 10%); /* Darken slightly */
+    background-color: color-mix(in srgb, var(--color-accent-green), #000 10%);
     box-shadow: var(--shadow-md);
 }
+html[data-theme='light'] .timer-display-button:hover:not(:disabled) {
+    background-color: color-mix(in srgb, #16A34A, #000 10%); /* Darken new light green */
+}
+
 .timer-display-button:disabled,
 .timer-display-button.timer-disabled {
     cursor: default;
-    background-color: var(--color-surface-2); /* Neutral gray */
+    background-color: var(--color-surface-2);
     color: var(--color-text-secondary);
     opacity: 0.8;
     box-shadow: none;
 }
+html[data-theme='light'] .timer-display-button:disabled,
+html[data-theme='light'] .timer-display-button.timer-disabled {
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #6B7280; /* New light text-secondary */
+}
+
 .timer-display-button.timer-running {
-    background-color: var(--color-surface-2); /* Neutral gray */
+    background-color: var(--color-surface-2);
     color: var(--color-text-primary);
     cursor: default;
     opacity: 1;
     box-shadow: none;
 }
+html[data-theme='light'] .timer-display-button.timer-running {
+    background-color: #E5E7EB; /* New light surface-2 */
+    color: #111827; /* New light text-primary */
+}
+
 .timer-display-button.timer-ending {
     color: var(--color-accent-red);
     animation: pulse-red 1s infinite;
 }
+html[data-theme='light'] .timer-display-button.timer-ending {
+    color: #DC2626; /* New light red */
+    /* Animation uses accent-red variable, which is overridden */
+}
+
 @keyframes pulse-red {
     0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-red), transparent 60%); }
     50% { box-shadow: 0 0 5px 2px color-mix(in srgb, var(--color-accent-red), transparent 80%); }
@@ -642,11 +790,18 @@ html[data-theme='light'] .timer-display-button {
     scrollbar-width: none;
     transition: opacity 0.3s ease, filter 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
     border: 1px solid var(--color-border);
-    /* Base background is transparent, team colors provide bg */
     background-color: transparent;
+}
+/* Light theme override for Team Column */
+html[data-theme='light'] .team-column {
+    border-color: #D1D5DB; /* New light border */
 }
 .team-column.blue-column { background-color: var(--color-blue-bg-transparent); border-color: color-mix(in srgb, var(--color-blue-team), transparent 70%); }
 .team-column.red-column { background-color: var(--color-red-bg-transparent); border-color: color-mix(in srgb, var(--color-red-team), transparent 70%);}
+/* Light theme override for Team Column BG/Border */
+html[data-theme='light'] .team-column.blue-column { background-color: rgba(37, 99, 235, 0.2); border-color: color-mix(in srgb, #2563EB, transparent 70%); }
+html[data-theme='light'] .team-column.red-column { background-color: rgba(220, 38, 38, 0.2); border-color: color-mix(in srgb, #DC2626, transparent 70%);}
+
 .team-column::-webkit-scrollbar { display: none; }
 
 .team-column.draft-disabled {
@@ -654,19 +809,18 @@ html[data-theme='light'] .timer-display-button {
     opacity: 0.6;
     filter: grayscale(60%);
 }
-/* Style to visually indicate non-interactable column for other team */
 .team-column.role-disabled {
      opacity: 0.7;
      filter: grayscale(30%);
-     pointer-events: none; /* Disable clicks on the column itself */
+     pointer-events: none;
 }
 .team-column.role-disabled .pick-slot,
 .team-column.role-disabled .ban-slot {
-     pointer-events: none; /* Disable clicks on slots */
+     pointer-events: none;
      cursor: not-allowed;
 }
 .team-column.role-disabled .nickname-input {
-    pointer-events: none; /* Disable nickname editing */
+    pointer-events: none;
     cursor: not-allowed;
 }
 
@@ -684,7 +838,7 @@ html[data-theme='light'] .timer-display-button {
 }
 
 .pick-slot, .ban-slot {
-    background-color: var(--color-surface-2); /* Neutral gray */
+    background-color: var(--color-surface-2);
     border: 1px solid var(--color-border);
     display: flex;
     align-items: center;
@@ -699,6 +853,14 @@ html[data-theme='light'] .timer-display-button {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     box-shadow: var(--shadow-sm);
 }
+/* Light theme override for Slots */
+html[data-theme='light'] .pick-slot,
+html[data-theme='light'] .ban-slot {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+}
+
+
 .ban-slot {
     width: var(--ban-size);
     height: var(--ban-size);
@@ -729,11 +891,24 @@ html[data-theme='light'] .timer-display-button {
     box-shadow: var(--shadow-glow-gold);
     background-color: color-mix(in srgb, var(--color-surface-2), var(--color-accent-gold) 10%);
 }
+/* Light theme override for Highlight */
+html[data-theme='light'] .highlight-action {
+    border-color: #D97706; /* New light gold */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+    background-color: color-mix(in srgb, #E5E7EB, #D97706 10%); /* Mix new light colors */
+}
+
 
 .swap-selected {
     border-color: var(--color-accent-blue);
     box-shadow: var(--shadow-glow-blue);
 }
+/* Light theme override for Swap Selected */
+html[data-theme='light'] .swap-selected {
+    border-color: #2563EB; /* New light blue */
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+}
+
 
 @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 .preview-flash > img { animation: flash 1s infinite ease-in-out; }
@@ -746,15 +921,8 @@ html[data-theme='light'] .timer-display-button {
     z-index: 1;
     font-size: calc(var(--nick-font-size) * 0.9);
     font-weight: 500;
-    color: #fff; /* White text for nickname */
     height: auto;
     min-height: var(--nick-min-height);
-    /* Removed background */
-    background-color: transparent !important;
-    border-radius: 0.25rem;
-    padding: 2px 6px;
-    /* Added stroke */
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     pointer-events: auto;
     cursor: text;
     overflow: hidden;
@@ -764,52 +932,30 @@ html[data-theme='light'] .timer-display-button {
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
     border: 1px solid transparent;
 }
-/* Adjust nickname appearance for light theme */
-html[data-theme='light'] .nickname-input[contenteditable="true"] {
-    /* Keep black stroke for light theme */
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    color: var(--color-text-primary); /* Ensure text is dark */
-}
-html[data-theme='light'] .nickname-input[contenteditable="true"]:focus {
-    background-color: rgba(255, 255, 255, 0.1); /* Slight background on focus */
-}
-html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
-    color: var(--color-text-secondary); /* Lighter placeholder */
-    opacity: 0.8;
-    text-shadow: none;
-}
 
-
- .nickname-input:not([contenteditable="true"]) { /* Style non-editable nicknames */
+ .nickname-input:not([contenteditable="true"]) {
      cursor: default;
-     /* Removed background */
-     background-color: transparent !important;
      pointer-events: none;
- }
- html[data-theme='light'] .nickname-input:not([contenteditable="true"]) {
-    /* No background needed */
  }
 
 
 [id^="blue-pick-"] .nickname-input { right: 8px; left: auto; text-align: right; }
 [id^="red-pick-"] .nickname-input { left: 8px; right: auto; text-align: left; }
 
-.nickname-input[contenteditable="true"]:empty::before {
-    content: "Ник";
-    color: #fff; /* White placeholder text */
-    font-style: normal;
-    opacity: 0.7; /* Make placeholder slightly transparent */
-    text-shadow: none; /* No stroke on placeholder */
-}
 .nickname-input[contenteditable="true"]:focus {
     outline: none;
-    background-color: rgba(0, 0, 0, 0.1); /* Slight background on focus */
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
     border: 1px solid var(--color-accent-gold);
     box-shadow: var(--shadow-glow-gold);
 }
+/* Light theme override for nickname focus */
+html[data-theme='light'] .nickname-input[contenteditable="true"]:focus {
+    border-color: #D97706; /* New light gold */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
+
 
 #championGridContainer {
     grid-column: 2;
@@ -818,7 +964,7 @@ html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
     padding: 0;
     box-shadow: none;
     display: flex;
-    flex-direction: column; /* Keep column for overall structure */
+    flex-direction: column;
     overflow: hidden;
     min-width: 300px;
     border: none;
@@ -837,6 +983,11 @@ html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
     padding-bottom: var(--gap-half);
     transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
 }
+/* Light theme override for Global Ban Display */
+html[data-theme='light'] #globallyBannedDisplay {
+    border-bottom-color: #D1D5DB; /* New light border */
+}
+
 #globallyBannedDisplay.hidden { opacity: 0; max-height: 0; margin-bottom: 0; padding-bottom: 0; border-bottom: none; overflow: hidden; }
 
 .global-bans-row { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; gap: var(--gap-size); }
@@ -845,10 +996,10 @@ html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
 #global-bans-red { justify-items: end; }
 
 .global-ban-icon {
-    width: var(--global-ban-icon-size);
-    height: var(--global-ban-icon-size);
-    min-width: var(--global-ban-icon-min-size);
-    min-height: var(--global-ban-icon-min-size);
+    width: var(--global-ban-icon-size); /* Uses the fixed size */
+    height: var(--global-ban-icon-size); /* Uses the fixed size */
+    min-width: var(--global-ban-icon-min-size); /* Uses the fixed min size */
+    min-height: var(--global-ban-icon-min-size); /* Uses the fixed min size */
     background-size: cover;
     background-position: center;
     border-radius: 0.25rem;
@@ -861,31 +1012,44 @@ html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
     position: relative;
     box-shadow: var(--shadow-sm);
 }
+/* Light theme override for Global Ban Icon */
+html[data-theme='light'] .global-ban-icon {
+    background-color: #F3F4F6; /* New light surface-1 */
+    border-color: #D1D5DB; /* New light border */
+}
+
 .global-ban-icon img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(90%) brightness(60%); }
 
 .search-controls-wrapper {
     display: flex;
     align-items: center;
     gap: var(--gap-half);
-    margin-bottom: var(--gap-size); /* Keep margin bottom */
+    margin-bottom: var(--gap-size);
     flex-shrink: 0;
     overflow-x: auto;
     padding: var(--gap-half);
-    background-color: var(--color-surface-1); /* Use opaque surface */
+    background-color: var(--color-surface-1);
     border-radius: 0.375rem;
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-md);
-    flex-wrap: wrap; /* Allow wrapping */
+    flex-wrap: wrap;
 }
+/* Light theme override for Search Controls Wrapper */
+html[data-theme='light'] .search-controls-wrapper {
+    background-color: #F3F4F6; /* New light surface-1 */
+    border-color: #D1D5DB; /* New light border */
+}
+
 .search-controls-wrapper::-webkit-scrollbar { height: 4px; }
 .search-controls-wrapper::-webkit-scrollbar-track { background: transparent; }
 .search-controls-wrapper::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 2px; }
+html[data-theme='light'] .search-controls-wrapper::-webkit-scrollbar-thumb { background-color: #9CA3AF; } /* New light border-medium */
 
 #championSearch {
     flex-grow: 1;
-    flex-shrink: 1; /* Allow shrinking */
+    flex-shrink: 1;
     font-size: clamp(0.85rem, 2vmin, 1rem);
-    min-width: 100px; /* Allow smaller min width */
+    min-width: 100px;
     height: var(--filter-button-size);
     min-height: 30px;
     background-color: var(--color-surface-2);
@@ -895,13 +1059,28 @@ html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
     color: var(--color-text-primary);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+/* Light theme override for Search Input */
+html[data-theme='light'] #championSearch {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+    color: #111827; /* New light text */
+}
+
 #championSearch::placeholder { color: var(--color-text-placeholder); }
+html[data-theme='light'] #championSearch::placeholder { color: #9CA3AF; } /* New light placeholder */
+
 #championSearch:focus {
     outline: none;
     border-color: var(--color-accent-blue);
     box-shadow: var(--shadow-glow-blue);
     background-color: var(--color-surface-1);
 }
+html[data-theme='light'] #championSearch:focus {
+    border-color: #2563EB; /* New light blue */
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+    background-color: #F3F4F6; /* New light surface-1 */
+}
+
 
 #roleFilterButtons { display: flex; gap: var(--gap-half); flex-shrink: 0; }
 
@@ -925,17 +1104,26 @@ html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
     font-size: calc(var(--button-size) * 0.45);
     line-height: 1;
     flex-shrink: 0;
-    background-color: var(--color-surface-2); /* Neutral gray */
+    background-color: var(--color-surface-2);
     box-shadow: var(--shadow-sm);
 }
+/* Light theme override for Action Button */
+html[data-theme='light'] .action-button {
+    color: #111827; /* New light text */
+    border-color: #D1D5DB; /* New light border */
+    background-color: #E5E7EB; /* New light surface-2 */
+}
+
 .action-button:hover:not(:disabled) {
     background-color: var(--color-border-medium);
     border-color: var(--color-text-secondary);
-    color: #fff; /* Keep white text on hover for dark theme */
+    color: #fff;
     box-shadow: var(--shadow-md);
 }
 html[data-theme='light'] .action-button:hover:not(:disabled) {
-    color: var(--color-text-primary); /* Use primary text color for light theme hover */
+    background-color: #9CA3AF; /* New light border-medium */
+    border-color: #6B7280; /* New light text-secondary */
+    color: #111827; /* New light text */
 }
 
 .action-button:active:not(:disabled) {
@@ -943,12 +1131,22 @@ html[data-theme='light'] .action-button:hover:not(:disabled) {
     background-color: var(--color-border);
     box-shadow: none;
 }
+html[data-theme='light'] .action-button:active:not(:disabled) {
+    background-color: #D1D5DB; /* New light border */
+}
+
 .action-button:focus-visible {
     outline: 2px solid var(--color-accent-blue);
     outline-offset: 1px;
     box-shadow: var(--shadow-glow-blue);
     border-color: var(--color-accent-blue);
 }
+html[data-theme='light'] .action-button:focus-visible {
+    outline-color: #2563EB; /* New light blue */
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+    border-color: #2563EB; /* New light blue */
+}
+
 .action-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -957,6 +1155,12 @@ html[data-theme='light'] .action-button:hover:not(:disabled) {
     border-color: var(--color-border);
     color: var(--color-text-secondary);
 }
+html[data-theme='light'] .action-button:disabled {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+    color: #6B7280; /* New light text-secondary */
+}
+
 
 .icon-button { font-size: calc(var(--button-size) * 0.55); width: var(--button-size); }
 
@@ -973,31 +1177,39 @@ html[data-theme='light'] .action-button:hover:not(:disabled) {
      color: #FFFFFF;
      border-color: var(--color-accent-green);
 }
+/* Light theme override for Confirm Button */
+html[data-theme='light'] #confirmPickBanButton {
+     background-color: #16A34A; /* New light green */
+     border-color: #16A34A;
+     color: #FFFFFF;
+}
+
 #confirmPickBanButton:hover:not(:disabled) {
     background-color: color-mix(in srgb, var(--color-accent-green), #000 10%);
 }
-html[data-theme='light'] #confirmPickBanButton {
-     color: #FFFFFF;
+html[data-theme='light'] #confirmPickBanButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, #16A34A, #000 10%); /* Darken new light green */
 }
 
 
 /* Other Specific Button Overrides */
 #resetButton { background-color: var(--color-accent-red); color: #FFFFFF; border-color: var(--color-accent-red);}
+/* Light theme override for Reset Button */
+html[data-theme='light'] #resetButton { background-color: #DC2626; border-color: #DC2626; color: #FFFFFF; } /* New light red */
+
 #resetButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-red), #000 10%); }
-html[data-theme='light'] #resetButton { color: #FFFFFF; }
+html[data-theme='light'] #resetButton:hover:not(:disabled) { background-color: color-mix(in srgb, #DC2626, #000 10%); } /* Darken new light red */
 
 #nextDraftButton { background-color: var(--color-accent-gold); color: #FFFFFF; border-color: var(--color-accent-gold); }
-#nextDraftButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-gold), #000 10%); }
-html[data-theme='light'] #nextDraftButton { color: #FFFFFF; }
+/* Light theme override for Next Button */
+html[data-theme='light'] #nextDraftButton { background-color: #D97706; border-color: #D97706; color: #FFFFFF; } /* New light gold */
 
-#priorityFilterButton { background-color: var(--color-surface-2); color: var(--color-accent-purple); border-color: var(--color-border); }
-#priorityFilterButton:hover:not(:disabled) { background-color: var(--color-border-medium); color: color-mix(in srgb, var(--color-accent-purple), #fff 20%);}
-#priorityFilterButton.active { background-color: var(--color-accent-purple); color: #FFFFFF; border-color: var(--color-accent-purple); box-shadow: 0 0 8px 0px color-mix(in srgb, var(--color-accent-purple), transparent 50%); }
-html[data-theme='light'] #priorityFilterButton.active { color: #FFFFFF; }
+#nextDraftButton:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-gold), #000 10%); }
+html[data-theme='light'] #nextDraftButton:hover:not(:disabled) { background-color: color-mix(in srgb, #D97706, #000 10%); } /* Darken new light gold */
 
 
 .filter-button {
-    background-color: var(--color-surface-2); /* Neutral gray */
+    background-color: var(--color-surface-2);
     width: var(--filter-button-size);
     height: var(--filter-button-size);
     font-size: calc(var(--filter-button-size) * 0.4);
@@ -1008,18 +1220,35 @@ html[data-theme='light'] #priorityFilterButton.active { color: #FFFFFF; }
     border: 1px solid var(--color-border);
     color: var(--color-text-secondary);
 }
+/* Light theme override for Filter Button */
+html[data-theme='light'] .filter-button {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+    color: #6B7280; /* New light text-secondary */
+}
+
 .filter-button:hover:not(:disabled) {
     background-color: var(--color-border-medium);
     color: var(--color-text-primary);
 }
+/* Light theme override for Filter Button Hover */
+html[data-theme='light'] .filter-button:hover:not(:disabled) {
+    background-color: #9CA3AF; /* New light border-medium */
+    color: #111827; /* New light text-primary */
+}
+
 .filter-button.active {
     background-color: var(--color-accent-blue);
     border-color: var(--color-accent-blue);
-    color: #FFFFFF; /* Explicit white for contrast */
+    color: #FFFFFF;
     box-shadow: var(--shadow-glow-blue);
 }
+/* Light theme override for Filter Button Active */
 html[data-theme='light'] .filter-button.active {
-    color: #FFFFFF; /* Keep white text for light theme */
+    background-color: #2563EB; /* New light blue */
+    border-color: #2563EB;
+    color: #FFFFFF;
+    box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
 }
 
 #championGrid {
@@ -1033,21 +1262,30 @@ html[data-theme='light'] .filter-button.active {
     min-height: 0;
     transition: opacity 0.3s ease;
     padding: var(--gap-size);
-    background-color: var(--color-surface-1); /* Use opaque surface */
+    background-color: var(--color-surface-1);
     border-radius: 0.5rem;
     border: 1px solid var(--color-border);
 }
+/* Light theme override for Champion Grid */
+html[data-theme='light'] #championGrid {
+    background-color: #F3F4F6; /* New light surface-1 */
+    border-color: #D1D5DB; /* New light border */
+}
+
 #championGrid::-webkit-scrollbar { width: 6px; }
 #championGrid::-webkit-scrollbar-track { background: transparent; }
 #championGrid::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 3px; }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb { background-color: #D1D5DB; } /* New light border */
 #championGrid::-webkit-scrollbar-thumb:hover { background-color: var(--color-border-medium); }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb:hover { background-color: #9CA3AF; } /* New light border-medium */
 #championGrid { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
+html[data-theme='light'] #championGrid { scrollbar-color: #D1D5DB transparent; } /* New light border */
 
 .champion-card {
-    width: var(--card-size);
-    height: var(--card-size);
-    min-width: var(--card-min-size);
-    min-height: var(--card-min-size);
+    width: var(--card-size); /* Uses the updated, larger size */
+    height: var(--card-size); /* Uses the updated, larger size */
+    min-width: var(--card-min-size); /* Uses the updated, larger min size */
+    min-height: var(--card-min-size); /* Uses the updated, larger min size */
     border-radius: 0.25rem;
     overflow: hidden;
     background-color: var(--color-surface-2);
@@ -1058,12 +1296,23 @@ html[data-theme='light'] .filter-button.active {
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-sm);
 }
+/* Light theme override for Champion Card */
+html[data-theme='light'] .champion-card {
+    background-color: #E5E7EB; /* New light surface-2 */
+    border-color: #D1D5DB; /* New light border */
+}
+
 .champion-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.2s ease, transform 0.2s ease; }
 .champion-card:hover {
     transform: scale(1.05);
     box-shadow: var(--shadow-md);
     border-color: var(--color-border-medium);
 }
+/* Light theme override for Champion Card Hover */
+html[data-theme='light'] .champion-card:hover {
+    border-color: #9CA3AF; /* New light border-medium */
+}
+
  .champion-card:hover img {
      transform: scale(1.03);
  }
@@ -1074,15 +1323,26 @@ html[data-theme='light'] .filter-button.active {
      border-color: var(--color-accent-blue);
      transform: scale(1.03);
 }
+/* Light theme override for Champion Card Focus */
+html[data-theme='light'] .champion-card:focus-visible {
+     outline-color: #2563EB; /* New light blue */
+     box-shadow: var(--shadow-glow-blue); /* Use light theme glow */
+     border-color: #2563EB; /* New light blue */
+}
 
 .champion-card.selected { border-color: var(--color-accent-gold); }
+/* Light theme override for Champion Card Selected */
+html[data-theme='light'] .champion-card.selected { border-color: #D97706; } /* New light gold */
+
 .champion-card.selected img { filter: grayscale(80%) brightness(50%) sepia(30%); opacity: 0.7; }
-html[data-theme='light'] .champion-card.selected img { filter: grayscale(50%) brightness(80%) sepia(10%); opacity: 0.8; } /* Lighter effect for light theme */
+html[data-theme='light'] .champion-card.selected img { filter: grayscale(50%) brightness(80%) sepia(10%); opacity: 0.8; }
 
 .champion-card.disabled { pointer-events: none; opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 .champion-card.disabled img { filter: grayscale(100%) brightness(40%); transform: none; }
-html[data-theme='light'] .champion-card.disabled img { filter: grayscale(100%) brightness(70%); } /* Slightly lighter disabled look */
+html[data-theme='light'] .champion-card.disabled img { filter: grayscale(100%) brightness(70%); }
 .champion-card.disabled:hover { transform: none; border-color: var(--color-border); }
+/* Light theme override for Champion Card Disabled Hover */
+html[data-theme='light'] .champion-card.disabled:hover { border-color: #D1D5DB; } /* New light border */
 
 
 .tooltip {
@@ -1101,9 +1361,18 @@ html[data-theme='light'] .champion-card.disabled img { filter: grayscale(100%) b
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--color-border-medium);
 }
+/* Light theme override for Tooltip */
+html[data-theme='light'] .tooltip {
+    background-color: rgba(243, 244, 246, 0.95); /* Use light tooltip bg */
+    color: #111827; /* Use light text */
+    border-color: #9CA3AF; /* Use light border-medium */
+}
+
 .tooltip.visible { opacity: 1; }
-.tooltip-title { font-weight: 600; display: block; margin-bottom: 0.1rem; color: var(--color-accent-gold); }
+.tooltip-title { font-weight: 600; display: block; margin-bottom: 0.1rem; color: var(--color-accent-gold); } /* Keep gold variable */
+html[data-theme='light'] .tooltip-title { color: #D97706; } /* New light gold */
 .tooltip-name { font-weight: 400; color: var(--color-text-secondary); font-size: 0.8rem; }
+html[data-theme='light'] .tooltip-name { color: #6B7280; } /* New light text-secondary */
 
 
 #statusMessage {
@@ -1125,83 +1394,63 @@ html[data-theme='light'] .champion-card.disabled img { filter: grayscale(100%) b
     box-shadow: var(--shadow-md);
     transform: translate(-50%, 10px);
 }
+/* Light theme override for Status Message */
+html[data-theme='light'] #statusMessage {
+     background-color: #F3F4F6; /* New light surface-1 */
+     color: #111827; /* New light text */
+     border-color: #9CA3AF; /* New light border-medium */
+}
+
 #statusMessage.visible {
     opacity: 1;
     transform: translate(-50%, 0);
 }
 
 /* --- Light Theme Direct Overrides --- */
-/* Apply light theme variables directly to elements */
+/* Most direct overrides are now included above */
 
-html[data-theme='light'] #lobbyLinksDisplay,
-html[data-theme='light'] .global-ban-icon,
-html[data-theme='light'] #championGrid, /* Use surface-1 */
-html[data-theme='light'] .search-controls-wrapper { /* Use surface-1 */
-    background-color: var(--color-surface-1);
-    border-color: var(--color-border);
+/* ****************************************************** */
+/* ****** Стили для новой кнопки приоритета (Иконка) **** */
+/* ****************************************************** */
+#newPriorityFilterButton {
+    color: var(--color-accent-gold);
+    width: var(--button-size);
+    height: var(--button-size);
+    padding: 0;
+    font-size: calc(var(--button-size) * 0.55);
 }
-
-html[data-theme='light'] #lobbyLinksDisplay a,
-html[data-theme='light'] #lobbyLinksDisplay span,
-html[data-theme='light'] .pick-slot,
-html[data-theme='light'] .ban-slot,
-html[data-theme='light'] #championSearch,
-html[data-theme='light'] .action-button,
-html[data-theme='light'] .filter-button,
-html[data-theme='light'] #themeToggleButton,
-html[data-theme='light'] .score-input, /* Use surface-2 */
-html[data-theme='light'] .timer-display-button:disabled,
-html[data-theme='light'] .timer-display-button.timer-disabled,
-html[data-theme='light'] .timer-display-button.timer-running {
-    background-color: var(--color-surface-2); /* Use surface-2 */
-    border-color: var(--color-border);
-    color: var(--color-text-primary); /* Ensure text color is set */
-}
-html[data-theme='light'] #lobbyLinksDisplay a {
-     color: var(--color-accent-blue); /* Keep link color */
-}
-html[data-theme='light'] #championSearch::placeholder {
-     color: var(--color-text-placeholder);
-}
-
-html[data-theme='light'] .action-button:disabled,
-html[data-theme='light'] .filter-button,
-html[data-theme='light'] #themeToggleButton { /* Base state for theme button */
-    color: var(--color-text-secondary); /* Disabled/secondary text color */
-}
-html[data-theme='light'] .action-button:hover:not(:disabled),
-html[data-theme='light'] .filter-button:hover:not(:disabled),
-html[data-theme='light'] #themeToggleButton:hover {
-    background-color: var(--color-surface-1); /* Use surface-1 for hover */
-    border-color: var(--color-border-medium);
-    color: var(--color-text-primary);
+/* Light theme override for Priority Button */
+html[data-theme='light'] #newPriorityFilterButton {
+    color: #D97706; /* New light gold */
 }
 
 
-html[data-theme='light'] .highlight-action {
-    border-color: var(--color-accent-gold);
-    background-color: color-mix(in srgb, var(--color-surface-2), var(--color-accent-gold) 15%); /* Slightly stronger mix for light */
-}
-html[data-theme='light'] .swap-selected {
-    border-color: var(--color-accent-blue);
-}
-
-
-html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb {
-    background-color: var(--color-border);
-}
-html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb:hover {
+#newPriorityFilterButton:hover:not(:disabled) {
     background-color: var(--color-border-medium);
+    border-color: var(--color-accent-gold);
+    color: color-mix(in srgb, var(--color-accent-gold), #fff 30%);
 }
-html[data-theme='light'] .champion-card {
-    background-color: var(--color-surface-2);
-    border-color: var(--color-border);
+/* Light theme override for Priority Button Hover */
+html[data-theme='light'] #newPriorityFilterButton:hover:not(:disabled) {
+    background-color: #9CA3AF; /* New light border-medium */
+    border-color: #D97706; /* New light gold */
+    color: color-mix(in srgb, #D97706, #fff 30%); /* Lighter new light gold */
 }
-html[data-theme='light'] #statusMessage {
-     background-color: var(--color-surface-1);
-     color: var(--color-text-primary);
-     border-color: var(--color-border-medium);
+
+#newPriorityFilterButton[aria-pressed="true"] {
+    background-color: var(--color-accent-gold);
+    border-color: var(--color-accent-gold);
+    color: #0a0f1f; /* Dark theme background */
+    box-shadow: var(--shadow-glow-gold);
 }
+/* Light theme override for Priority Button Active */
+html[data-theme='light'] #newPriorityFilterButton[aria-pressed="true"] {
+    background-color: #D97706; /* New light gold */
+    border-color: #D97706;
+    color: #FFFFFF; /* White icon on light gold */
+    box-shadow: var(--shadow-glow-gold); /* Use light theme glow */
+}
+/* ****************************************************** */
 
 
 /* --- Responsive Adjustments --- */
@@ -1212,7 +1461,8 @@ html[data-theme='light'] #statusMessage {
 
 @media (max-width: 1024px) {
     :root {
-        --card-size: 7.5vh;
+        /* --- MODIFIED: Increased responsive card size --- */
+        --card-size: 11.25vh; /* Was 7.5vh */
         --ban-size: 5vh;
         --button-size: 4vh;
         --filter-button-size: 3.5vh;
@@ -1228,7 +1478,8 @@ html[data-theme='light'] #statusMessage {
 
 @media (max-width: 768px) {
      :root {
-        --card-size: 7vh;
+        /* --- MODIFIED: Increased responsive card size --- */
+        --card-size: 10.5vh; /* Was 7vh */
         --ban-size: 4.5vh;
         --button-size: 3.8vh;
         --filter-button-size: 3.2vh;
@@ -1256,13 +1507,15 @@ html[data-theme='light'] #statusMessage {
     body { padding: 2px; }
      #app-container { padding: 2px; } /* Reduce padding on small screens */
     :root {
-        --card-size: 6.5vh;
+        /* --- MODIFIED: Increased responsive card size --- */
+        --card-size: 9.75vh; /* Was 6.5vh */
         --ban-size: 4vh;
         --button-size: 3.5vh;
         --filter-button-size: 3vh;
         --score-size: 3.5vh;
         --nick-font-size: 2vh;
-        --card-min-size: 38px;
+        /* --- MODIFIED: Increased responsive card min size --- */
+        --card-min-size: 57px; /* Was 38px */
         --ban-min-size: 25px;
         --button-min-size: 28px;
         --score-min-size: 28px;
@@ -1290,3 +1543,4 @@ html[data-theme='light'] #statusMessage {
      #championSearch { min-width: 100px; }
      /* Adjust top right buttons for very small screens */
      #topRightButtons { top: var(--gap-size); right: var(--gap-size); }
+}
