@@ -1,6 +1,6 @@
-// script.js v7.5 - Priority Button Icon Only, Nickname Placeholder Update
+// script.js v7.6 - Added 'Open' button functionality in lobby
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v7.5..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v7.6..."); // Version Updated
 
     // --- Page Elements ---
     const appContainer = document.getElementById('app-container');
@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const judgeLinkText = document.getElementById('judgeLinkText');
     const team1LinkText = document.getElementById('team1LinkText');
     const team2LinkText = document.getElementById('team2LinkText');
+    // ADDED: Get references for the new 'Open' buttons
+    const openJudgeLinkButton = document.getElementById('openJudgeLinkButton');
+    const openTeam1LinkButton = document.getElementById('openTeam1LinkButton');
+    const openTeam2LinkButton = document.getElementById('openTeam2LinkButton');
+
 
     // --- Draft Simulator Global Elements ---
     let loadingIndicator, mainLayout, championGridElement, startButton, resetButton, undoButton, timerDisplay, championSearch, bluePicksContainer, redPicksContainer, blueColumn, redColumn, swapButton, clearPicksButton, toggleTimerButton, filterButtons, /* Changed back to NodeList */ confirmPickBanButton, newPriorityFilterButton, nextDraftButton, globallyBannedDisplay, globalBansBlueContainer, globalBansRedContainer, championTooltip, statusMessage, blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl, returnHomeButton, roleFilterButtonsContainer;
@@ -226,15 +231,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const team2Name = team2NameInput.value.trim() || "Красная Команда";
         localStorage.setItem('lobbyTeam1Name', team1Name);
         localStorage.setItem('lobbyTeam2Name', team2Name);
+
         const baseUrl = window.location.origin + window.location.pathname;
         const judgeLink = baseUrl + '#role=judge';
         const team1Link = baseUrl + '#role=team1';
         const team2Link = baseUrl + '#role=team2';
+
+        // Update link text spans
         if (judgeLinkText) judgeLinkText.textContent = judgeLink;
         if (team1LinkText) team1LinkText.textContent = team1Link;
         if (team2LinkText) team2LinkText.textContent = team2Link;
+
+        // --- ADDED: Set href for the 'Open' buttons ---
+        if (openJudgeLinkButton) {
+            openJudgeLinkButton.href = judgeLink;
+        } else {
+            console.warn("Judge 'Open' button not found");
+        }
+        if (openTeam1LinkButton) {
+            openTeam1LinkButton.href = team1Link;
+        } else {
+            console.warn("Team 1 'Open' button not found");
+        }
+        if (openTeam2LinkButton) {
+            openTeam2LinkButton.href = team2Link;
+        } else {
+            console.warn("Team 2 'Open' button not found");
+        }
+        // --- END OF ADDED CODE ---
+
         if (lobbyLinksDisplay) lobbyLinksDisplay.classList.remove('hidden');
-        showStatusMessage("Лобби создано! Скопируйте ссылки.", 3000);
+        showStatusMessage("Лобби создано! Скопируйте или откройте ссылки.", 3000); // Updated message slightly
     }
 
     // --- Admin Button Logic ---
@@ -256,13 +283,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
      // Add listeners for copy buttons
      document.querySelectorAll('.copy-button').forEach(button => {
-         button.addEventListener('click', (event) => {
-             const linkId = event.target.dataset.linkId;
-             const linkSpan = document.getElementById(linkId);
-             if (linkSpan) {
-                 copyToClipboard(linkSpan.textContent);
-             } else { console.warn("Copy link span not found for id:", linkId); }
-         });
+         // Ensure we only attach to actual buttons, not the new <a> tags
+         if (button.tagName === 'BUTTON') {
+             button.addEventListener('click', (event) => {
+                 const linkId = event.target.dataset.linkId;
+                 const linkSpan = document.getElementById(linkId);
+                 if (linkSpan) {
+                     copyToClipboard(linkSpan.textContent);
+                 } else { console.warn("Copy link span not found for id:", linkId); }
+             });
+         }
      });
 
     // Add listener for Admin button
