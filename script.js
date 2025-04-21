@@ -1,6 +1,6 @@
-// script.js v7.9 - Fixed appendChild error in displayChampions
+// script.js v7.11 - Reordered function definitions to potentially fix "not defined" error
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v7.9..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v7.11..."); // Version Updated
 
     // --- Language State & Translations ---
     let currentLanguage = localStorage.getItem('language') || 'ru'; // Default to Russian
@@ -317,20 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Helper Functions ---
     const debounce = (func, wait) => { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func(...args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; };
-    // --- MODIFIED: showStatusMessage to use translations ---
-    const showStatusMessage = (key, duration = 3000, replacements = {}) => {
-        if (!statusMessage) statusMessage = document.getElementById('statusMessage');
-        if (!statusMessage) { console.warn("Status message element not found!"); return; }
-        let message = translations[currentLanguage]?.[key] || key; // Fallback to key if translation missing
-        // Replace placeholders like {name} or {time}
-        for (const placeholder in replacements) {
-            message = message.replace(`{${placeholder}}`, replacements[placeholder]);
-        }
-        statusMessage.textContent = message;
-        statusMessage.classList.add('visible');
-        clearTimeout(statusTimeout);
-        statusTimeout = setTimeout(() => { statusMessage.classList.remove('visible'); }, duration);
-    };
+    const showStatusMessage = (key, duration = 3000, replacements = {}) => { /* ... (Already modified) ... */ if (!statusMessage) statusMessage = document.getElementById('statusMessage'); if (!statusMessage) { console.warn("Status message element not found!"); return; } let message = translations[currentLanguage]?.[key] || key; for (const placeholder in replacements) { message = message.replace(`{${placeholder}}`, replacements[placeholder]); } statusMessage.textContent = message; statusMessage.classList.add('visible'); clearTimeout(statusTimeout); statusTimeout = setTimeout(() => { statusMessage.classList.remove('visible'); }, duration); };
     const getChampionById = (id) => processedChampions.find(champ => champ.id === id);
 
     // Permission Check Function
@@ -429,6 +416,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Draft Logic Functions (Draft Specific - with permission checks added) ---
+     // --- MOVED: createChampionCard definition before displayChampions ---
+     function createChampionCard(champ) {
+        const card = document.createElement('button');
+        card.className = 'champion-card';
+        card.dataset.championId = champ.id;
+        // Keep both EN and RU names in dataset for filtering regardless of current language
+        card.dataset.championNameEn = champ.name.en.toLowerCase();
+        card.dataset.championNameRu = champ.name.ru.toLowerCase();
+        card.dataset.roles = champ.roles.join(',');
+        card.setAttribute('role', 'gridcell');
+        card.setAttribute('aria-label', champ.name[currentLanguage]); // Use current language for aria-label
+
+        const img = document.createElement('img');
+        img.src = champ.iconUrl;
+        img.alt = ""; // Decorative image
+        img.className = 'w-full h-full object-cover block pointer-events-none';
+        img.loading = 'lazy';
+        img.onerror = () => { img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%234a5568'/%3E%3C/svg%3E`; card.setAttribute('aria-label', `${champ.name[currentLanguage]} (error)`); };
+
+        card.appendChild(img);
+        card.addEventListener('click', () => handleChampionPreview(champ));
+        card.addEventListener('mouseover', (event) => showChampionTooltip(event, champ)); // Tooltip function handles language
+        card.addEventListener('mouseout', hideChampionTooltip);
+        card.addEventListener('focus', (event) => showChampionTooltip(event, champ));
+        card.addEventListener('blur', hideChampionTooltip);
+        return card;
+    }
+     // --- END MOVED createChampionCard ---
+
      // --- FIXED: displayChampions function ---
      function displayChampions() {
         if(!championGridElement) { console.error("displayChampions: championGridElement not found"); return; }
@@ -437,7 +453,12 @@ document.addEventListener('DOMContentLoaded', () => {
         processedChampions.sort((a, b) => a.name[currentLanguage].localeCompare(b.name[currentLanguage], currentLanguage));
         // --- CORRECTED: Iterate and append champion cards ---
         processedChampions.forEach(champ => {
-            fragment.appendChild(createChampionCard(champ));
+            // Ensure createChampionCard is defined before calling it
+            if (typeof createChampionCard === 'function') {
+                 fragment.appendChild(createChampionCard(champ));
+            } else {
+                console.error('createChampionCard is not defined when called from displayChampions');
+            }
         });
         // --- END CORRECTION ---
         championGridElement.innerHTML = ''; // Clear the grid
