@@ -1,14 +1,13 @@
-// script.js v7.3 - Debug Theme Toggle, Reverted Role Filters Handler
+// script.js v7.5 - Priority Button Icon Only, Nickname Placeholder Update
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Fully Loaded. Initializing App v7.3..."); // Version Updated
+    console.log("DOM Fully Loaded. Initializing App v7.5..."); // Version Updated
 
     // --- Page Elements ---
     const appContainer = document.getElementById('app-container');
     const homePage = document.getElementById('homePage');
     const draftPage = document.getElementById('draftPage');
     const adminButton = document.getElementById('adminButton');
-    const themeToggleButton = document.getElementById('themeToggleButton'); // Get Theme Button
-    // DEBUG: Check if button element is found
+    const themeToggleButton = document.getElementById('themeToggleButton');
     console.log("DEBUG: Theme Toggle Button Element:", themeToggleButton);
 
     // Home Page Elements
@@ -21,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const team2LinkText = document.getElementById('team2LinkText');
 
     // --- Draft Simulator Global Elements ---
-    let loadingIndicator, mainLayout, championGridElement, startButton, resetButton, undoButton, timerDisplay, championSearch, bluePicksContainer, redPicksContainer, blueColumn, redColumn, swapButton, clearPicksButton, toggleTimerButton, filterButtons, /* Changed back to NodeList */ confirmPickBanButton, priorityFilterButton, nextDraftButton, globallyBannedDisplay, globalBansBlueContainer, globalBansRedContainer, championTooltip, statusMessage, blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl, returnHomeButton;
+    let loadingIndicator, mainLayout, championGridElement, startButton, resetButton, undoButton, timerDisplay, championSearch, bluePicksContainer, redPicksContainer, blueColumn, redColumn, swapButton, clearPicksButton, toggleTimerButton, filterButtons, /* Changed back to NodeList */ confirmPickBanButton, newPriorityFilterButton, nextDraftButton, globallyBannedDisplay, globalBansBlueContainer, globalBansRedContainer, championTooltip, statusMessage, blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl, returnHomeButton, roleFilterButtonsContainer;
 
     // --- State Variables ---
     let currentPage = 'home';
@@ -48,11 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerSeconds = draftTimerDuration;
     let currentRoleFilter = 'All';
     let previewedChampion = null;
-    let isPriorityFilterActive = false;
+    let isPriorityFilterActive = false; // State variable remains the same
     let statusTimeout = null;
     let globallyDisabledChampions = new Set();
     let globalBanHistory = [];
-    // Priority list from user's v4.0 file
+    // Priority list from user's v4.0 file (Used by filterChampions)
     const priorityChampions = new Set(['Aatrox', 'Ahri', 'Akali', 'Akshan', 'Alistar', 'Amumu', 'Annie', 'Ashe', 'AurelionSol', 'Blitzcrank', 'Brand', 'Braum', 'Caitlyn', 'Camille', 'Corki', 'Darius', 'Diana', 'DrMundo', 'Draven', 'Ekko', 'Evelynn', 'Ezreal', 'Fiddlesticks', 'Fiora', 'Fizz', 'Galio', 'Garen', 'Gnar', 'Gragas', 'Graves', 'Gwen', 'Hecarim', 'Heimerdinger', 'Irelia', 'Janna', 'JarvanIV', 'Jax', 'Jayce', 'Jhin', 'Jinx', 'Kaisa', 'Kalista', 'Karma', 'Kassadin', 'Katarina', 'Kayle', 'Kayn', 'Kennen', 'Khazix', 'Kindred', 'LeeSin', 'Leona', 'Lillia', 'Lissandra', 'Lucian', 'Lulu', 'Lux', 'Malphite', 'Maokai', 'MasterYi', 'Milio', 'MissFortune', 'Mordekaiser', 'Morgana', 'Nami', 'Nasus', 'Nautilus', 'Nilah', 'Nunu', 'Olaf', 'Orianna', 'Ornn', 'Pantheon', 'Poppy', 'Pyke', 'Rakan', 'Rammus', 'Renekton', 'Rengar', 'Riven', 'Rumble', 'Samira', 'Senna', 'Seraphine', 'Sett', 'Shen', 'Shyvana', 'Singed', 'Sion', 'Sivir', 'Sona', 'Soraka', 'Swain', 'Syndra', 'Talon', 'Teemo', 'Thresh', 'Tristana', 'Tryndamere', 'TwistedFate', 'Twitch', 'Urgot', 'Varus', 'Vayne', 'Veigar', 'Vex', 'Vi', 'Viego', 'Viktor', 'Vladimir', 'Volibear', 'Warwick', 'MonkeyKing', 'Xayah', 'XinZhao', 'Yasuo', 'Yone', 'Yuumi', 'Zac', 'Zed', 'Zeri', 'Ziggs', 'Zoe', 'Zyra', 'Ryze', 'Nocturne', 'Zilean', 'Renata', 'Belveth', 'Naafiri', 'Briar', 'Hwei', 'Smolder']);
 
     // --- Permissions Map ---
@@ -298,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         roleFilterButtonsContainer = document.getElementById('roleFilterButtons'); // Get container
         filterButtons = roleFilterButtonsContainer ? roleFilterButtonsContainer.querySelectorAll('.filter-button') : null; // Get buttons inside container
         confirmPickBanButton = document.getElementById('confirmPickBanButton');
-        priorityFilterButton = document.getElementById('priorityFilterButton');
+        newPriorityFilterButton = document.getElementById('newPriorityFilterButton');
         nextDraftButton = document.getElementById('nextDraftButton');
         returnHomeButton = document.getElementById('returnHomeButton');
         blueTeamNameH2 = document.getElementById('blue-team-name-h2');
@@ -306,13 +305,19 @@ document.addEventListener('DOMContentLoaded', () => {
         blueScoreEl = document.getElementById('blue-score');
         redScoreEl = document.getElementById('red-score');
         statusMessage = document.getElementById('statusMessage');
+        championTooltip = document.getElementById('championTooltip'); // Make sure tooltip is fetched
+        globalBansBlueContainer = document.getElementById('global-bans-blue');
+        globalBansRedContainer = document.getElementById('global-bans-red');
+        globallyBannedDisplay = document.getElementById('globallyBannedDisplay');
+
 
         const elementsToCheck = [
             loadingIndicator, mainLayout, championGridElement, timerDisplay, resetButton, undoButton,
             championSearch, blueColumn, redColumn, swapButton, clearPicksButton, toggleTimerButton,
             roleFilterButtonsContainer, filterButtons, // Check container and buttons
-            confirmPickBanButton, priorityFilterButton, nextDraftButton, returnHomeButton,
-            blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl, statusMessage
+            confirmPickBanButton, newPriorityFilterButton, nextDraftButton, returnHomeButton,
+            blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl, statusMessage, championTooltip,
+            globalBansBlueContainer, globalBansRedContainer, globallyBannedDisplay
         ];
         if (!filterButtons || filterButtons.length === 0) {
              console.error("Role filter buttons NodeList is empty or null!");
@@ -321,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const missingElements = elementsToCheck.filter(el => !el);
         if (missingElements.length > 0) {
-            console.error("Missing draft elements during check:", missingElements.map(el => el?.id || 'unknown'));
+            console.error("Missing draft elements during check:", missingElements.map(el => el?.id || (el === newPriorityFilterButton ? 'newPriorityFilterButton' : 'unknown')));
             return false;
         }
         return true;
@@ -377,9 +382,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (swapButton) swapButton.addEventListener('click', handleSwapTeams); else console.warn("Listener not attached: swapButton not found");
             if (toggleTimerButton) toggleTimerButton.addEventListener('click', handleToggleTimer); else console.warn("Listener not attached: toggleTimerButton not found");
             if (confirmPickBanButton) confirmPickBanButton.addEventListener('click', handleConfirmPickBan); else console.warn("Listener not attached: confirmPickBanButton not found");
-            if (priorityFilterButton) {
-                // Listener attached on DOM load now
-            } else { console.warn("Listener not attached: priorityFilterButton not found"); }
+            if (newPriorityFilterButton) {
+                 newPriorityFilterButton.addEventListener('click', handleNewPriorityFilterToggle); // Use new handler
+             } else { console.warn("Listener not attached: newPriorityFilterButton not found"); }
             if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); else console.warn("Listener not attached: nextDraftButton not found");
             if (championSearch) championSearch.addEventListener('input', debouncedFilter); else console.warn("Listener not attached: championSearch not found");
 
@@ -444,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(swapButton) swapButton.disabled = !can('swapSides');
         if(toggleTimerButton) toggleTimerButton.disabled = !can('toggleTimerDuration');
         if(confirmPickBanButton) confirmPickBanButton.disabled = !can('confirmAction');
-        if(priorityFilterButton) priorityFilterButton.disabled = !can('togglePriorityFilter');
+        if(newPriorityFilterButton) newPriorityFilterButton.disabled = !can('togglePriorityFilter');
         if(nextDraftButton) nextDraftButton.disabled = !can('nextDraft');
         if(returnHomeButton) returnHomeButton.disabled = !can('returnHome');
 
@@ -684,7 +689,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(swapButton) swapButton.disabled = !canSwap;
             if(clearPicksButton) clearPicksButton.disabled = !canClear || (draftHistory.length === 0 && Object.keys(pickNicknames).length === 0 && selectedChampions.size === 0 && globalBanHistory.length === 0);
             if(toggleTimerButton) toggleTimerButton.disabled = !canToggleTimer;
-            if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
+            if(newPriorityFilterButton) newPriorityFilterButton.disabled = !canTogglePriority;
             if(resetButton) resetButton.disabled = !canReset;
             if(timerDisplay) timerDisplay.disabled = !canStart;
             if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive before start
@@ -715,7 +720,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(timerDisplay) timerDisplay.disabled = true; // Timer running or user is team
             if(swapButton) swapButton.disabled = true;
             if(toggleTimerButton) toggleTimerButton.disabled = true;
-            if(priorityFilterButton) priorityFilterButton.disabled = true;
+            if(newPriorityFilterButton) newPriorityFilterButton.disabled = true; // Disable during active draft phase
             if(clearPicksButton) clearPicksButton.disabled = !canClear;
             if(resetButton) resetButton.disabled = !canReset;
 
@@ -741,7 +746,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(swapButton) swapButton.disabled = !canSwap;
             if(clearPicksButton) clearPicksButton.disabled = !canClear;
             if(toggleTimerButton) toggleTimerButton.disabled = true;
-            if(priorityFilterButton) priorityFilterButton.disabled = !canTogglePriority;
+            if(newPriorityFilterButton) newPriorityFilterButton.disabled = !canTogglePriority; // Re-enable based on permission after draft
             if(resetButton) resetButton.disabled = !canReset;
             if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Grid inactive after draft
         }
@@ -884,7 +889,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem('lobbyTeam2Name') || 'Красная Команда';
         if (blueScoreEl) blueScoreEl.textContent = ''; if (redScoreEl) redScoreEl.textContent = '';
         if(blueColumn) blueColumn.classList.add('draft-disabled'); if(redColumn) redColumn.classList.add('draft-disabled');
-        if(championSearch) championSearch.value = ''; currentRoleFilter = 'All'; if(filterButtons) { filterButtons.forEach(btn => btn.classList.remove('active')); filterButtons[0]?.classList.add('active'); } isPriorityFilterActive = false; if (priorityFilterButton) { priorityFilterButton.classList.remove('active'); priorityFilterButton.setAttribute('aria-pressed', 'false'); }
+        if(championSearch) championSearch.value = ''; currentRoleFilter = 'All'; if(filterButtons) { filterButtons.forEach(btn => btn.classList.remove('active')); filterButtons[0]?.classList.add('active'); }
+        isPriorityFilterActive = false;
+        if (newPriorityFilterButton) {
+            newPriorityFilterButton.setAttribute('aria-pressed', 'false');
+            newPriorityFilterButton.title = 'Показать только приоритетных чемпионов';
+            // No need to reset innerHTML as it's icon only now
+        }
         displayGloballyBanned(); updateChampionAvailability(); filterChampions(); updateDraftUI();
         showStatusMessage("Драфт полностью сброшен.", 2000);
     }
@@ -941,7 +952,7 @@ document.addEventListener('DOMContentLoaded', () => {
      }
     const debouncedFilter = debounce(() => { filterChampions(); }, 250);
 
-    // Filter logic using restored data
+    // Filter logic using restored data - NO CHANGES NEEDED HERE
     function filterChampions() {
         if (!isDraftInitialized || !championSearch || !championGridElement) return;
         const searchTerm = championSearch.value.toLowerCase().trim();
@@ -958,7 +969,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Corrected roleMatch check
             const roleMatch = currentRoleFilter === 'All' || (champRoles.length > 0 && champRoles.includes(currentRoleFilter));
             const isPriority = priorityChampions.has(champId); // Uses restored priority list
-            const hideByPriorityFilter = isPriorityFilterActive && !isPriority;
+            const hideByPriorityFilter = isPriorityFilterActive && !isPriority; // Logic remains the same
 
             const isVisible = searchMatch && roleMatch && !hideByPriorityFilter;
 
@@ -1164,23 +1175,37 @@ document.addEventListener('DOMContentLoaded', () => {
          filterChampions(); // Calls filter function
      }
 
-    function handlePriorityFilterToggle() {
-         console.log("--- handlePriorityFilterToggle ---"); // DEBUG log
-         if (!hasPermission('togglePriorityFilter')) {
-             console.log("Priority filter toggle denied: No permission.");
-             showStatusMessage("Нет прав для переключения приоритета.", 2000);
-             return;
-         }
-        isPriorityFilterActive = !isPriorityFilterActive;
-        if(priorityFilterButton) {
-            priorityFilterButton.classList.toggle('active', isPriorityFilterActive);
-            priorityFilterButton.setAttribute('aria-pressed', isPriorityFilterActive.toString());
-            priorityFilterButton.title = isPriorityFilterActive ? 'Показать всех чемпионов' : 'Показать только приоритетных чемпионов';
+    // --- New Priority Filter Handler ---
+    function handleNewPriorityFilterToggle() {
+        // console.log("--- handleNewPriorityFilterToggle ---"); // DEBUG log
+        if (!hasPermission('togglePriorityFilter')) {
+            console.log("Priority filter toggle denied: No permission.");
+            showStatusMessage("Нет прав для переключения приоритета.", 2000);
+            return;
         }
+
+        isPriorityFilterActive = !isPriorityFilterActive; // Toggle the state
+
+        if (newPriorityFilterButton) {
+            newPriorityFilterButton.setAttribute('aria-pressed', isPriorityFilterActive.toString());
+            // Update title for better accessibility/user feedback
+            if (isPriorityFilterActive) {
+                newPriorityFilterButton.title = 'Показать всех чемпионов';
+                // Optional: Change button text (REMOVED as per request)
+                // newPriorityFilterButton.innerHTML = '⭐ Все';
+            } else {
+                newPriorityFilterButton.title = 'Показать только приоритетных чемпионов';
+                // Optional: Change button text back (REMOVED as per request)
+                // newPriorityFilterButton.innerHTML = '⭐ Приоритет';
+            }
+        }
+
         console.log('Priority filter active state toggled to:', isPriorityFilterActive);
-        filterChampions();
+        filterChampions(); // Apply the filter change
         showStatusMessage(isPriorityFilterActive ? "Показаны только приоритетные чемпионы." : "Показаны все чемпионы.", 2000);
     }
+
+
     function displayGloballyBanned() { if (!globalBansBlueContainer || !globalBansRedContainer || !globallyBannedDisplay) return; globalBansBlueContainer.innerHTML = ''; globalBansRedContainer.innerHTML = ''; if (globalBanHistory.length > 0) { globallyBannedDisplay.classList.remove('hidden'); const blueFragment = document.createDocumentFragment(); const redFragment = document.createDocumentFragment(); globalBanHistory.forEach(banInfo => { const champ = getChampionById(banInfo.championId); if (champ) { const iconDiv = document.createElement('div'); iconDiv.className = 'global-ban-icon'; const banTeamText = banInfo.team === 'blue' ? 'синими' : 'красными'; iconDiv.title = `${champ.name.ru} (Заблокирован ${banTeamText} в пред. игре)`; iconDiv.setAttribute('aria-label', iconDiv.title); const img = document.createElement('img'); img.src = champ.iconUrl; img.alt = ""; img.loading = 'lazy'; img.onerror = () => { img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%234a5568'/%3E%3C/svg%3E`; }; iconDiv.appendChild(img); if (banInfo.team === 'blue') { blueFragment.appendChild(iconDiv); } else { redFragment.appendChild(iconDiv); } } }); globalBansBlueContainer.appendChild(blueFragment); globalBansRedContainer.appendChild(redFragment); } else { globallyBannedDisplay.classList.add('hidden'); } }
     function handleNextDraft() {
          console.log("handleNextDraft called");
