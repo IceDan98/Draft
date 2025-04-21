@@ -13,6 +13,12 @@
     <style>
         /* Минимальные базовые стили для body */
         body { margin: 0; height: 100vh; overflow: hidden; }
+        /* Добавим небольшой отступ для новых кнопок */
+        .open-button {
+            margin-left: 0.25rem; /* Небольшой отступ слева */
+            /* Можно добавить другие стили, например, другой цвет фона */
+            /* background-color: var(--color-accent-green); */
+        }
     </style>
 </head>
 <body>
@@ -32,9 +38,21 @@
       <input type="text" id="team2NameInput" class="lobby-input" placeholder="Команда 2">
       <button id="createLobbyButton">Создать Лобби</button>
       <div id="lobbyLinksDisplay" class="hidden">
-          <p><strong>Судья:</strong> <span id="judgeLinkText"></span> <button class="copy-button" data-link-id="judgeLinkText">Копировать</button></p>
-          <p><strong>Команда 1:</strong> <span id="team1LinkText"></span> <button class="copy-button" data-link-id="team1LinkText">Копировать</button></p>
-          <p><strong>Команда 2:</strong> <span id="team2LinkText"></span> <button class="copy-button" data-link-id="team2LinkText">Копировать</button></p>
+          <p>
+              <strong>Судья:</strong> <span id="judgeLinkText"></span>
+              <button class="copy-button" data-link-id="judgeLinkText">Копировать</button>
+              <a href="#" id="openJudgeLinkButton" class="copy-button open-button" target="_self">Открыть</a>
+          </p>
+          <p>
+              <strong>Команда 1:</strong> <span id="team1LinkText"></span>
+              <button class="copy-button" data-link-id="team1LinkText">Копировать</button>
+              <a href="#" id="openTeam1LinkButton" class="copy-button open-button" target="_self">Открыть</a>
+          </p>
+          <p>
+              <strong>Команда 2:</strong> <span id="team2LinkText"></span>
+              <button class="copy-button" data-link-id="team2LinkText">Копировать</button>
+              <a href="#" id="openTeam2LinkButton" class="copy-button open-button" target="_self">Открыть</a>
+          </p>
       </div>
     </div>
 
