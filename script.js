@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLobbyId = null;
     let statusTimeout = null;
     let timerInterval = null;
-    let selectedSwapSlotId = null;
+    let selectedSwapSlotId = null; // ID первого слота для обмена пиками
     let tooltipTimeout = null;
 
     // Глобальные данные о чемпионах
@@ -742,7 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else console.warn("Listener not attached: newPriorityFilterButton not found");
 
         // Кнопка следующего драфта
-        if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); // Заглушка
+        if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); // РЕАЛИЗОВАНО НИЖЕ
         else console.warn("Listener not attached: nextDraftButton not found");
 
         // Поле поиска
@@ -761,9 +761,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else { console.warn("Listener not attached: filterButtons collection is null/empty"); }
 
         // Клики по колонкам (для обмена пиками)
-        if (blueColumn) blueColumn.addEventListener('click', handlePickContainerClick); // Заглушка
+        if (blueColumn) blueColumn.addEventListener('click', handlePickContainerClick); // РЕАЛИЗОВАНО НИЖЕ
         else console.warn("Listener not attached: blueColumn not found");
-        if (redColumn) redColumn.addEventListener('click', handlePickContainerClick); // Заглушка
+        if (redColumn) redColumn.addEventListener('click', handlePickContainerClick); // РЕАЛИЗОВАНО НИЖЕ
         else console.warn("Listener not attached: redColumn not found");
 
         // Кнопка "Домой"
@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(clearPicksButton) clearPicksButton.disabled = !canClear;
         if(swapButton) swapButton.disabled = !canSwap || (isStarted && !isComplete);
         if(toggleTimerButton) toggleTimerButton.disabled = !canToggleTimer || isStarted;
-        if(nextDraftButton) nextDraftButton.disabled = !canNext || !isComplete;
+        if(nextDraftButton) nextDraftButton.disabled = !canNext || !isComplete; // Кнопка активна только после завершения
         if(newPriorityFilterButton) newPriorityFilterButton.disabled = !canTogglePriority || isStarted;
         if(filterButtons) filterButtons.forEach(btn => btn.disabled = !canUseFilters || isStarted);
         if(championSearch) championSearch.disabled = !canUseFilters || isStarted;
@@ -884,9 +884,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (blueColumn) blueColumn.classList.toggle('role-disabled', !isAdminOrJudge() && userTeamSide === 'red');
             if (redColumn) redColumn.classList.toggle('role-disabled', !isAdminOrJudge() && userTeamSide === 'blue');
 
-            if (!timerInterval && hasPermission('startDraft')) {
-                 startTimer(); // Запускаем таймер, если он не идет
-            }
+            // Таймер запускается автоматически при подтверждении/отмене/старте
+            // if (!timerInterval && hasPermission('startDraft')) {
+            //      startTimer(); // Запускаем таймер, если он не идет
+            // }
         } else { // Драфт завершен
             stopTimer();
             if (timerDisplay) {
@@ -999,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showStatusMessage(currentPriorityState ? "priorityFilterOn" : "priorityFilterOff", 2000);
     }
 
-    // --- НОВАЯ ЧАСТЬ: Основная логика драфта ---
+    // --- Основная логика драфта ---
 
     /**
      * Возвращает стандартный порядок пиков и банов.
@@ -1296,7 +1297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Убираем выделение слотов для обмена (если было)
-        deselectSwapSlots(); // Функция будет реализована позже
+        deselectSwapSlots(); // РЕАЛИЗОВАНО НИЖЕ
 
         // Удаляем последнее действие из истории
         history.pop();
@@ -1333,7 +1334,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showStatusMessage("actionUndone", 1500);
     }
 
-    // --- НОВАЯ ЧАСТЬ: Управление Таймером ---
+    // --- Управление Таймером ---
 
     /**
      * Форматирует время в секундах в строку MM:SS.
@@ -1524,7 +1525,7 @@ document.addEventListener('DOMContentLoaded', () => {
          console.log("Timer duration set to:", currentDuration);
      }
 
-    // --- НОВАЯ ЧАСТЬ: Функции сброса ---
+    // --- Функции сброса ---
 
     /**
      * Выполняет полный сброс драфта (пики, баны, ники, история, глобальные баны).
@@ -1661,7 +1662,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showStatusMessage("resetCurrentGameKeptInfo", 2500); // Сообщение о сохранении ников/глоб. банов
     }
 
-    // --- НОВАЯ ЧАСТЬ: Отображение глобальных банов ---
+    // --- Отображение глобальных банов ---
 
     /**
      * Отображает иконки глобально забаненных чемпионов.
@@ -1729,12 +1730,280 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Обработка следующего драфта (Fearless) ---
 
-    // --- Заглушки для функций, которые будут реализованы позже ---
-    function handleSwapTeams() { console.warn("handleSwapTeams() not implemented yet."); }
-    function handleNextDraft() { console.warn("handleNextDraft() not implemented yet."); }
-    function handlePickContainerClick(event) { console.warn("handlePickContainerClick() not implemented yet."); }
-    function deselectSwapSlots() { console.warn("deselectSwapSlots() not implemented yet."); if (selectedSwapSlotId) { const prevSelected = document.getElementById(selectedSwapSlotId); if (prevSelected) { prevSelected.classList.remove('swap-selected'); } selectedSwapSlotId = null; } }
+    /**
+     * Обрабатывает нажатие кнопки "Следующий драфт".
+     * Добавляет пики текущей игры в глобальные баны и сбрасывает игру.
+     */
+    function handleNextDraft() {
+        console.log("handleNextDraft called");
+        if (!hasPermission('nextDraft')) {
+            showStatusMessage("permDeniedNextDraft", 2000);
+            return;
+        }
+
+        // Проверяем, завершен ли текущий драфт
+        if (!getLobbyItem('isDraftComplete', false)) {
+            showStatusMessage("nextDraftErrorNotComplete", 3000);
+            return;
+        }
+
+        let history = getLobbyItem('draftHistory', []);
+        let currentGlobalDisabled = getLobbyItem('globallyDisabledChampions', new Set());
+        let currentGlobalHistory = getLobbyItem('globalBanHistory', []);
+        let addedBansCount = 0;
+
+        // Проходим по истории завершенного драфта
+        history.forEach(action => {
+            // Если это был пик и чемпион еще не в глобальном бане
+            if (action.type === 'pick' && !currentGlobalDisabled.has(action.championId)) {
+                // Добавляем в историю глобальных банов
+                currentGlobalHistory.push({ championId: action.championId, team: action.team });
+                // Добавляем в сет глобально забаненных
+                currentGlobalDisabled.add(action.championId);
+                addedBansCount++;
+            }
+        });
+
+        // Сохраняем обновленные списки глобальных банов
+        setLobbyItem('globallyDisabledChampions', currentGlobalDisabled);
+        setLobbyItem('globalBanHistory', currentGlobalHistory);
+
+        console.log(`handleNextDraft (Lobby ${currentLobbyId}): Added ${addedBansCount} champions to global bans.`);
+
+        // Сбрасываем текущую игру, сохраняя ники и НОВЫЕ глобальные баны
+        resetCurrentGamePicksBans(true, true); // force=true, keepGlobal=true
+
+        // Показываем сообщение
+        showStatusMessage("nextDraftComplete", 2500);
+    }
+
+    // --- НОВАЯ ЧАСТЬ: Логика обмена пиками ---
+
+    /**
+     * Снимает выделение со слота, выбранного для обмена.
+     */
+    function deselectSwapSlots() {
+        if (selectedSwapSlotId) {
+            const prevSelected = document.getElementById(selectedSwapSlotId);
+            if (prevSelected) {
+                prevSelected.classList.remove('swap-selected');
+            }
+            selectedSwapSlotId = null; // Сбрасываем ID выбранного слота
+            console.log("Swap selection cleared.");
+        }
+    }
+
+/**
+     * Обрабатывает нажатие кнопки смены команд местами.
+     * Меняет имена, счет, историю глобальных банов.
+     * Если драфт был завершен, также меняет пики и баны.
+     */
+    function handleSwapTeams() {
+        console.log("handleSwapTeams called");
+        if (!hasPermission('swapSides')) {
+            showStatusMessage("permDeniedSwap", 2000);
+            return;
+        }
+        // Убираем выделение слотов для обмена пиками, если оно было
+        deselectSwapSlots();
+
+        try {
+            // 1. Меняем имена команд (в UI и localStorage)
+            const lobbyTeam1Key = `${currentLobbyId}_team1Name`;
+            const lobbyTeam2Key = `${currentLobbyId}_team2Name`;
+            const name1 = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName;
+            const name2 = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName;
+            if (blueTeamNameH2) blueTeamNameH2.textContent = name2;
+            if (redTeamNameH2) redTeamNameH2.textContent = name1;
+            localStorage.setItem(lobbyTeam1Key, name2);
+            localStorage.setItem(lobbyTeam2Key, name1);
+
+            // 2. Меняем счет (в UI и localStorage)
+            const score1 = getLobbyItem('blueScore', '');
+            const score2 = getLobbyItem('redScore', '');
+            if (blueScoreEl) blueScoreEl.textContent = score2;
+            if (redScoreEl) redScoreEl.textContent = score1;
+            setLobbyItem('blueScore', score2);
+            setLobbyItem('redScore', score1);
+
+            // 3. Меняем историю глобальных банов
+            let currentGlobalHistory = getLobbyItem('globalBanHistory', []);
+            currentGlobalHistory.forEach(ban => {
+                ban.team = ban.team === 'blue' ? 'red' : 'blue'; // Инвертируем команду
+            });
+            setLobbyItem('globalBanHistory', currentGlobalHistory);
+            displayGloballyBanned(); // Обновляем отображение
+
+            // 4. Меняем пики/баны/ники, ТОЛЬКО если драфт был ЗАВЕРШЕН
+            const isStarted = getLobbyItem('isDraftStarted', false);
+            const isComplete = getLobbyItem('isDraftComplete', false);
+
+            if (isComplete) { // <--- ИЗМЕНЕНИЕ ЗДЕСЬ: Проверяем, был ли драфт завершен
+                console.log("Swapping picks/bans/nicknames as draft was complete...");
+
+                let currentNicknames = getLobbyItem('pickNicknames', {});
+                let currentSelected = getLobbyItem('selectedChampions', new Set());
+                let currentHistory = getLobbyItem('draftHistory', []);
+
+                const swappedData = {
+                    bluePicks: [], redPicks: [], blueBans: [], redBans: [],
+                    nicknames: {}, selected: new Set()
+                };
+
+                // Собираем текущие пики и баны из истории
+                const currentPicks = {};
+                const currentBans = {};
+                currentHistory.forEach(action => {
+                    if (action.type === 'pick') {
+                        currentPicks[action.slotId] = { champId: action.championId, nick: currentNicknames[action.slotId] || '' };
+                    } else {
+                        currentBans[action.slotId] = { champId: action.championId };
+                    }
+                });
+                 getLobbyItem('globallyDisabledChampions', new Set()).forEach(id => swappedData.selected.add(id));
+
+                // Меняем пики местами
+                for (let i = 1; i <= 5; i++) {
+                    const blueSlotId = `blue-pick-${i}`;
+                    const redSlotId = `red-pick-${i}`;
+                    const bluePick = currentPicks[blueSlotId];
+                    const redPick = currentPicks[redSlotId];
+
+                    if (redPick) {
+                        swappedData.bluePicks.push({ slotId: blueSlotId, champId: redPick.champId, nick: redPick.nick });
+                        swappedData.nicknames[blueSlotId] = redPick.nick;
+                        if (redPick.champId) swappedData.selected.add(redPick.champId);
+                    } else { swappedData.nicknames[blueSlotId] = ''; }
+                    if (bluePick) {
+                        swappedData.redPicks.push({ slotId: redSlotId, champId: bluePick.champId, nick: bluePick.nick });
+                        swappedData.nicknames[redSlotId] = bluePick.nick;
+                        if (bluePick.champId) swappedData.selected.add(bluePick.champId);
+                    } else { swappedData.nicknames[redSlotId] = ''; }
+                }
+
+                // Меняем баны местами
+                for (let i = 1; i <= 5; i++) {
+                    const blueSlotId = `blue-ban-${i}`;
+                    const redSlotId = `red-ban-${i}`;
+                    const blueBan = currentBans[blueSlotId];
+                    const redBan = currentBans[redSlotId];
+
+                    if (redBan) {
+                        swappedData.blueBans.push({ slotId: blueSlotId, champId: redBan.champId });
+                        if (redBan.champId) swappedData.selected.add(redBan.champId);
+                    }
+                    if (blueBan) {
+                        swappedData.redBans.push({ slotId: redSlotId, champId: blueBan.champId });
+                        if (blueBan.champId) swappedData.selected.add(blueBan.champId);
+                    }
+                }
+
+                // Сохраняем новые ники и выбранных чемпионов
+                setLobbyItem('pickNicknames', swappedData.nicknames);
+                setLobbyItem('selectedChampions', swappedData.selected);
+
+                // Очищаем слоты в UI перед заполнением новыми данными
+                document.querySelectorAll('.pick-slot, .ban-slot').forEach(slot => {
+                    restoreSlotPlaceholder(slot, slot.id, swappedData.nicknames[slot.id] || '');
+                });
+
+                // Заполняем слоты новыми данными
+                swappedData.blueBans.forEach(b => fillSlot(document.getElementById(b.slotId), getChampionById(b.champId), 'ban'));
+                swappedData.redBans.forEach(b => fillSlot(document.getElementById(b.slotId), getChampionById(b.champId), 'ban'));
+                swappedData.bluePicks.forEach(p => fillSlot(document.getElementById(p.slotId), getChampionById(p.champId), 'pick', p.nick));
+                swappedData.redPicks.forEach(p => fillSlot(document.getElementById(p.slotId), getChampionById(p.champId), 'pick', p.nick));
+
+                // Сбрасываем состояние драфта, так как пики/баны изменились
+                setLobbyItem('draftHistory', []); // Очищаем историю, т.к. она больше не соответствует слотам
+                setLobbyItem('currentStep', 0);
+                setLobbyItem('isDraftStarted', false);
+                setLobbyItem('isDraftComplete', false); // Считаем драфт "незавершенным" после смены сторон
+                setLobbyItem('previewedChampionId', null);
+                setLobbyItem('previewedSlotId', null);
+
+                showStatusMessage("swapSuccess", 2000);
+
+            } else if (isStarted) {
+                // Если драфт идет, показываем сообщение об ошибке
+                console.warn("Attempted to swap teams during an active draft. Only names/scores/global bans swapped.");
+                showStatusMessage("swapDuringDraftError", 3000);
+            } else {
+                // Если драфт не был начат, просто меняем имена/счет/глоб. баны (уже сделано выше)
+                console.log("Swapped only names/scores/global bans as draft was not started/complete.");
+                // Можно добавить сообщение, но swapSuccess может быть обманчивым
+            }
+
+            // Обновляем UI в любом случае (для имен, счета, глоб. банов и состояния кнопок)
+            updateDraftUI();
+            updateChampionAvailability(); // Обновить доступность чемпионов после смены
+
+        } catch (error) {
+            console.error("Error in handleSwapTeams:", error);
+            showStatusMessage("swapError", 3000);
+        }
+    }
+
+                // Меняем баны местами
+                for (let i = 1; i <= 5; i++) {
+                    const blueSlotId = `blue-ban-${i}`;
+                    const redSlotId = `red-ban-${i}`;
+                    const blueBan = currentBans[blueSlotId];
+                    const redBan = currentBans[redSlotId];
+
+                    if (redBan) {
+                        swappedData.blueBans.push({ slotId: blueSlotId, champId: redBan.champId });
+                        if (redBan.champId) swappedData.selected.add(redBan.champId);
+                    }
+                    if (blueBan) {
+                        swappedData.redBans.push({ slotId: redSlotId, champId: blueBan.champId });
+                        if (blueBan.champId) swappedData.selected.add(blueBan.champId);
+                    }
+                }
+
+                // Сохраняем новые ники и выбранных чемпионов
+                setLobbyItem('pickNicknames', swappedData.nicknames);
+                setLobbyItem('selectedChampions', swappedData.selected);
+
+                // Очищаем слоты в UI перед заполнением новыми данными
+                document.querySelectorAll('.pick-slot, .ban-slot').forEach(slot => {
+                    restoreSlotPlaceholder(slot, slot.id, swappedData.nicknames[slot.id] || '');
+                });
+
+                // Заполняем слоты новыми данными
+                swappedData.blueBans.forEach(b => fillSlot(document.getElementById(b.slotId), getChampionById(b.champId), 'ban'));
+                swappedData.redBans.forEach(b => fillSlot(document.getElementById(b.slotId), getChampionById(b.champId), 'ban'));
+                swappedData.bluePicks.forEach(p => fillSlot(document.getElementById(p.slotId), getChampionById(p.champId), 'pick', p.nick));
+                swappedData.redPicks.forEach(p => fillSlot(document.getElementById(p.slotId), getChampionById(p.champId), 'pick', p.nick));
+
+                // Сбрасываем состояние драфта, так как пики/баны изменились
+                setLobbyItem('draftHistory', []);
+                setLobbyItem('currentStep', 0);
+                setLobbyItem('isDraftStarted', false);
+                setLobbyItem('isDraftComplete', false);
+                setLobbyItem('previewedChampionId', null);
+                setLobbyItem('previewedSlotId', null);
+
+                showStatusMessage("swapSuccess", 2000);
+
+            } else {
+                // Если драфт идет, показываем сообщение, что пики/баны не менялись
+                console.warn("Attempted to swap teams during an active draft. Only names/scores/global bans swapped.");
+                showStatusMessage("swapDuringDraftError", 3000);
+            }
+
+            // Обновляем UI в любом случае (для имен, счета, глоб. банов и состояния кнопок)
+            updateDraftUI();
+            updateChampionAvailability(); // Обновить доступность чемпионов после смены
+
+        } catch (error) {
+            console.error("Error in handleSwapTeams:", error);
+            showStatusMessage("swapError", 3000);
+        }
+    }
+    // function handlePickContainerClick(event) { console.warn("handlePickContainerClick() called but partially implemented."); } // Реализовано выше
+    // function deselectSwapSlots() { console.warn("deselectSwapSlots() called but partially implemented."); } // Реализовано выше
     function isAdminOrJudge() { return currentUserRole === 'admin' || currentUserRole === 'judge'; } // Простая проверка
 
 
