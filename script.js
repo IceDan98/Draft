@@ -304,47 +304,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Вспомогательные функции ---
-    const debounce = (func, wait) => { /* ... (как в части 1) ... */ let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func(...args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; };
-    const showStatusMessage = (key, duration = 3000, replacements = {}) => { /* ... (как в части 1) ... */ if (!statusMessage) { console.warn("Status message element not found!"); return; } let message = translations[currentLanguage]?.[key] || key; for (const placeholder in replacements) { message = message.replace(`{${placeholder}}`, replacements[placeholder]); } statusMessage.textContent = message; statusMessage.classList.add('visible'); clearTimeout(statusTimeout); statusTimeout = setTimeout(() => { statusMessage.classList.remove('visible'); }, duration); };
+    const debounce = (func, wait) => { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func(...args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; };
+    const showStatusMessage = (key, duration = 3000, replacements = {}) => { if (!statusMessage) { console.warn("Status message element not found!"); return; } let message = translations[currentLanguage]?.[key] || key; for (const placeholder in replacements) { message = message.replace(`{${placeholder}}`, replacements[placeholder]); } statusMessage.textContent = message; statusMessage.classList.add('visible'); clearTimeout(statusTimeout); statusTimeout = setTimeout(() => { statusMessage.classList.remove('visible'); }, duration); };
     const getChampionById = (id) => processedChampions.find(champ => champ.id === id);
-    function generateLobbyId(length = 6) { /* ... (как в части 1) ... */ const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; let result = ''; for (let i = 0; i < length; i++) { result += characters.charAt(Math.floor(Math.random() * characters.length)); } return result; }
-    async function copyToClipboard(text) { /* ... (как в части 1) ... */ if (!navigator.clipboard) { try { const textArea = document.createElement("textarea"); textArea.value = text; textArea.style.position = "fixed"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showStatusMessage("linkCopiedFallbackMsg", 1500); } catch (err) { console.error('Fallback copy failed:', err); showStatusMessage("copyErrorMsg", 2000); } return; } try { await navigator.clipboard.writeText(text); showStatusMessage("linkCopiedMsg", 1500); } catch (err) { console.error('Async clipboard copy failed:', err); showStatusMessage("copyErrorMsg", 2000); } }
+    function generateLobbyId(length = 6) { const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; let result = ''; for (let i = 0; i < length; i++) { result += characters.charAt(Math.floor(Math.random() * characters.length)); } return result; }
+    async function copyToClipboard(text) { if (!navigator.clipboard) { try { const textArea = document.createElement("textarea"); textArea.value = text; textArea.style.position = "fixed"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showStatusMessage("linkCopiedFallbackMsg", 1500); } catch (err) { console.error('Fallback copy failed:', err); showStatusMessage("copyErrorMsg", 2000); } return; } try { await navigator.clipboard.writeText(text); showStatusMessage("linkCopiedMsg", 1500); } catch (err) { console.error('Async clipboard copy failed:', err); showStatusMessage("copyErrorMsg", 2000); } }
 
     // --- Функции для работы с localStorage ---
-    function getLobbyStorageKey(key) { /* ... (как в части 1) ... */ if (!currentLobbyId) { console.error("Attempted to get storage key without a currentLobbyId"); return null; } return `lobby_${currentLobbyId}_${key}`; }
-    function getLobbyItem(key, defaultValue) { /* ... (как в части 1, с обработкой Set) ... */ const storageKey = getLobbyStorageKey(key); if (!storageKey) { console.warn(`getLobbyItem called without valid lobbyId for key "${key}"`); return defaultValue; } try { const item = localStorage.getItem(storageKey); const value = item != null ? JSON.parse(item) : defaultValue; if (defaultValue instanceof Set && Array.isArray(value)) { return new Set(value); } return value; } catch (e) { console.error(`Error parsing localStorage item "${storageKey}":`, e); return defaultValue; } }
-    function setLobbyItem(key, value) { /* ... (как в части 1, с обработкой Set) ... */ const storageKey = getLobbyStorageKey(key); if (!storageKey) { console.warn(`setLobbyItem called without valid lobbyId for key "${key}"`); return; } try { let valueToStore = value; if (value instanceof Set) { valueToStore = Array.from(value); } localStorage.setItem(storageKey, JSON.stringify(valueToStore)); } catch (e) { console.error(`Error setting localStorage item "${storageKey}":`, e); showStatusMessage(translations[currentLanguage]?.copyErrorMsg || "Ошибка сохранения состояния!", 5000); } }
-    function removeLobbyItem(key) { /* ... (как в части 1) ... */ const storageKey = getLobbyStorageKey(key); if (!storageKey) return; localStorage.removeItem(storageKey); }
-    function clearLobbyState() { /* ... (как в части 1) ... */ if (!currentLobbyId) return; console.log(`Clearing state for lobby: ${currentLobbyId}`); for (const key in defaultLobbyState) { removeLobbyItem(key); } if (currentLobbyId !== 'admin_view') { localStorage.removeItem(`${currentLobbyId}_team1Name`); localStorage.removeItem(`${currentLobbyId}_team2Name`); } console.log(`Lobby state cleared for ${currentLobbyId}`); }
+    function getLobbyStorageKey(key) { if (!currentLobbyId) { console.error("Attempted to get storage key without a currentLobbyId"); return null; } return `lobby_${currentLobbyId}_${key}`; }
+    function getLobbyItem(key, defaultValue) { const storageKey = getLobbyStorageKey(key); if (!storageKey) { console.warn(`getLobbyItem called without valid lobbyId for key "${key}"`); return defaultValue; } try { const item = localStorage.getItem(storageKey); const value = item != null ? JSON.parse(item) : defaultValue; if (defaultValue instanceof Set && Array.isArray(value)) { return new Set(value); } return value; } catch (e) { console.error(`Error parsing localStorage item "${storageKey}":`, e); return defaultValue; } }
+    function setLobbyItem(key, value) { const storageKey = getLobbyStorageKey(key); if (!storageKey) { console.warn(`setLobbyItem called without valid lobbyId for key "${key}"`); return; } try { let valueToStore = value; if (value instanceof Set) { valueToStore = Array.from(value); } localStorage.setItem(storageKey, JSON.stringify(valueToStore)); } catch (e) { console.error(`Error setting localStorage item "${storageKey}":`, e); showStatusMessage(translations[currentLanguage]?.copyErrorMsg || "Ошибка сохранения состояния!", 5000); } }
+    function removeLobbyItem(key) { const storageKey = getLobbyStorageKey(key); if (!storageKey) return; localStorage.removeItem(storageKey); }
+    function clearLobbyState() { if (!currentLobbyId) return; console.log(`Clearing state for lobby: ${currentLobbyId}`); for (const key in defaultLobbyState) { removeLobbyItem(key); } if (currentLobbyId !== 'admin_view') { localStorage.removeItem(`${currentLobbyId}_team1Name`); localStorage.removeItem(`${currentLobbyId}_team2Name`); } console.log(`Lobby state cleared for ${currentLobbyId}`); }
 
     // --- Управление Темами ---
-    function applyTheme(theme) { /* ... (как в части 1) ... */ console.log(`Applying theme: ${theme}`); document.documentElement.setAttribute('data-theme', theme); if (themeToggleButton) { themeToggleButton.textContent = theme === 'dark' ? '🌙' : '☀️'; const key = theme === 'dark' ? 'themeToggleLight' : 'themeToggleDark'; themeToggleButton.title = translations[currentLanguage]?.[key] || key; } else { console.warn("applyTheme: themeToggleButton not found."); } }
-    function toggleTheme() { /* ... (как в части 1) ... */ console.log("Toggling theme..."); currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', currentTheme); applyTheme(currentTheme); updateUIText(currentLanguage); }
+    function applyTheme(theme) { console.log(`Applying theme: ${theme}`); document.documentElement.setAttribute('data-theme', theme); if (themeToggleButton) { themeToggleButton.textContent = theme === 'dark' ? '🌙' : '☀️'; const key = theme === 'dark' ? 'themeToggleLight' : 'themeToggleDark'; themeToggleButton.title = translations[currentLanguage]?.[key] || key; } else { console.warn("applyTheme: themeToggleButton not found."); } }
+    function toggleTheme() { console.log("Toggling theme..."); currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', currentTheme); applyTheme(currentTheme); updateUIText(currentLanguage); }
 
     // --- Управление Языком ---
-    function updateUIText(lang) { /* ... (как в части 1, с улучшенной обработкой textContent) ... */ console.log(`Updating UI text to: ${lang}`); const langTranslations = translations[lang] || translations.en; document.querySelectorAll('[data-lang-key]').forEach(el => { const key = el.dataset.langKey; const target = el.dataset.langTarget || 'textContent'; let translation = langTranslations[key]; if (translation === undefined) { console.warn(`Missing translation for key "${key}" in language "${lang}"`); const fallbackLang = lang === 'ru' ? 'en' : 'ru'; translation = translations[fallbackLang]?.[key] || key; } if (target === 'aria-label' && el.dataset.ariaValue && typeof translation === 'string') { translation = translation.replace(/{\w+}/g, el.dataset.ariaValue); } switch (target) { case 'textContent': const hasDirectText = Array.from(el.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== ''); if (hasDirectText || el.children.length === 0 || ['STRONG', 'SPAN'].includes(el.tagName)) { el.textContent = translation; } else if (el.querySelector(`span[data-lang-key="${key}"]`)) { const span = el.querySelector(`span[data-lang-key="${key}"]`); if (span) span.textContent = translation; } break; case 'placeholder': el.placeholder = translation; break; case 'title': el.title = translation; break; case 'aria-label': el.setAttribute('aria-label', translation); break; default: el.setAttribute(target, translation); break; } }); const nicknamePlaceholderText = langTranslations.pickSlotNicknamePlaceholder || 'Player'; document.querySelectorAll('.nickname-input').forEach(input => { input.dataset.placeholder = nicknamePlaceholderText; }); if (languageToggleButton) { languageToggleButton.textContent = langTranslations.languageToggleButton || (lang === 'ru' ? 'EN' : 'RU'); } if (themeToggleButton) { const themeKey = currentTheme === 'dark' ? 'themeToggleLight' : 'themeToggleDark'; themeToggleButton.title = langTranslations[themeKey] || themeKey; } if (newPriorityFilterButton) { const priorityKey = getLobbyItem('isPriorityFilterActive', false) ? 'priorityFilterShowAllTitle' : 'priorityFilterShowPriorityTitle'; newPriorityFilterButton.title = langTranslations[priorityKey] || priorityKey; } if (timerDisplay && !getLobbyItem('isDraftStarted', false)) { timerDisplay.title = langTranslations.timerStartDraftTitle || 'Start Draft'; timerDisplay.setAttribute('aria-label', langTranslations.timerAriaLabelStart || 'Timer / Start Draft'); } if (isDraftInitialized) { if (processedChampions.length > 0) { processedChampions.sort((a, b) => a.name[currentLanguage].localeCompare(b.name[currentLanguage], currentLanguage)); displayChampions(); } updateDraftUI(); } console.log("UI text update complete."); }
-    function toggleLanguage() { /* ... (как в части 1) ... */ currentLanguage = (currentLanguage === 'ru') ? 'en' : 'ru'; localStorage.setItem('language', currentLanguage); console.log(`Language switched to: ${currentLanguage}`); document.documentElement.lang = currentLanguage; updateUIText(currentLanguage); }
+    function updateUIText(lang) { console.log(`Updating UI text to: ${lang}`); const langTranslations = translations[lang] || translations.en; document.querySelectorAll('[data-lang-key]').forEach(el => { const key = el.dataset.langKey; const target = el.dataset.langTarget || 'textContent'; let translation = langTranslations[key]; if (translation === undefined) { console.warn(`Missing translation for key "${key}" in language "${lang}"`); const fallbackLang = lang === 'ru' ? 'en' : 'ru'; translation = translations[fallbackLang]?.[key] || key; } if (target === 'aria-label' && el.dataset.ariaValue && typeof translation === 'string') { translation = translation.replace(/{\w+}/g, el.dataset.ariaValue); } switch (target) { case 'textContent': const hasDirectText = Array.from(el.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== ''); if (hasDirectText || el.children.length === 0 || ['STRONG', 'SPAN'].includes(el.tagName)) { el.textContent = translation; } else if (el.querySelector(`span[data-lang-key="${key}"]`)) { const span = el.querySelector(`span[data-lang-key="${key}"]`); if (span) span.textContent = translation; } break; case 'placeholder': el.placeholder = translation; break; case 'title': el.title = translation; break; case 'aria-label': el.setAttribute('aria-label', translation); break; default: el.setAttribute(target, translation); break; } }); const nicknamePlaceholderText = langTranslations.pickSlotNicknamePlaceholder || 'Player'; document.querySelectorAll('.nickname-input').forEach(input => { input.dataset.placeholder = nicknamePlaceholderText; }); if (languageToggleButton) { languageToggleButton.textContent = langTranslations.languageToggleButton || (lang === 'ru' ? 'EN' : 'RU'); } if (themeToggleButton) { const themeKey = currentTheme === 'dark' ? 'themeToggleLight' : 'themeToggleDark'; themeToggleButton.title = langTranslations[themeKey] || themeKey; } if (newPriorityFilterButton) { const priorityKey = getLobbyItem('isPriorityFilterActive', false) ? 'priorityFilterShowAllTitle' : 'priorityFilterShowPriorityTitle'; newPriorityFilterButton.title = langTranslations[priorityKey] || priorityKey; } if (timerDisplay && !getLobbyItem('isDraftStarted', false)) { timerDisplay.title = langTranslations.timerStartDraftTitle || 'Start Draft'; timerDisplay.setAttribute('aria-label', langTranslations.timerAriaLabelStart || 'Timer / Start Draft'); } if (isDraftInitialized) { if (processedChampions.length > 0) { processedChampions.sort((a, b) => a.name[currentLanguage].localeCompare(b.name[currentLanguage], currentLanguage)); displayChampions(); } updateDraftUI(); } console.log("UI text update complete."); }
+    function toggleLanguage() { currentLanguage = (currentLanguage === 'ru') ? 'en' : 'ru'; localStorage.setItem('language', currentLanguage); console.log(`Language switched to: ${currentLanguage}`); document.documentElement.lang = currentLanguage; updateUIText(currentLanguage); }
 
-    // --- НОВАЯ ЧАСТЬ: Навигация и Роутинг ---
-
-    /**
-     * Получает параметры лобби (ID и роль) из хэша URL.
-     * Возвращает объект { lobbyId, role } или null, если хэш некорректен.
-     * @returns {{lobbyId: string, role: string} | null}
-     */
-    function getParamsFromHash() {
-        const hash = window.location.hash.substring(1); // Убираем '#'
-        const params = new URLSearchParams(hash);
-        const lobbyId = params.get('lobby');
-        const role = params.get('role');
-
-        // Проверяем, что ID и роль существуют, и роль валидна (есть в permissions)
-        // Роль 'admin' не передается через URL
-        if (lobbyId && role && permissions[role] && role !== 'admin') {
-            return { lobbyId, role };
-        }
-        return null; // Некорректный хэш
-    }
+    // --- Навигация и Роутинг ---
+    function getParamsFromHash() { const hash = window.location.hash.substring(1); const params = new URLSearchParams(hash); const lobbyId = params.get('lobby'); const role = params.get('role'); if (lobbyId && role && permissions[role] && role !== 'admin') { return { lobbyId, role }; } return null; }
 
     /**
      * Переключает отображение между страницами 'home' и 'draft'.
@@ -355,200 +337,163 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Navigating to: ${pageName}`);
         currentPage = pageName;
 
-        // Скрываем все страницы и кнопки управления (кроме тех, что на странице)
+        // Скрываем все страницы
         if (homePage) homePage.classList.add('hidden');
         if (draftPage) draftPage.classList.add('hidden');
-        // Кнопки в углу скрываем/показываем в зависимости от страницы
-        // if(adminButton) adminButton.classList.add('hidden');
-        // if(themeToggleButton) themeToggleButton.classList.add('hidden');
-        // if(languageToggleButton) languageToggleButton.classList.add('hidden');
+        // Кнопки админа, темы, языка всегда видимы (убрано скрытие/показ)
 
         if (pageName === 'home') {
             if (homePage) homePage.classList.remove('hidden');
-            // Показываем кнопки управления на домашней странице
-            // if(adminButton) adminButton.classList.remove('hidden');
-            // if(themeToggleButton) themeToggleButton.classList.remove('hidden');
-            // if(languageToggleButton) languageToggleButton.classList.remove('hidden');
 
             // Если перешли на главную, сбрасываем хэш и состояние лобби/роли
             if (window.location.hash) {
                 currentUserRole = null;
                 userTeamSide = null;
                 currentLobbyId = null;
-                isDraftInitialized = false; // Сбрасываем флаг инициализации
-                // Очищаем хэш в URL без перезагрузки страницы
+                isDraftInitialized = false;
                 history.pushState("", document.title, window.location.pathname + window.location.search);
             }
-            updateUIText(currentLanguage); // Обновляем текст на главной
+            updateUIText(currentLanguage);
         }
         else if (pageName === 'draft') {
             if (draftPage) draftPage.classList.remove('hidden');
-            // Кнопки управления остаются видимыми на странице драфта
 
-            const params = getParamsFromHash(); // Получаем параметры из URL
+            const params = getParamsFromHash();
 
             if (params) {
-                // Обычный вход в лобби по ссылке
                 console.log(`Draft Navigation - Lobby: ${params.lobbyId}, Role: ${params.role}`);
                 currentLobbyId = params.lobbyId;
                 currentUserRole = params.role;
-                // Определяем сторону команды
                 if (currentUserRole === 'team1') userTeamSide = 'blue';
                 else if (currentUserRole === 'team2') userTeamSide = 'red';
-                else userTeamSide = null; // Для судьи и зрителя
+                else userTeamSide = null;
             } else if (currentUserRole === 'admin' && currentLobbyId === 'admin_view') {
-                // Вход в режиме администратора (уже установлено в handleAdminClick)
                 console.log("Navigating as Admin to admin_view");
             } else {
-                // Если нет параметров и не админ - ошибка
                 console.error("Cannot navigate to draft: Missing or invalid lobbyId/role in hash.");
                 showStatusMessage("errorInitCritical", 5000, { error: "Invalid lobby link." });
-                navigateTo('home'); // Возвращаем на главную
+                navigateTo('home');
                 return;
             }
 
             // Инициализируем страницу драфта, если она еще не была инициализирована
-            // или если изменился ID лобби (чтобы перезагрузить состояние)
-            if (!isDraftInitialized || !document.getElementById('championGrid')) { // Проверяем наличие основного элемента
+            // ИЛИ если ID лобби изменился (для случая admin_view -> lobby_id)
+            // ИЛИ если элементы еще не найдены (на всякий случай)
+            if (!isDraftInitialized || currentLobbyId !== getLobbyItem('lastInitializedLobbyId', null) || !checkDraftElements()) {
                 console.log(`Initializing draft simulator for lobby ${currentLobbyId}...`);
-                // Вызываем асинхронную функцию инициализации (будет добавлена позже)
-                initializeAppDraft(); // Эта функция сделает isDraftInitialized = true после успешной загрузки
+                // Сохраняем ID лобби, для которого идет инициализация
+                setLobbyItem('lastInitializedLobbyId', currentLobbyId);
+                initializeAppDraft(); // Асинхронная функция
             } else {
-                // Если драфт уже инициализирован (например, обновили язык)
+                // Если драфт уже инициализирован для этого лобби
                 console.log(`Draft already initialized for lobby ${currentLobbyId}, re-applying settings for role: ${currentUserRole}`);
-                if (checkDraftElements()) { // Проверяем наличие элементов
-                    // Применяем права доступа для текущей роли
-                    applyRolePermissions(currentUserRole); // Функция будет добавлена позже
-                    // Загружаем имена команд из localStorage
-                    const lobbyTeam1Key = `${currentLobbyId}_team1Name`;
-                    const lobbyTeam2Key = `${currentLobbyId}_team2Name`;
-                    if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName;
-                    if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName;
-                    // Восстанавливаем состояние драфта из localStorage
-                    restoreDraftStateFromStorage(); // Функция будет добавлена позже
-                    updateUIText(currentLanguage); // Обновляем тексты
-                    updateDraftUI(); // Обновляем интерфейс драфта (будет добавлена позже)
-                } else {
-                    console.error("Draft elements not found when trying to re-apply settings.");
-                    showStatusMessage("errorInitDraftElements", 5000);
-                    navigateTo('home'); // Ошибка - возвращаем на главную
-                }
+                // Применяем права доступа для текущей роли
+                applyRolePermissions(currentUserRole); // Функция будет добавлена позже
+                // Загружаем имена команд из localStorage
+                const lobbyTeam1Key = `${currentLobbyId}_team1Name`;
+                const lobbyTeam2Key = `${currentLobbyId}_team2Name`;
+                if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName;
+                if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName;
+                // Восстанавливаем состояние драфта из localStorage
+                restoreDraftStateFromStorage(); // Функция будет добавлена позже
+                updateUIText(currentLanguage); // Обновляем тексты
+                updateDraftUI(); // Обновляем интерфейс драфта (будет добавлена позже)
             }
         }
     }
 
-    // --- НОВАЯ ЧАСТЬ: Логика Домашней страницы ---
+    // --- Логика Домашней страницы ---
+    function handleCreateLobby() { console.log("handleCreateLobby called"); const lobbyId = generateLobbyId(); console.log("Generated Lobby ID:", lobbyId); const team1Name = team1NameInput.value.trim() || translations[currentLanguage].blueTeamDefaultName; const team2Name = team2NameInput.value.trim() || translations[currentLanguage].redTeamDefaultName; localStorage.setItem(`${lobbyId}_team1Name`, team1Name); localStorage.setItem(`${lobbyId}_team2Name`, team2Name); const baseUrl = window.location.origin + window.location.pathname; const judgeLink = `${baseUrl}#lobby=${lobbyId}&role=judge`; const team1Link = `${baseUrl}#lobby=${lobbyId}&role=team1`; const team2Link = `${baseUrl}#lobby=${lobbyId}&role=team2`; if (judgeLinkText) judgeLinkText.textContent = judgeLink; if (team1LinkText) team1LinkText.textContent = team1Link; if (team2LinkText) team2LinkText.textContent = team2Link; if (openJudgeLinkButton) openJudgeLinkButton.href = judgeLink; if (openTeam1LinkButton) openTeam1LinkButton.href = team1Link; if (openTeam2LinkButton) openTeam2LinkButton.href = team2Link; if (lobbyLinksDisplay) lobbyLinksDisplay.classList.remove('hidden'); showStatusMessage("lobbyCreatedMsg", 3000); }
+    function handleAdminClick() { console.log("Admin button clicked."); currentUserRole = 'admin'; userTeamSide = null; currentLobbyId = 'admin_view'; isDraftInitialized = false; navigateTo('draft'); }
+
+    // --- Добавление Слушателей Событий ---
+    if (themeToggleButton) { themeToggleButton.addEventListener('click', toggleTheme); } else { console.warn("Theme toggle button not found!"); }
+    if (languageToggleButton) { languageToggleButton.addEventListener('click', toggleLanguage); } else { console.warn("Language toggle button not found!"); }
+    if (adminButton) { adminButton.addEventListener('click', handleAdminClick); } else { console.warn("Admin Button not found!"); }
+    if (createLobbyButton) { createLobbyButton.addEventListener('click', handleCreateLobby); } else { console.warn("Create Lobby Button not found"); }
+    document.querySelectorAll('.copy-button').forEach(button => { if (button.tagName === 'BUTTON' && button.dataset.linkId) { button.addEventListener('click', (event) => { const linkId = event.target.dataset.linkId; const linkSpan = document.getElementById(linkId); if (linkSpan) { copyToClipboard(linkSpan.textContent); } else { console.warn("Copy link span not found for id:", linkId); } }); } });
+
+    // --- Инициализация и Управление страницей Драфта ---
 
     /**
-     * Обработчик нажатия кнопки "Создать Лобби".
-     * Генерирует ID лобби, сохраняет имена команд, формирует и отображает ссылки.
-     */
-    function handleCreateLobby() {
-        console.log("handleCreateLobby called");
-        const lobbyId = generateLobbyId();
-        console.log("Generated Lobby ID:", lobbyId);
-
-        // Получаем имена команд или используем дефолтные
-        const team1Name = team1NameInput.value.trim() || translations[currentLanguage].blueTeamDefaultName;
-        const team2Name = team2NameInput.value.trim() || translations[currentLanguage].redTeamDefaultName;
-
-        // Сохраняем имена команд в localStorage с привязкой к ID лобби
-        // В будущем это будет отправляться на сервер.
-        localStorage.setItem(`${lobbyId}_team1Name`, team1Name);
-        localStorage.setItem(`${lobbyId}_team2Name`, team2Name);
-
-        // Формируем ссылки
-        const baseUrl = window.location.origin + window.location.pathname; // Базовый URL без хэша
-        const judgeLink = `${baseUrl}#lobby=${lobbyId}&role=judge`;
-        const team1Link = `${baseUrl}#lobby=${lobbyId}&role=team1`;
-        const team2Link = `${baseUrl}#lobby=${lobbyId}&role=team2`;
-        // В будущем можно добавить ссылку для зрителя:
-        // const spectatorLink = `${baseUrl}#lobby=${lobbyId}&role=spectator`;
-
-        // Отображаем ссылки
-        if (judgeLinkText) judgeLinkText.textContent = judgeLink;
-        if (team1LinkText) team1LinkText.textContent = team1Link;
-        if (team2LinkText) team2LinkText.textContent = team2Link;
-
-        // Устанавливаем href для кнопок "Открыть"
-        if (openJudgeLinkButton) openJudgeLinkButton.href = judgeLink;
-        if (openTeam1LinkButton) openTeam1LinkButton.href = team1Link;
-        if (openTeam2LinkButton) openTeam2LinkButton.href = team2Link;
-
-        // Показываем блок со ссылками
-        if (lobbyLinksDisplay) lobbyLinksDisplay.classList.remove('hidden');
-        showStatusMessage("lobbyCreatedMsg", 3000);
-    }
-
-    /**
-     * Обработчик нажатия кнопки "Админ".
-     * Устанавливает роль 'admin', специальный ID лобби и переходит на страницу драфта.
-     */
-    function handleAdminClick() {
-        console.log("Admin button clicked.");
-        currentUserRole = 'admin';
-        userTeamSide = null; // У админа нет стороны
-        currentLobbyId = 'admin_view'; // Специальный ID для админ-режима
-        isDraftInitialized = false; // Принудительно переинициализируем драфт для админа
-        navigateTo('draft'); // Переходим на страницу драфта
-    }
-
-
-    // --- НОВАЯ ЧАСТЬ: Добавление Слушателей Событий ---
-
-    // Слушатели для кнопок в правом верхнем углу
-    if (themeToggleButton) {
-        themeToggleButton.addEventListener('click', toggleTheme);
-    } else { console.warn("Theme toggle button not found!"); }
-
-    if (languageToggleButton) {
-        languageToggleButton.addEventListener('click', toggleLanguage);
-    } else { console.warn("Language toggle button not found!"); }
-
-    if (adminButton) {
-        adminButton.addEventListener('click', handleAdminClick);
-    } else { console.warn("Admin Button not found!"); }
-
-    // Слушатели для домашней страницы
-    if (createLobbyButton) {
-        createLobbyButton.addEventListener('click', handleCreateLobby);
-    } else { console.warn("Create Lobby Button not found"); }
-
-    // Слушатели для кнопок "Копировать"
-    document.querySelectorAll('.copy-button').forEach(button => {
-        // Убедимся, что это действительно кнопка копирования, а не открытия
-        if (button.tagName === 'BUTTON' && button.dataset.linkId) {
-            button.addEventListener('click', (event) => {
-                const linkId = event.target.dataset.linkId; // Получаем ID элемента с текстом ссылки
-                const linkSpan = document.getElementById(linkId);
-                if (linkSpan) {
-                    copyToClipboard(linkSpan.textContent); // Копируем текст из span
-                } else {
-                    console.warn("Copy link span not found for id:", linkId);
-                }
-            });
-        }
-    });
-
-    // --- НОВАЯ ЧАСТЬ: Инициализация Роутинга ---
-
-    /**
-     * Функция для инициализации страницы драфта (заглушка, будет реализована позже).
-     * Должна загружать данные чемпионов, инициализировать элементы UI драфта,
-     * восстанавливать состояние и применять права доступа.
+     * Асинхронно инициализирует страницу драфта.
+     * Загружает данные, настраивает UI, восстанавливает состояние.
      */
     async function initializeAppDraft() {
-        console.log("initializeAppDraft called (placeholder)");
-        // TODO: Реализовать загрузку данных чемпионов (fetch)
-        // TODO: Инициализировать элементы страницы драфта (checkDraftElements)
-        // TODO: Восстановить состояние из localStorage (restoreDraftStateFromStorage)
-        // TODO: Применить права доступа (applyRolePermissions)
-        // TODO: Отобразить чемпионов (displayChampions)
-        // TODO: Обновить UI драфта (updateDraftUI)
-        // TODO: Добавить слушатели событий для элементов драфта
-        // После успешной инициализации:
-        // isDraftInitialized = true;
-        showStatusMessage("Загрузка страницы драфта...", 2000); // Временное сообщение
+        console.log(`initializeAppDraft started for lobby: ${currentLobbyId}`);
+        isDraftInitialized = false; // Сбрасываем флаг на время инициализации
+
+        // Показываем индикатор загрузки
+        if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+        if (mainLayout) mainLayout.classList.add('hidden'); // Скрываем основной макет на время загрузки
+
+        try {
+            if (!currentUserRole || !currentLobbyId) {
+                throw new Error(`Invalid state: Role (${currentUserRole}) or Lobby ID (${currentLobbyId}) not set.`);
+            }
+            console.log(`Initializing draft with Role: ${currentUserRole}, Lobby: ${currentLobbyId}`);
+
+            // Проверяем наличие DOM-элементов страницы драфта
+            if (!checkDraftElements()) {
+                throw new Error("One or more draft page elements were not found during initialization!");
+            }
+            console.log("All draft elements found.");
+
+            // Обновляем тексты (например, текст индикатора загрузки)
+            updateUIText(currentLanguage);
+
+            // Загружаем данные чемпионов (если еще не загружены)
+            // В реальном приложении здесь будет fetch
+            if (processedChampions.length === 0) {
+                const dataLoaded = await loadChampionData(); // Функция будет добавлена позже
+                if (!dataLoaded) {
+                    throw new Error("Failed to load champion data.");
+                }
+            }
+
+            // --- Инициализация UI после загрузки данных ---
+            console.log("Champion data loaded/verified. Initializing UI...");
+
+            // Отображаем чемпионов в сетке
+            displayChampions(); // Функция будет добавлена позже
+
+            // Восстанавливаем состояние драфта из localStorage
+            restoreDraftStateFromStorage(); // Функция будет добавлена позже
+
+            // Устанавливаем имена команд
+            const lobbyTeam1Key = `${currentLobbyId}_team1Name`;
+            const lobbyTeam2Key = `${currentLobbyId}_team2Name`;
+            if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName;
+            if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName;
+
+            // Применяем права доступа для роли
+            applyRolePermissions(currentUserRole); // Функция будет добавлена позже
+
+            // Добавляем слушатели событий к элементам управления драфтом
+            addDraftEventListeners(); // Функция будет добавлена позже
+
+            // Обновляем весь UI драфта (состояния кнопок, подсветка и т.д.)
+            updateDraftUI(); // Функция будет добавлена позже
+
+            // Скрываем индикатор загрузки и показываем основной макет
+            if (loadingIndicator) loadingIndicator.classList.add('hidden');
+            if (mainLayout) mainLayout.classList.remove('hidden');
+
+            // Устанавливаем флаг успешной инициализации
+            isDraftInitialized = true;
+            console.log(`Draft simulator page initialized successfully for lobby ${currentLobbyId}, role: ${currentUserRole}`);
+
+        } catch (error) {
+            console.error(`Error during initializeAppDraft for lobby ${currentLobbyId}:`, error);
+            showStatusMessage("errorInitCritical", 10000, { error: error.message });
+            if (loadingIndicator) {
+                loadingIndicator.textContent = `Ошибка инициализации! ${error.message}`;
+                // Не скрываем индикатор, чтобы показать ошибку
+            }
+            if (mainLayout) mainLayout.classList.add('hidden'); // Скрываем макет при ошибке
+            // Можно перенаправить на главную или оставить сообщение об ошибке
+            // navigateTo('home');
+        }
     }
 
     /**
@@ -556,6 +501,9 @@ document.addEventListener('DOMContentLoaded', () => {
      * @returns {boolean} - true, если все основные элементы найдены, иначе false.
      */
     function checkDraftElements() {
+        // Эта функция теперь вызывается внутри initializeAppDraft,
+        // поэтому можно считать, что элементы уже найдены, если она вызвана оттуда.
+        // Но для надежности оставим проверку.
         console.log("Checking draft elements...");
         loadingIndicator = document.getElementById('loadingIndicator');
         mainLayout = document.getElementById('mainLayout');
@@ -579,7 +527,6 @@ document.addEventListener('DOMContentLoaded', () => {
         redTeamNameH2 = document.getElementById('red-team-name-h2');
         blueScoreEl = document.getElementById('blue-score');
         redScoreEl = document.getElementById('red-score');
-        // statusMessage и championTooltip инициализированы ранее
         globalBansBlueContainer = document.getElementById('global-bans-blue');
         globalBansRedContainer = document.getElementById('global-bans-red');
         globallyBannedDisplay = document.getElementById('globallyBannedDisplay');
@@ -593,30 +540,49 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         if (!filterButtons || filterButtons.length === 0) {
-            console.error("Role filter buttons NodeList is empty or null!");
-            // Не считаем критической ошибкой, но логируем
+            console.warn("Role filter buttons NodeList is empty or null!");
+            // Не считаем критической ошибкой для базовой работы
         }
 
         const missingElements = elementsToCheck.filter(el => !el);
         if (missingElements.length > 0) {
-            // Получаем ID недостающих элементов для лога
             const missingIds = elementsToCheck
-                .map((el, index) => elementsToCheck[index] ? null : `element at index ${index} (expected: ${['loadingIndicator', 'mainLayout', /* ... добавьте остальные ID по порядку */][index] || 'unknown'})`)
+                .map((el, index) => {
+                    if (!el) {
+                        // Попробуем угадать ID по порядку для лога
+                        const expectedIds = [
+                            'loadingIndicator', 'mainLayout', 'championGrid', 'timerDisplay', 'resetButton', 'undoButton',
+                            'championSearch', '.blue-column', '.red-column', 'swapButton', 'clearPicksButton', 'toggleTimerButton',
+                            'roleFilterButtons', 'confirmPickBanButton', 'newPriorityFilterButton', 'nextDraftButton',
+                            'returnHomeButton', 'blue-team-name-h2', 'red-team-name-h2', 'blue-score', 'red-score', 'statusMessage',
+                            'championTooltip', 'global-bans-blue', 'global-bans-red', 'globallyBannedDisplay'
+                        ];
+                        return `Missing element (expected: ${expectedIds[index] || 'unknown'})`;
+                    }
+                    return null;
+                })
                 .filter(id => id !== null);
             console.error("Missing critical draft elements during check:", missingIds);
-            return false;
+            return false; // Элементы не найдены
         }
         console.log("All critical draft elements found.");
-        return true;
+        return true; // Все на месте
     }
 
-    // --- Начальный роутинг при загрузке страницы ---
+    // --- Заглушки для функций, которые будут реализованы позже ---
+    async function loadChampionData() { console.warn("loadChampionData() not implemented yet."); return true; /* Заглушка */ }
+    function displayChampions() { console.warn("displayChampions() not implemented yet."); }
+    function restoreDraftStateFromStorage() { console.warn("restoreDraftStateFromStorage() not implemented yet."); }
+    function applyRolePermissions(role) { console.warn("applyRolePermissions() not implemented yet.", role); }
+    function addDraftEventListeners() { console.warn("addDraftEventListeners() not implemented yet."); }
+    function updateDraftUI() { console.warn("updateDraftUI() not implemented yet."); }
+
+
+    // --- Инициализация Роутинга при загрузке ---
     const initialParams = getParamsFromHash();
     if (initialParams) {
-        // Если в URL есть параметры лобби, переходим на страницу драфта
         navigateTo('draft');
     } else {
-        // Иначе показываем домашнюю страницу
         navigateTo('home');
     }
 
@@ -626,21 +592,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const newParams = getParamsFromHash();
 
         if (newParams) {
-            // Если появился валидный хэш лобби
-            // Переходим на страницу драфта, если мы не на ней, или если изменился ID/роль
             if (currentPage !== 'draft' || newParams.lobbyId !== currentLobbyId || newParams.role !== currentUserRole) {
-                // Сбрасываем флаг инициализации, чтобы перезагрузить состояние для нового лобби/роли
-                isDraftInitialized = false;
+                isDraftInitialized = false; // Сбрасываем флаг при смене лобби/роли
                 navigateTo('draft');
             }
         } else if (currentPage !== 'home') {
-            // Если хэш удален или стал невалидным, а мы не на главной - переходим на главную
             navigateTo('home');
         }
     });
 
-
-    console.log("Initial setup (Part 2: Navigation & Home Page) complete.");
-    console.log("Waiting for draft initialization if needed...");
+    console.log("Initial setup complete. Application is running.");
 
 }); // Конец DOMContentLoaded
+```
+
+**Изменения:**
+
+1.  **`navigateTo`:**
+    * Убраны строки, скрывающие кнопки админа/темы/языка. Теперь они всегда видимы.
+    * При переходе на страницу драфта (`pageName === 'draft'`), теперь вызывается `initializeAppDraft()`.
+    * Добавлена проверка `currentLobbyId !== getLobbyItem('lastInitializedLobbyId', null)` для принудительной переинициализации, если пользователь перешел в другое лобби из админ-режима.
+2.  **`initializeAppDraft`:**
+    * Это теперь `async` функция (так как загрузка данных будет асинхронной).
+    * Добавлена логика показа/скрытия `loadingIndicator` и `mainLayout`.
+    * Добавлен блок `try...catch` для обработки ошибок инициализации.
+    * Вызовы реальных функций (загрузка данных, отображение и т.д.) пока заменены на `console.warn` и заглушки.
+    * Флаг `isDraftInitialized = true` устанавливается только в конце *успешной* инициализации.
+3.  **`checkDraftElements`:** Немного улучшено логирование недостающих элементов.
+4.  **Заглушки:** Добавлены пустые функции-заглушки для `loadChampionData`, `displayChampions`, `restoreDraftStateFromStorage`, `applyRolePermissions`, `addDraftEventListeners`, `updateDraftUI`, чтобы избежать ошибок `ReferenceError` при их вызове из `initializeAppDraft`.
+
+**Что делать дальше:**
+
+1.  **Замените** код в вашем файле `script.js` на этот обновленный код.
+2.  **Проверьте:**
+    * Кнопки админа/темы/языка теперь должны быть видны всегда.
+    * При переходе по ссылке лобби или нажатии "Админ" должна кратковременно появиться надпись "Загрузка данных чемпионов...", а затем показаться основная структура страницы драфта (пока без чемпионов и с неработающими кнопками драфта).
+    * Переход между домашней страницей и страницей драфта (и обратно через удаление хэша) должен работать корректно.
+
+Сообщите, если эти проблемы исправлены. Затем мы перейдем к загрузке и отображению данных чемпион
