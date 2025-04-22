@@ -705,3 +705,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Initial setup complete. Application is running.");
 
 }); // Конец DOMContentLoaded
+```
