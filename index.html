@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoL and Wild Rift Drafter - v7.8 (Language Toggle)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Минимальные базовые стили для body */
+        body { margin: 0; height: 100vh; overflow: hidden; }
+        /* Стиль для отступа кнопки "Открыть" */
+        .open-button { margin-left: 0.25rem; }
+        /* Убрали отступ слева для кнопки языка, т.к. она теперь первая или вторая */
+        /* #languageToggleButton { margin-left: 0.5rem; } */
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="topRightButtons">
+        <button id="languageToggleButton" data-lang-key="languageToggleButton" class="action-button hidden">EN</button>
+        <button id="themeToggleButton" title="Переключить на светлую тему" class="action-button icon-button hidden"> 🌙 </button>
+        <button id="adminButton" class="action-button hidden" data-lang-key="adminButton"> Админ </button>
+    </div>
+    <div id="homePage" class="page">
+      <h1 id="homeTitle" class="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 text-center" data-lang-key="homeTitle">
+        LoL and Wild Rift Drafter
+      </h1>
+      <input type="text" id="team1NameInput" class="lobby-input" placeholder="Команда 1" data-lang-key="team1Placeholder" data-lang-target="placeholder">
+      <input type="text" id="team2NameInput" class="lobby-input" placeholder="Команда 2" data-lang-key="team2Placeholder" data-lang-target="placeholder">
+      <button id="createLobbyButton" data-lang-key="createLobbyButton">Создать Лобби</button>
+      <div id="lobbyLinksDisplay" class="hidden">
+          <p>
+              <strong data-lang-key="lobbyJudgeLabel">Судья:</strong> <span id="judgeLinkText"></span>
+              <button class="copy-button" data-link-id="judgeLinkText" data-lang-key="copyButton">Копировать</button>
+              <a href="#" id="openJudgeLinkButton" class="copy-button open-button" target="_self" data-lang-key="openButton">Открыть</a>
+          </p>
+          <p>
+              <strong data-lang-key="lobbyTeam1Label">Команда 1:</strong> <span id="team1LinkText"></span>
+              <button class="copy-button" data-link-id="team1LinkText" data-lang-key="copyButton">Копировать</button>
+              <a href="#" id="openTeam1LinkButton" class="copy-button open-button" target="_self" data-lang-key="openButton">Открыть</a>
+          </p>
+          <p>
+              <strong data-lang-key="lobbyTeam2Label">Команда 2:</strong> <span id="team2LinkText"></span>
+              <button class="copy-button" data-link-id="team2LinkText" data-lang-key="copyButton">Копировать</button>
+              <a href="#" id="openTeam2LinkButton" class="copy-button open-button" target="_self" data-lang-key="openButton">Открыть</a>
+          </p>
+      </div>
+    </div>
+
+    <div id="draftPage" class="page hidden">
+        <div id="loadingIndicator" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
+            <div class="text-white text-xl font-semibold animate-pulse" data-lang-key="loadingChampions">Загрузка данных чемпионов...</div>
+        </div>
+
+        <div id="mainLayout" class="hidden">
+            <div id="topRowContainer">
+                <div class="top-row-cell blue-info">
+                    <div class="bans-container" id="blue-bans-display">
+                        <div id="blue-ban-1" class="ban-slot" aria-label="Синий бан 1" data-lang-key="blueBanAriaLabel" data-lang-target="aria-label" data-aria-value="1"></div>
+                        <div id="blue-ban-2" class="ban-slot" aria-label="Синий бан 2" data-lang-key="blueBanAriaLabel" data-lang-target="aria-label" data-aria-value="2"></div>
+                        <div id="blue-ban-3" class="ban-slot" aria-label="Синий бан 3" data-lang-key="blueBanAriaLabel" data-lang-target="aria-label" data-aria-value="3"></div>
+                        <div id="blue-ban-4" class="ban-slot" aria-label="Синий бан 4" data-lang-key="blueBanAriaLabel" data-lang-target="aria-label" data-aria-value="4"></div>
+                        <div id="blue-ban-5" class="ban-slot" aria-label="Синий бан 5" data-lang-key="blueBanAriaLabel" data-lang-target="aria-label" data-aria-value="5"></div>
+                    </div>
+                </div>
+
+                <div class="top-row-cell center-controls">
+                     <div class="center-controls-wrapper">
+                         <h2 contenteditable="false" spellcheck="false" class="team-name" id="blue-team-name-h2" aria-label="Название синей команды">Синяя Команда</h2>
+                         <div contenteditable="false" id="blue-score" class="score-input" inputmode="numeric" aria-label="Счет синей команды"></div>
+                         <button id="timerDisplay" class="timer-display-button" title="Начать драфт" aria-label="Таймер / Старт драфта" data-lang-key="timerStartDraftTitle" data-lang-target="title">--:--</button>
+                         <div contenteditable="false" id="red-score" class="score-input" inputmode="numeric" aria-label="Счет красной команды"></div>
+                         <h2 contenteditable="false" spellcheck="false" class="team-name" id="red-team-name-h2" aria-label="Название красной команды">Красная Команда</h2>
+                     </div>
+                </div>
+
+                <div class="top-row-cell red-info">
+                     <div class="bans-container" id="red-bans-display">
+                        <div id="red-ban-1" class="ban-slot" aria-label="Красный бан 1" data-lang-key="redBanAriaLabel" data-lang-target="aria-label" data-aria-value="1"></div>
+                        <div id="red-ban-2" class="ban-slot" aria-label="Красный бан 2" data-lang-key="redBanAriaLabel" data-lang-target="aria-label" data-aria-value="2"></div>
+                        <div id="red-ban-3" class="ban-slot" aria-label="Красный бан 3" data-lang-key="redBanAriaLabel" data-lang-target="aria-label" data-aria-value="3"></div>
+                        <div id="red-ban-4" class="ban-slot" aria-label="Красный бан 4" data-lang-key="redBanAriaLabel" data-lang-target="aria-label" data-aria-value="4"></div>
+                        <div id="red-ban-5" class="ban-slot" aria-label="Красный бан 5" data-lang-key="redBanAriaLabel" data-lang-target="aria-label" data-aria-value="5"></div>
+                     </div>
+                </div>
+            </div>
+
+            <div id="draftArea">
+                <div class="team-column blue-column draft-disabled">
+                     <div class="picks-container blue-picks-container">
+                         <div id="blue-pick-1" class="pick-slot" aria-label="Синий пик 1" data-lang-key="bluePickAriaLabel" data-lang-target="aria-label" data-aria-value="1"></div>
+                         <div id="blue-pick-2" class="pick-slot" aria-label="Синий пик 2" data-lang-key="bluePickAriaLabel" data-lang-target="aria-label" data-aria-value="2"></div>
+                         <div id="blue-pick-3" class="pick-slot" aria-label="Синий пик 3" data-lang-key="bluePickAriaLabel" data-lang-target="aria-label" data-aria-value="3"></div>
+                         <div id="blue-pick-4" class="pick-slot" aria-label="Синий пик 4" data-lang-key="bluePickAriaLabel" data-lang-target="aria-label" data-aria-value="4"></div>
+                         <div id="blue-pick-5" class="pick-slot" aria-label="Синий пик 5" data-lang-key="bluePickAriaLabel" data-lang-target="aria-label" data-aria-value="5"></div>
+                     </div>
+                </div>
+
+                <div id="championGridContainer">
+                     <div id="globallyBannedDisplay" class="hidden">
+                         <div class="global-bans-row">
+                             <div id="global-bans-blue"></div>
+                             <div id="global-bans-red"></div>
+                         </div>
+                     </div>
+                     <div class="search-controls-wrapper">
+                         <input type="text" id="championSearch" placeholder="Поиск..." aria-label="Поиск чемпиона" class="p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500" data-lang-key="searchPlaceholder" data-lang-target="placeholder">
+                         <button id="clearPicksButton" class="action-button icon-button" title="Очистить пики/баны текущей игры (вкл. глоб.)" aria-label="Очистить пики/баны текущей игры" data-lang-key="clearPicksTitle" data-lang-target="title">🧹</button>
+                         <button id="resetButton" class="action-button reset-button icon-button" title="Полный сброс" aria-label="Полный сброс" data-lang-key="resetTitle" data-lang-target="title">🔄</button>
+                         <button id="confirmPickBanButton" class="action-button confirm-button icon-button" title="Подтвердить выбор/бан" aria-label="Подтвердить выбор/бан" data-lang-key="confirmPickBanTitle" data-lang-target="title" disabled>✔️</button>
+                         <div id="roleFilterButtons" class="flex justify-center gap-2" role="group" aria-label="Фильтр по ролям" data-lang-key="roleFilterGroupAriaLabel" data-lang-target="aria-label">
+                             <button type="button" class="action-button filter-button active" data-role="All" title="Фильтр: Все" data-lang-key="roleFilterAllTitle" data-lang-target="title"><span data-lang-key="roleFilterAllText">ВСЕ</span></button>
+                             <button type="button" class="action-button filter-button" data-role="Top" title="Фильтр: Топ" data-lang-key="roleFilterTopTitle" data-lang-target="title"><span data-lang-key="roleFilterTopText">ТОП</span></button>
+                             <button type="button" class="action-button filter-button" data-role="Jungle" title="Фильтр: Лес" data-lang-key="roleFilterJungleTitle" data-lang-target="title"><span data-lang-key="roleFilterJungleText">ЛЕС</span></button>
+                             <button type="button" class="action-button filter-button" data-role="Mid" title="Фильтр: Мид" data-lang-key="roleFilterMidTitle" data-lang-target="title"><span data-lang-key="roleFilterMidText">МИД</span></button>
+                             <button type="button" class="action-button filter-button" data-role="ADC" title="Фильтр: АДК" data-lang-key="roleFilterADCTitle" data-lang-target="title"><span data-lang-key="roleFilterADCText">АДК</span></button>
+                             <button type="button" class="action-button filter-button" data-role="Support" title="Фильтр: Поддержка" data-lang-key="roleFilterSupportTitle" data-lang-target="title"><span data-lang-key="roleFilterSupportText">САП</span></button>
+                         </div>
+                         <button id="newPriorityFilterButton" type="button" class="action-button icon-button" title="Показать только приоритетных чемпионов" aria-label="Переключить фильтр приоритетных чемпионов" aria-pressed="false" data-lang-key="priorityFilterAriaLabel" data-lang-target="aria-label">⭐</button>
+                         <button id="nextDraftButton" class="action-button next-draft-button icon-button" title="Следующий драфт (Fearless)" aria-label="Следующий драфт (Fearless)" data-lang-key="nextDraftTitle" data-lang-target="title" disabled>▶️</button>
+                         <button id="swapButton" class="action-button icon-button" title="Поменять команды местами" aria-label="Поменять команды местами" data-lang-key="swapTeamsTitle" data-lang-target="title">⇄</button>
+                         <button id="toggleTimerButton" class="action-button icon-button" title="Сменить время таймера (30/45с)" aria-label="Сменить время таймера" data-lang-key="toggleTimerTitle" data-lang-target="title">⏱️</button>
+                         <button id="undoButton" class="action-button undo-button icon-button" title="Отменить действие" aria-label="Отменить действие" data-lang-key="undoTitle" data-lang-target="title" disabled>↩</button>
+                         <button id="returnHomeButton" class="action-button icon-button" title="Вернуться на главную" aria-label="Вернуться на главную" data-lang-key="returnHomeTitle" data-lang-target="title">🏠</button>
+                     </div>
+                     <div id="championGrid" role="grid" aria-label="Сетка выбора чемпионов" data-lang-key="championGridAriaLabel" data-lang-target="aria-label">
+                         </div>
+                </div>
+
+                <div class="team-column red-column draft-disabled">
+                    <div class="picks-container red-picks-container">
+                         <div id="red-pick-1" class="pick-slot" aria-label="Красный пик 1" data-lang-key="redPickAriaLabel" data-lang-target="aria-label" data-aria-value="1"></div>
+                         <div id="red-pick-2" class="pick-slot" aria-label="Красный пик 2" data-lang-key="redPickAriaLabel" data-lang-target="aria-label" data-aria-value="2"></div>
+                         <div id="red-pick-3" class="pick-slot" aria-label="Красный пик 3" data-lang-key="redPickAriaLabel" data-lang-target="aria-label" data-aria-value="3"></div>
+                         <div id="red-pick-4" class="pick-slot" aria-label="Красный пик 4" data-lang-key="redPickAriaLabel" data-lang-target="aria-label" data-aria-value="4"></div>
+                         <div id="red-pick-5" class="pick-slot" aria-label="Красный пик 5" data-lang-key="redPickAriaLabel" data-lang-target="aria-label" data-aria-value="5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="championTooltip" class="tooltip" role="tooltip"></div>
+        <div id="statusMessage" aria-live="polite"></div>
+    </div>
+</div>
+
+<script defer src="script.js"></script>
+
+</body>
+</html>
