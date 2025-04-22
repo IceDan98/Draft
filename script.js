@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideChampionTooltip() { clearTimeout(tooltipTimeout); if (championTooltip) { championTooltip.classList.remove('visible'); } }
 
 
-    // --- НОВАЯ ЧАСТЬ: Восстановление состояния, Права, Слушатели драфта, Обновление UI ---
+    // --- Восстановление состояния, Права, Слушатели драфта, Обновление UI ---
 
     /**
      * Восстанавливает состояние драфта из localStorage при загрузке страницы драфта.
@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Очищаем все слоты перед восстановлением
         document.querySelectorAll('.pick-slot, .ban-slot').forEach(slot => {
-            restoreSlotPlaceholder(slot, slot.id, ''); // Очистка с сохранением структуры ника
+            restoreSlotPlaceholder(slot, slot.id, ''); // РЕАЛИЗОВАНО НИЖЕ
         });
 
         // Заполняем слоты на основе истории
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const slotElement = document.getElementById(action.slotId);
             const nickname = loadedPickNicknames[action.slotId] || ''; // Берем ник из сохраненного состояния
             if (champ && slotElement) {
-                fillSlot(slotElement, champ, action.type, nickname); // Заполняем слот
+                fillSlot(slotElement, champ, action.type, nickname); // РЕАЛИЗОВАНО НИЖЕ
             } else {
                  console.warn(`Could not restore slot ${action.slotId}: Champion ${action.championId} or slot element not found.`);
             }
@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setLobbyItem('previewedChampionId', loadedPreviewedChampionId);
         if (loadedPreviewedChampionId) {
             const previewChamp = getChampionById(loadedPreviewedChampionId);
-            const draftOrder = getDraftOrder(); // Получаем порядок драфта
+            const draftOrder = getDraftOrder(); // РЕАЛИЗОВАНО НИЖЕ
             if (previewChamp && loadedStep < draftOrder.length) {
                 const previewSlotId = draftOrder[loadedStep].slot;
                 setLobbyItem('previewedSlotId', previewSlotId); // Сохраняем слот предпросмотра
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Восстанавливаем таймер
         setLobbyItem('draftTimerDuration', loadedTimerDuration);
         setLobbyItem('timerSeconds', loadedTimerSeconds);
-        resetTimerDisplay(); // Обновляем отображение таймера
+        resetTimerDisplay(); // РЕАЛИЗОВАНО НИЖЕ
 
         // Отображаем глобальные баны
         displayGloballyBanned(); // РЕАЛИЗОВАНО НИЖЕ
@@ -681,15 +681,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if(blueScoreEl) blueScoreEl.contentEditable = can('editScore');
         if(redScoreEl) redScoreEl.contentEditable = can('editScore');
 
-        // Блокировка колонок для команд (визуальная)
-        // if (blueColumn) blueColumn.classList.toggle('role-disabled', role === 'team2' || role === 'spectator');
-        // if (redColumn) redColumn.classList.toggle('role-disabled', role === 'team1' || role === 'spectator');
-        // if (role === 'admin' || role === 'judge') { // Админ и судья видят обе колонки активными
-        //     if(blueColumn) blueColumn.classList.remove('role-disabled');
-        //     if(redColumn) redColumn.classList.remove('role-disabled');
-        // }
-        // Перенес логику блокировки колонок в updateDraftUI, т.к. она зависит и от хода драфта
-
         // Обновляем редактируемость никнеймов
         updateNicknameEditability();
     }
@@ -713,56 +704,56 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Attaching draft page event listeners...");
 
         // Кнопка старта/Таймер
-        if (timerDisplay) timerDisplay.addEventListener('click', handleStartDraft); // Будет реализовано
+        if (timerDisplay) timerDisplay.addEventListener('click', handleStartDraft); // РЕАЛИЗОВАНО НИЖЕ
         else console.warn("Listener not attached: timerDisplay not found");
 
         // Кнопка полного сброса
         if (resetButton) resetButton.addEventListener('click', () => {
             console.log("Reset button clicked");
-            resetDraftFull(false); // Будет реализовано
+            resetDraftFull(false); // РЕАЛИЗОВАНО НИЖЕ
         });
         else console.warn("Listener not attached: resetButton not found");
 
         // Кнопка очистки текущей игры
         if (clearPicksButton) clearPicksButton.addEventListener('click', () => {
             console.log("Clear Picks button clicked");
-            resetCurrentGamePicksBans(false, true); // Будет реализовано (true - сохранять глоб. баны)
+            resetCurrentGamePicksBans(false, true); // РЕАЛИЗОВАНО НИЖЕ
         });
         else console.warn("Listener not attached: clearPicksButton not found");
 
         // Кнопка отмены
-        if (undoButton) undoButton.addEventListener('click', handleUndo); // Будет реализовано
+        if (undoButton) undoButton.addEventListener('click', handleUndo); // РЕАЛИЗОВАНО НИЖЕ
         else console.warn("Listener not attached: undoButton not found");
 
         // Кнопка смены сторон
-        if (swapButton) swapButton.addEventListener('click', handleSwapTeams); // Будет реализовано
+        if (swapButton) swapButton.addEventListener('click', handleSwapTeams); // Заглушка
         else console.warn("Listener not attached: swapButton not found");
 
         // Кнопка смены длительности таймера
-        if (toggleTimerButton) toggleTimerButton.addEventListener('click', handleToggleTimer); // Будет реализовано
+        if (toggleTimerButton) toggleTimerButton.addEventListener('click', handleToggleTimer); // РЕАЛИЗОВАНО НИЖЕ
         else console.warn("Listener not attached: toggleTimerButton not found");
 
         // Кнопка подтверждения пика/бана
-        if (confirmPickBanButton) confirmPickBanButton.addEventListener('click', handleConfirmPickBan); // Будет реализовано
+        if (confirmPickBanButton) confirmPickBanButton.addEventListener('click', handleConfirmPickBan); // РЕАЛИЗОВАНО НИЖЕ
         else console.warn("Listener not attached: confirmPickBanButton not found");
 
         // Кнопка фильтра приоритета
-        if (newPriorityFilterButton) newPriorityFilterButton.addEventListener('click', handleNewPriorityFilterToggle); // Будет реализовано
+        if (newPriorityFilterButton) newPriorityFilterButton.addEventListener('click', handleNewPriorityFilterToggle); // Реализовано ранее
         else console.warn("Listener not attached: newPriorityFilterButton not found");
 
         // Кнопка следующего драфта
-        if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); // Будет реализовано
+        if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); // Заглушка
         else console.warn("Listener not attached: nextDraftButton not found");
 
         // Поле поиска
-        if (championSearch) championSearch.addEventListener('input', debouncedFilter); // debouncedFilter вызывает filterChampions
+        if (championSearch) championSearch.addEventListener('input', debouncedFilter); // Реализовано ранее
         else console.warn("Listener not attached: championSearch not found");
 
         // Кнопки фильтра ролей
         if (filterButtons) {
             filterButtons.forEach((button) => {
                 if (button) {
-                    button.addEventListener('click', handleRoleFilterClick); // РЕАЛИЗОВАНО НИЖЕ
+                    button.addEventListener('click', handleRoleFilterClick); // Реализовано ранее
                 } else {
                     console.warn(`Listener not attached: a filter button was null`);
                 }
@@ -770,9 +761,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else { console.warn("Listener not attached: filterButtons collection is null/empty"); }
 
         // Клики по колонкам (для обмена пиками)
-        if (blueColumn) blueColumn.addEventListener('click', handlePickContainerClick); // Будет реализовано
+        if (blueColumn) blueColumn.addEventListener('click', handlePickContainerClick); // Заглушка
         else console.warn("Listener not attached: blueColumn not found");
-        if (redColumn) redColumn.addEventListener('click', handlePickContainerClick); // Будет реализовано
+        if (redColumn) redColumn.addEventListener('click', handlePickContainerClick); // Заглушка
         else console.warn("Listener not attached: redColumn not found");
 
         // Кнопка "Домой"
@@ -790,35 +781,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const isName = el.id.includes('name');
                     const permissionNeeded = isName ? 'editTeamName' : 'editScore';
                     if (!hasPermission(permissionNeeded)) return; // Проверка прав
-
                     const newValue = e.target.textContent.trim();
                     e.target.textContent = newValue; // Обновляем текст в элементе
-
-                    const key = isName
-                        ? (el.id.includes('blue') ? 'team1Name' : 'team2Name')
-                        : (el.id.includes('blue') ? 'blueScore' : 'redScore');
-
-                    if (isName) {
-                        // Имена команд хранятся отдельно от основного состояния лобби
-                        localStorage.setItem(`${currentLobbyId}_${key}`, newValue);
-                    } else {
-                        // Счет хранится как часть состояния лобби
-                        setLobbyItem(key, newValue);
-                    }
+                    const key = isName ? (el.id.includes('blue') ? 'team1Name' : 'team2Name') : (el.id.includes('blue') ? 'blueScore' : 'redScore');
+                    if (isName) { localStorage.setItem(`${currentLobbyId}_${key}`, newValue); }
+                    else { setLobbyItem(key, newValue); }
                     console.log(`Saved ${key}: ${newValue}`);
                 });
                 // Сохранение по Enter
                 el.addEventListener('keydown', (e) => {
                     const permissionNeeded = el.id.includes('name') ? 'editTeamName' : 'editScore';
                     if (!hasPermission(permissionNeeded)) return; // Проверка прав
-                    if (e.key === 'Enter') {
-                        e.preventDefault(); // Предотвращаем перенос строки
-                        e.target.blur(); // Снимаем фокус, что вызовет событие 'blur' и сохранение
-                    }
+                    if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
                 });
-            } else {
-                console.warn("Listener not attached: An editable H2/Score element was not found");
-            }
+            } else { console.warn("Listener not attached: An editable H2/Score element was not found"); }
         });
 
         console.log("Draft page event listeners attached.");
@@ -829,36 +805,25 @@ document.addEventListener('DOMContentLoaded', () => {
      * Вызывается после каждого изменения состояния драфта.
      */
     function updateDraftUI() {
-        if (!isDraftInitialized || !currentLobbyId) {
-             console.warn("updateDraftUI called before draft initialization or without lobbyId.");
-             return;
-        }
+        if (!isDraftInitialized || !currentLobbyId) { console.warn("updateDraftUI called before draft initialization or without lobbyId."); return; }
         console.log(`Updating Draft UI for lobby ${currentLobbyId}`);
 
-        // Получаем текущее состояние из localStorage
         const step = getLobbyItem('currentStep', 0);
         const isStarted = getLobbyItem('isDraftStarted', false);
         const isComplete = getLobbyItem('isDraftComplete', false);
         const history = getLobbyItem('draftHistory', []);
         const previewId = getLobbyItem('previewedChampionId', null);
         const previewChamp = previewId ? getChampionById(previewId) : null;
-        const draftOrder = getDraftOrder(); // Получаем порядок действий
+        const draftOrder = getDraftOrder();
 
-        // Сначала применяем общие права доступа для роли
-        applyRolePermissions(currentUserRole);
+        applyRolePermissions(currentUserRole); // Применяем базовые права
 
-        // Затем корректируем доступность кнопок в зависимости от состояния драфта
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach(el => { el.classList.remove('highlight-action', 'preview-flash', 'swap-selected'); });
 
-        // Убираем подсветку со всех слотов
-        document.querySelectorAll('.pick-slot, .ban-slot').forEach(el => {
-            el.classList.remove('highlight-action', 'preview-flash', 'swap-selected');
-        });
-
-        let currentActionTeam = null; // Команда, чей ход сейчас
-        let currentActionType = null; // Тип действия (pick/ban)
-        let currentActionSlotId = null; // ID текущего слота
-
-        if (step < draftOrder.length) {
+        let currentActionTeam = null;
+        let currentActionType = null;
+        let currentActionSlotId = null;
+        if (!isComplete && step < draftOrder.length) {
             const currentAction = draftOrder[step];
             currentActionTeam = currentAction.team;
             currentActionType = currentAction.type;
@@ -871,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const lastAction = history[history.length - 1];
         const canUndo = hasPermission('undoAction', lastAction?.team);
-        if (undoButton) undoButton.disabled = !canUndo || history.length === 0 || !isStarted || isComplete; // Нельзя отменять до старта или после завершения
+        if (undoButton) undoButton.disabled = !canUndo || history.length === 0 || !isStarted || isComplete;
 
         const canStart = hasPermission('startDraft');
         const canClear = hasPermission('clearDraft');
@@ -882,310 +847,894 @@ document.addEventListener('DOMContentLoaded', () => {
         const canUseFilters = hasPermission('useRoleFilters');
         const canTogglePriority = hasPermission('togglePriorityFilter');
 
-        if(timerDisplay) timerDisplay.disabled = !canStart || isStarted; // Нельзя стартовать, если уже начато
+        if(timerDisplay) timerDisplay.disabled = !canStart || isStarted;
         if(resetButton) resetButton.disabled = !canReset;
         if(clearPicksButton) clearPicksButton.disabled = !canClear;
-        if(swapButton) swapButton.disabled = !canSwap || (isStarted && !isComplete); // Нельзя менять во время драфта
-        if(toggleTimerButton) toggleTimerButton.disabled = !canToggleTimer || isStarted; // Нельзя менять во время драфта
-        if(nextDraftButton) nextDraftButton.disabled = !canNext || !isComplete; // Только после завершения
-        if(newPriorityFilterButton) newPriorityFilterButton.disabled = !canTogglePriority || isStarted; // Нельзя менять во время драфта
-        if(filterButtons) filterButtons.forEach(btn => btn.disabled = !canUseFilters || isStarted); // Нельзя менять во время драфта
-        if(championSearch) championSearch.disabled = !canUseFilters || isStarted; // Нельзя менять во время драфта
-
+        if(swapButton) swapButton.disabled = !canSwap || (isStarted && !isComplete);
+        if(toggleTimerButton) toggleTimerButton.disabled = !canToggleTimer || isStarted;
+        if(nextDraftButton) nextDraftButton.disabled = !canNext || !isComplete;
+        if(newPriorityFilterButton) newPriorityFilterButton.disabled = !canTogglePriority || isStarted;
+        if(filterButtons) filterButtons.forEach(btn => btn.disabled = !canUseFilters || isStarted);
+        if(championSearch) championSearch.disabled = !canUseFilters || isStarted;
 
         // --- Управление состоянием UI в зависимости от фазы драфта ---
-
         if (!isStarted) {
-            // --- Состояние: Драфт не начат ---
-            resetTimerDisplay(); // Сбрасываем таймер
+            resetTimerDisplay();
             if (blueColumn) blueColumn.classList.add('draft-disabled');
             if (redColumn) redColumn.classList.add('draft-disabled');
-            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Сетка неактивна
-            // Кнопки nextDraft, swap, toggleTimer, priority, filters уже настроены выше
+            if (championGridElement) championGridElement.style.pointerEvents = 'none';
         } else if (!isComplete) {
-            // --- Состояние: Драфт идет ---
             if (blueColumn) blueColumn.classList.remove('draft-disabled');
             if (redColumn) redColumn.classList.remove('draft-disabled');
 
-            // Подсветка активного слота
             const activeSlotElement = document.getElementById(currentActionSlotId);
-            if (activeSlotElement) {
-                // Подсвечиваем, если админ/судья или если это ход команды пользователя
-                 if (currentUserRole === 'admin' || currentUserRole === 'judge' || userTeamSide === currentActionTeam) {
-                     activeSlotElement.classList.add('highlight-action');
-                 }
+            if (activeSlotElement && (isAdminOrJudge() || userTeamSide === currentActionTeam)) {
+                activeSlotElement.classList.add('highlight-action');
             }
 
-             // Подсветка предпросмотра
             const previewSlotId = getLobbyItem('previewedSlotId', null);
             if (previewChamp && previewSlotId === currentActionSlotId) {
                  const previewSlotElement = document.getElementById(previewSlotId);
-                 if (previewSlotElement) {
-                     previewSlotElement.classList.add('preview-flash');
-                 }
+                 if (previewSlotElement) previewSlotElement.classList.add('preview-flash');
             }
 
-            // Блокировка сетки для команды, чей не ход
             const isGridInteractive = hasPermission(currentActionType === 'pick' ? 'pickChampion' : 'banChampion', currentActionTeam);
-            if (championGridElement) {
-                championGridElement.style.pointerEvents = isGridInteractive ? 'auto' : 'none';
-            }
+            if (championGridElement) championGridElement.style.pointerEvents = isGridInteractive ? 'auto' : 'none';
 
-            // Блокировка чужой колонки (визуально)
             if (blueColumn) blueColumn.classList.toggle('role-disabled', !isAdminOrJudge() && userTeamSide === 'red');
             if (redColumn) redColumn.classList.toggle('role-disabled', !isAdminOrJudge() && userTeamSide === 'blue');
 
-
-            // Запускаем таймер, если он еще не запущен (например, после отмены)
-            if (!timerInterval && hasPermission('startDraft')) { // Проверяем права на всякий случай
-                // startTimer(); // Функция будет реализована позже
+            if (!timerInterval && hasPermission('startDraft')) {
+                 startTimer(); // Запускаем таймер, если он не идет
             }
-
-        } else {
-            // --- Состояние: Драфт завершен ---
-            stopTimer(); // Останавливаем таймер
+        } else { // Драфт завершен
+            stopTimer();
             if (timerDisplay) {
                 timerDisplay.textContent = translations[currentLanguage].timerDraftCompleteText;
-                timerDisplay.classList.add('timer-disabled'); // Визуально неактивен
-                timerDisplay.disabled = true; // Функционально неактивен
+                timerDisplay.classList.add('timer-disabled');
+                timerDisplay.disabled = true;
                 timerDisplay.title = translations[currentLanguage].timerDraftCompleteTitle;
             }
             if (blueColumn) blueColumn.classList.remove('draft-disabled', 'role-disabled');
             if (redColumn) redColumn.classList.remove('draft-disabled', 'role-disabled');
-            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Сетка неактивна
+            if (championGridElement) championGridElement.style.pointerEvents = 'none';
 
-            // Разрешаем смену сторон и переход к след. драфту (доступность кнопок настроена выше)
-            // Делаем пики кликабельными для обмена
             document.querySelectorAll('.pick-slot').forEach(slot => {
-                const champId = getSlotChampionId(slot.id); // Функция будет реализована позже
-                const canSwapPicks = canSwap && champId; // Можно менять, если есть чемп и права
+                const champId = getSlotChampionId(slot.id);
+                const canSwapPicks = canSwap && champId;
                 slot.style.cursor = canSwapPicks ? 'pointer' : 'default';
                 slot.title = canSwapPicks ? translations[currentLanguage].swapPickSelect : '';
             });
         }
 
-        // Обновляем доступность чемпионов в сетке (серые/активные)
         updateChampionAvailability();
-        // Обновляем отображение глобальных банов
         displayGloballyBanned();
-        // Обновляем редактируемость никнеймов
         updateNicknameEditability();
-
         console.log("Draft UI updated.");
     }
 
-    // --- НОВАЯ ЧАСТЬ: Фильтрация и доступность чемпионов ---
-
-    /**
-     * Фильтрует чемпионов в сетке по поиску, роли и приоритету.
-     */
+    // --- Фильтрация и доступность чемпионов ---
     function filterChampions() {
         if (!isDraftInitialized || !championSearch || !championGridElement) return;
-
         const searchTerm = championSearch.value.toLowerCase().trim();
         const roleFilter = getLobbyItem('currentRoleFilter', 'All');
         const priorityFilterActive = getLobbyItem('isPriorityFilterActive', false);
-
-        console.log(`Filtering champions: Role=${roleFilter}, Priority=${priorityFilterActive}, Search="${searchTerm}"`);
-
+        // console.log(`Filtering champions: Role=${roleFilter}, Priority=${priorityFilterActive}, Search="${searchTerm}"`);
         championGridElement.querySelectorAll('.champion-card').forEach(card => {
             const champId = card.dataset.championId;
             const nameEn = card.dataset.championNameEn || '';
             const nameRu = card.dataset.championNameRu || '';
             const champRoles = card.dataset.roles ? card.dataset.roles.split(',') : [];
-
-            // Проверка совпадения по поиску (ID или имя на любом языке)
-            const searchMatch = searchTerm === '' ||
-                                nameEn.includes(searchTerm) ||
-                                nameRu.includes(searchTerm) ||
-                                champId.toLowerCase().includes(searchTerm);
-
-            // Проверка совпадения по роли
+            const searchMatch = searchTerm === '' || nameEn.includes(searchTerm) || nameRu.includes(searchTerm) || champId.toLowerCase().includes(searchTerm);
             const roleMatch = roleFilter === 'All' || champRoles.includes(roleFilter);
-
-            // Проверка на приоритет
             const isPriority = priorityChampions.has(champId);
             const hideByPriorityFilter = priorityFilterActive && !isPriority;
-
-            // Показываем карточку, если все условия выполнены
             const isVisible = searchMatch && roleMatch && !hideByPriorityFilter;
-            card.style.display = isVisible ? 'flex' : 'none'; // Используем flex для выравнивания контента, если нужно
+            card.style.display = isVisible ? 'flex' : 'none';
         });
-
-        // Обновляем доступность после фильтрации (на всякий случай)
         updateChampionAvailability();
     }
-    // Создаем debounced-версию для поля поиска
-    const debouncedFilter = debounce(filterChampions, 250); // Задержка 250 мс
-
-    /**
-     * Обновляет классы 'disabled' и 'selected' у карточек чемпионов
-     * в зависимости от текущего состояния драфта (selectedChampions, globallyDisabledChampions).
-     */
+    const debouncedFilter = debounce(filterChampions, 250);
     function updateChampionAvailability() {
         if (!isDraftInitialized || !currentLobbyId) return;
-
         const selectedSet = getLobbyItem('selectedChampions', new Set());
         const globallyDisabledSet = getLobbyItem('globallyDisabledChampions', new Set());
         const combinedDisabled = new Set([...selectedSet, ...globallyDisabledSet]);
-
         document.querySelectorAll('.champion-card').forEach(card => {
             const champId = card.dataset.championId;
             const isDisabled = combinedDisabled.has(champId);
-            const isSelected = selectedSet.has(champId); // Отдельно для .selected
-
-            card.classList.toggle('selected', isSelected && !isDisabled); // Выбран, но не глобально забанен
-            card.classList.toggle('disabled', isDisabled); // Любой бан/пик делает неактивным
-            card.disabled = isDisabled; // Блокируем кнопку
+            const isSelected = selectedSet.has(champId);
+            card.classList.toggle('selected', isSelected && !isDisabled);
+            card.classList.toggle('disabled', isDisabled);
+            card.disabled = isDisabled;
             card.setAttribute('aria-disabled', isDisabled.toString());
         });
-         console.log("Champion availability updated.");
+         // console.log("Champion availability updated."); // Слишком частое сообщение
     }
 
-    // --- НОВАЯ ЧАСТЬ: Логика действий драфта (Предпросмотр, Фильтры) ---
-
-    /**
-     * Обрабатывает клик по карточке чемпиона в сетке (предпросмотр).
-     * @param {object} champion - Объект выбранного чемпиона.
-     */
+    // --- Логика действий драфта (Предпросмотр, Фильтры) ---
     function handleChampionPreview(champion) {
         const isStarted = getLobbyItem('isDraftStarted', false);
         const isComplete = getLobbyItem('isDraftComplete', false);
         const step = getLobbyItem('currentStep', 0);
         const draftOrder = getDraftOrder();
-
-        // Нельзя выбирать до старта или после завершения
         if (!isStarted || isComplete || step >= draftOrder.length) return;
-
         const currentAction = draftOrder[step];
         const permissionNeeded = currentAction.type === 'pick' ? 'pickChampion' : 'banChampion';
         const permKey = currentAction.type === 'pick' ? 'permDeniedPreviewPick' : 'permDeniedPreviewBan';
-
-        // Проверяем права на пик/бан для текущей команды
-        if (!hasPermission(permissionNeeded, currentAction.team)) {
-            showStatusMessage(permKey, 2000);
-            return;
-        }
-
-        // Проверяем, не выбран ли уже или глобально забанен
+        if (!hasPermission(permissionNeeded, currentAction.team)) { showStatusMessage(permKey, 2000); return; }
         const selectedSet = getLobbyItem('selectedChampions', new Set());
         const globallyDisabledSet = getLobbyItem('globallyDisabledChampions', new Set());
         const isDisabled = selectedSet.has(champion.id) || globallyDisabledSet.has(champion.id);
-        if (isDisabled) {
-            showStatusMessage("championAlreadySelected", 2000, { name: champion.name[currentLanguage] });
-            return;
-        }
-
-        // Находим слот для текущего действия
+        if (isDisabled) { showStatusMessage("championAlreadySelected", 2000, { name: champion.name[currentLanguage] }); return; }
         const slotElement = document.getElementById(currentAction.slot);
         if (slotElement) {
-            // Убираем предыдущий предпросмотр
             document.querySelectorAll('.preview-flash').forEach(el => el.classList.remove('preview-flash'));
-
-            // Сохраняем ID чемпиона и слота для предпросмотра
             setLobbyItem('previewedChampionId', champion.id);
             setLobbyItem('previewedSlotId', currentAction.slot);
-
-            // Получаем текущий никнейм из состояния (если есть)
             const nicknames = getLobbyItem('pickNicknames', {});
             const existingNickname = nicknames[currentAction.slot] || '';
-
-            // Отображаем чемпиона в слоте
-            fillSlot(slotElement, champion, currentAction.type, existingNickname); // Функция будет реализована позже
-            slotElement.classList.add('preview-flash'); // Добавляем анимацию
-
-            // Обновляем состояние кнопки подтверждения
+            fillSlot(slotElement, champion, currentAction.type, existingNickname); // РЕАЛИЗОВАНО НИЖЕ
+            slotElement.classList.add('preview-flash');
             updateDraftUI();
-        } else {
-            console.warn(`Preview failed: Slot element ${currentAction.slot} not found.`);
-        }
+        } else { console.warn(`Preview failed: Slot element ${currentAction.slot} not found.`); }
     }
-
-    /**
-    * Обрабатывает клик по кнопке фильтра ролей.
-    * @param {Event} event - Событие клика.
-    */
     function handleRoleFilterClick(event) {
         const clickedButton = event.currentTarget;
-        if (!clickedButton || clickedButton.disabled) return; // Игнорируем клики по неактивным кнопкам
-
+        if (!clickedButton || clickedButton.disabled) return;
         const role = clickedButton.dataset.role;
-        if (!role) return; // Если у кнопки нет data-role
-
-        if (!hasPermission('useRoleFilters')) {
-            showStatusMessage("permDeniedRoleFilter", 2000);
-            return;
-        }
-
-        // Сохраняем выбранный фильтр в localStorage
+        if (!role) return;
+        if (!hasPermission('useRoleFilters')) { showStatusMessage("permDeniedRoleFilter", 2000); return; }
         setLobbyItem('currentRoleFilter', role);
-
-        // Обновляем активный класс у кнопок
-        if (filterButtons) {
-            filterButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            clickedButton.classList.add('active');
-        }
-
-        // Применяем фильтры к сетке чемпионов
+        if (filterButtons) { filterButtons.forEach(btn => { btn.classList.remove('active'); }); clickedButton.classList.add('active'); }
         filterChampions();
     }
-
-    /**
-     * Обрабатывает клик по кнопке фильтра приоритета.
-     */
     function handleNewPriorityFilterToggle() {
-        if (!hasPermission('togglePriorityFilter')) {
-            showStatusMessage("permDeniedPriorityFilter", 2000);
-            return;
-        }
-
-        // Инвертируем текущее состояние фильтра
+        if (!hasPermission('togglePriorityFilter')) { showStatusMessage("permDeniedPriorityFilter", 2000); return; }
         let currentPriorityState = getLobbyItem('isPriorityFilterActive', false);
         currentPriorityState = !currentPriorityState;
         setLobbyItem('isPriorityFilterActive', currentPriorityState);
-
-        // Обновляем атрибуты кнопки
-        if (newPriorityFilterButton) {
-            newPriorityFilterButton.setAttribute('aria-pressed', currentPriorityState.toString());
-            const titleKey = currentPriorityState ? 'priorityFilterShowAllTitle' : 'priorityFilterShowPriorityTitle';
-            newPriorityFilterButton.title = translations[currentLanguage][titleKey] || titleKey;
-        }
-
-        // Применяем фильтры
+        if (newPriorityFilterButton) { newPriorityFilterButton.setAttribute('aria-pressed', currentPriorityState.toString()); const titleKey = currentPriorityState ? 'priorityFilterShowAllTitle' : 'priorityFilterShowPriorityTitle'; newPriorityFilterButton.title = translations[currentLanguage][titleKey] || titleKey; }
         filterChampions();
-
-        // Показываем сообщение
         showStatusMessage(currentPriorityState ? "priorityFilterOn" : "priorityFilterOff", 2000);
     }
 
-    // --- Заглушки для функций, которые будут реализованы позже ---
-    // function restoreDraftStateFromStorage() { console.warn("restoreDraftStateFromStorage() called but partially implemented."); } // Частично реализована выше
-    // function applyRolePermissions(role) { console.warn("applyRolePermissions() called but partially implemented.", role); } // Частично реализована выше
-    // function addDraftEventListeners() { console.warn("addDraftEventListeners() called but partially implemented."); } // Частично реализована выше
-    // function updateDraftUI() { console.warn("updateDraftUI() called but partially implemented."); } // Частично реализована выше
-    // function filterChampions() { console.warn("filterChampions() called but partially implemented."); } // Частично реализована выше
-    // function updateChampionAvailability() { console.warn("updateChampionAvailability() called but partially implemented."); } // Частично реализована выше
-    // function handleChampionPreview(champion) { console.warn("handleChampionPreview() called but partially implemented.", champion); } // Частично реализована выше
+    // --- НОВАЯ ЧАСТЬ: Основная логика драфта ---
 
-    function getDraftOrder() { console.warn("getDraftOrder() not implemented yet."); return []; }
-    function resetTimerDisplay() { console.warn("resetTimerDisplay() not implemented yet."); }
-    function displayGloballyBanned() { console.warn("displayGloballyBanned() not implemented yet."); }
-    function fillSlot(slotElement, champion, type, nicknameText = '') { console.warn("fillSlot() not implemented yet."); }
-    function addNicknameInput(slotElement, text = '') { console.warn("addNicknameInput() not implemented yet."); }
-    function restoreSlotPlaceholder(slotElement, slotId, nicknameText = '') { console.warn("restoreSlotPlaceholder() not implemented yet."); }
-    function getSlotChampionId(slotId) { console.warn("getSlotChampionId() not implemented yet."); return null; }
-    function handleStartDraft() { console.warn("handleStartDraft() not implemented yet."); }
-    function resetDraftFull(force = false) { console.warn("resetDraftFull() not implemented yet."); }
-    function resetCurrentGamePicksBans(force = false, keepGlobal = true) { console.warn("resetCurrentGamePicksBans() not implemented yet."); }
-    function handleUndo() { console.warn("handleUndo() not implemented yet."); }
+    /**
+     * Возвращает стандартный порядок пиков и банов.
+     * @returns {Array<object>} - Массив объектов { team, type, slot }.
+     */
+    function getDraftOrder() {
+        // Стандартный порядок для LoL 5v5
+        return [
+            { team: 'blue', type: 'ban', slot: 'blue-ban-1' },
+            { team: 'red', type: 'ban', slot: 'red-ban-1' },
+            { team: 'blue', type: 'ban', slot: 'blue-ban-2' },
+            { team: 'red', type: 'ban', slot: 'red-ban-2' },
+            { team: 'blue', type: 'ban', slot: 'blue-ban-3' },
+            { team: 'red', type: 'ban', slot: 'red-ban-3' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-1' },
+            { team: 'red', type: 'pick', slot: 'red-pick-1' },
+            { team: 'red', type: 'pick', slot: 'red-pick-2' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-2' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-3' },
+            { team: 'red', type: 'pick', slot: 'red-pick-3' },
+            { team: 'red', type: 'ban', slot: 'red-ban-4' },
+            { team: 'blue', type: 'ban', slot: 'blue-ban-4' },
+            { team: 'red', type: 'ban', slot: 'red-ban-5' },
+            { team: 'blue', type: 'ban', slot: 'blue-ban-5' },
+            { team: 'red', type: 'pick', slot: 'red-pick-4' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-4' },
+            { team: 'blue', type: 'pick', slot: 'blue-pick-5' },
+            { team: 'red', type: 'pick', slot: 'red-pick-5' },
+        ];
+    }
+
+    /**
+     * Заполняет слот изображением чемпиона и никнеймом (если это пик).
+     * @param {HTMLElement} slotElement - DOM-элемент слота.
+     * @param {object} champion - Объект чемпиона.
+     * @param {'pick' | 'ban'} type - Тип действия.
+     * @param {string} [nicknameText=''] - Текст никнейма.
+     */
+    function fillSlot(slotElement, champion, type, nicknameText = '') {
+        if (!slotElement || !champion) {
+             console.warn("fillSlot: slotElement or champion is missing.");
+             return;
+        }
+        slotElement.innerHTML = ''; // Очищаем предыдущее содержимое
+        slotElement.classList.remove('preview-flash'); // Убираем анимацию предпросмотра
+
+        // Создаем и добавляем изображение
+        const img = document.createElement('img');
+        img.alt = champion.name[currentLanguage]; // Alt для доступности
+        img.className = 'w-full h-full object-cover block absolute inset-0 z-0 pointer-events-none'; // Стили
+
+        // Выбираем URL изображения: сплеш для пиков (если не мобильный), иконка для банов/мобильных
+        let imageUrl;
+        if (type === 'pick') {
+            const isMobileView = window.innerWidth <= 768; // Примерная граница мобильного вида
+            imageUrl = isMobileView ? champion.iconUrl : champion.splashUrl;
+        } else { // ban
+            imageUrl = champion.iconUrl;
+        }
+        img.src = imageUrl;
+
+        // Обработчик ошибки загрузки
+        img.onerror = () => {
+            console.warn(`Failed to load image for ${champion.id} in slot ${slotElement.id}`);
+            const errorSpan = document.createElement('span');
+            errorSpan.className = 'text-[1.5vmin] text-red-400'; // Маленький красный текст
+            errorSpan.textContent = 'Err';
+            slotElement.innerHTML = ''; // Очищаем снова
+            slotElement.appendChild(errorSpan);
+            // Если это пик, все равно добавляем поле для ника
+            if (type === 'pick') {
+                addNicknameInput(slotElement, nicknameText); // РЕАЛИЗОВАНО НИЖЕ
+            }
+        };
+        slotElement.appendChild(img);
+
+        // Добавляем поле для никнейма, если это пик
+        if (type === 'pick') {
+            addNicknameInput(slotElement, nicknameText); // РЕАЛИЗОВАНО НИЖЕ
+            slotElement.dataset.championId = champion.id; // Сохраняем ID пикнутого чемпиона
+        } else {
+            delete slotElement.dataset.championId; // Убираем ID, если это бан
+        }
+
+        // Обновляем aria-label слота
+        const baseAriaLabel = slotElement.getAttribute('aria-label')?.split(':')[0] || (type === 'pick' ? `Pick ${slotElement.id.slice(-1)}` : `Ban ${slotElement.id.slice(-1)}`);
+        slotElement.setAttribute('aria-label', `${baseAriaLabel}: ${champion.name[currentLanguage]}`);
+    }
+
+    /**
+     * Добавляет редактируемое поле для никнейма в слот пика.
+     * @param {HTMLElement} slotElement - DOM-элемент слота пика.
+     * @param {string} [text=''] - Начальный текст никнейма.
+     */
+    function addNicknameInput(slotElement, text = '') {
+        // Удаляем старый инпут, если он есть
+        const oldInput = slotElement.querySelector('.nickname-input');
+        if (oldInput) oldInput.remove();
+
+        // Создаем новый div для ника
+        const nicknameInput = document.createElement('div');
+        nicknameInput.spellcheck = false; // Отключаем проверку орфографии
+        nicknameInput.className = 'nickname-input'; // Класс для стилизации
+        nicknameInput.textContent = text || ''; // Устанавливаем текст
+        nicknameInput.dataset.slotId = slotElement.id; // Сохраняем ID слота
+
+        // Устанавливаем плейсхолдер через data-атрибут (стили CSS используют ::before)
+        const placeholderText = translations[currentLanguage]?.pickSlotNicknamePlaceholder || 'Player';
+        nicknameInput.dataset.placeholder = placeholderText;
+
+        // Устанавливаем редактируемость в зависимости от прав
+        const canEdit = hasPermission('editNicknames');
+        nicknameInput.contentEditable = canEdit;
+        nicknameInput.style.cursor = canEdit ? 'text' : 'default';
+
+        // Добавляем слушатели для сохранения, если можно редактировать
+        if (canEdit) {
+            nicknameInput.addEventListener('blur', (e) => { // Сохранение при потере фокуса
+                const slotId = e.target.dataset.slotId;
+                if (slotId && currentLobbyId) {
+                    let nicknames = getLobbyItem('pickNicknames', {});
+                    nicknames[slotId] = e.target.textContent.trim();
+                    setLobbyItem('pickNicknames', nicknames);
+                    console.log(`Nickname saved for ${slotId}: ${nicknames[slotId]}`);
+                }
+            });
+             nicknameInput.addEventListener('keydown', (e) => { // Сохранение по Enter
+                 if (e.key === 'Enter') {
+                     e.preventDefault();
+                     e.target.blur(); // Снять фокус для сохранения
+                 }
+             });
+        }
+        slotElement.appendChild(nicknameInput); // Добавляем поле в слот
+    }
+
+    /**
+     * Восстанавливает пустой слот (удаляет изображение, очищает ник).
+     * @param {HTMLElement} slotElement - DOM-элемент слота.
+     * @param {string} slotId - ID слота.
+     * @param {string} [nicknameText=''] - Текст для восстановления в поле ника (обычно пустой).
+     */
+    function restoreSlotPlaceholder(slotElement, slotId, nicknameText = '') {
+        if (!slotElement) return;
+        slotElement.innerHTML = ''; // Очищаем содержимое
+        slotElement.classList.remove('preview-flash', 'swap-selected', 'highlight-action');
+        delete slotElement.dataset.championId; // Удаляем ID чемпиона
+        slotElement.style.backgroundImage = ''; // Убираем фон (на всякий случай)
+        slotElement.style.cursor = 'default';
+        slotElement.title = '';
+
+        // Восстанавливаем базовый aria-label
+        const isPick = slotId.includes('-pick-');
+        const baseAriaLabel = slotElement.getAttribute('aria-label')?.split(':')[0] || (isPick ? `Pick ${slotId.slice(-1)}` : `Ban ${slotId.slice(-1)}`);
+        slotElement.setAttribute('aria-label', `${baseAriaLabel}: Empty`);
+
+        // Если это слот пика, добавляем пустое поле для ника
+        if (isPick) {
+            addNicknameInput(slotElement, nicknameText);
+            // Убедимся, что в состоянии ник тоже очищен или установлен в nicknameText
+            let nicknames = getLobbyItem('pickNicknames', {});
+            nicknames[slotId] = nicknameText;
+            setLobbyItem('pickNicknames', nicknames);
+        } else {
+            // Для банов удаляем ник из состояния, если он там был
+            let nicknames = getLobbyItem('pickNicknames', {});
+            if (nicknames.hasOwnProperty(slotId)) {
+                 delete nicknames[slotId];
+                 setLobbyItem('pickNicknames', nicknames);
+            }
+        }
+    }
+
+    /**
+     * Получает ID чемпиона, находящегося в слоте.
+     * @param {string} slotId - ID слота.
+     * @returns {string | null} - ID чемпиона или null, если слот пуст или не найден.
+     */
+    function getSlotChampionId(slotId) {
+        const slotElement = document.getElementById(slotId);
+        return slotElement ? slotElement.dataset.championId : null;
+    }
+
+    /**
+     * Обрабатывает подтверждение пика или бана.
+     * Обновляет состояние драфта, историю, переходит к следующему шагу.
+     */
+    function handleConfirmPickBan() {
+        console.log("handleConfirmPickBan called");
+        const previewId = getLobbyItem('previewedChampionId', null);
+        const isStarted = getLobbyItem('isDraftStarted', false);
+        const isComplete = getLobbyItem('isDraftComplete', false);
+        const step = getLobbyItem('currentStep', 0);
+        const draftOrder = getDraftOrder();
+
+        const championToConfirm = previewId ? getChampionById(previewId) : null;
+
+        // Проверки: есть ли предпросмотр, начат ли драфт, не завершен ли он
+        if (!championToConfirm || !isStarted || isComplete || step >= draftOrder.length) {
+            console.warn("Confirmation failed: No preview or draft not in correct state.");
+            return;
+        }
+
+        const currentAction = draftOrder[step];
+
+        // Проверка прав на подтверждение для текущей команды
+        if (!hasPermission('confirmAction', currentAction.team)) {
+            showStatusMessage("permDeniedConfirm", 2000);
+            return;
+        }
+
+        const slotElement = document.getElementById(currentAction.slot);
+        const selectedSet = getLobbyItem('selectedChampions', new Set());
+        const globallyDisabledSet = getLobbyItem('globallyDisabledChampions', new Set());
+        const isDisabled = selectedSet.has(championToConfirm.id) || globallyDisabledSet.has(championToConfirm.id);
+
+        // Дополнительная проверка, что слот найден и чемпион все еще доступен
+        if (!slotElement || isDisabled) {
+            console.warn("Confirmation failed: Slot not found or champion unavailable.");
+            // Сбрасываем предпросмотр
+            setLobbyItem('previewedChampionId', null);
+            setLobbyItem('previewedSlotId', null);
+            if (slotElement) slotElement.classList.remove('preview-flash');
+            updateDraftUI(); // Обновляем UI (кнопка подтверждения станет неактивной)
+            return;
+        }
+
+        console.log(`Confirming ${championToConfirm.id} for slot ${currentAction.slot} in lobby ${currentLobbyId}`);
+
+        // Обновляем состояние
+        let history = getLobbyItem('draftHistory', []);
+        let nicknames = getLobbyItem('pickNicknames', {});
+        const previousNickname = nicknames[currentAction.slot] || ''; // Сохраняем старый ник для отмены
+
+        // Добавляем чемпиона в выбранные
+        selectedSet.add(championToConfirm.id);
+        setLobbyItem('selectedChampions', selectedSet);
+
+        // Добавляем действие в историю
+        history.push({
+            championId: championToConfirm.id,
+            slotId: currentAction.slot,
+            step: step,
+            previousNickname: previousNickname, // Сохраняем для отмены
+            type: currentAction.type,
+            team: currentAction.team
+        });
+        setLobbyItem('draftHistory', history);
+
+        // Переходим к следующему шагу
+        const nextStep = step + 1;
+        setLobbyItem('currentStep', nextStep);
+
+        // Сбрасываем предпросмотр
+        setLobbyItem('previewedChampionId', null);
+        setLobbyItem('previewedSlotId', null);
+
+        // Проверяем, завершен ли драфт
+        if (nextStep >= draftOrder.length) {
+            setLobbyItem('isDraftComplete', true);
+            console.log("Draft complete!");
+            stopTimer(); // Останавливаем таймер при завершении
+        } else {
+            // Если драфт не завершен, сбрасываем и запускаем таймер для след. хода
+            resetTimerDisplay();
+            startTimer();
+        }
+
+        // Обновляем UI
+        slotElement.classList.remove('preview-flash'); // Убираем анимацию с подтвержденного слота
+        updateDraftUI();
+        filterChampions(); // Обновляем фильтры (чемпион стал неактивным)
+    }
+
+    /**
+     * Обрабатывает отмену последнего действия.
+     */
+    function handleUndo() {
+        console.log("handleUndo called");
+        let history = getLobbyItem('draftHistory', []);
+        const isStarted = getLobbyItem('isDraftStarted', false);
+
+        if (history.length === 0 || !isStarted) {
+            console.warn("Undo failed: No history or draft not started.");
+            return;
+        }
+
+        const lastAction = history[history.length - 1]; // Получаем последнее действие
+
+        // Проверка прав на отмену для команды, совершившей действие
+        if (!hasPermission('undoAction', lastAction.team)) {
+            showStatusMessage("permDeniedUndo", 2000);
+            return;
+        }
+
+        // Убираем выделение слотов для обмена (если было)
+        deselectSwapSlots(); // Функция будет реализована позже
+
+        // Удаляем последнее действие из истории
+        history.pop();
+        setLobbyItem('draftHistory', history);
+
+        console.log("Undoing action:", lastAction);
+
+        // Убираем чемпиона из выбранных
+        let selectedSet = getLobbyItem('selectedChampions', new Set());
+        selectedSet.delete(lastAction.championId);
+        setLobbyItem('selectedChampions', selectedSet);
+
+        // Восстанавливаем предыдущее состояние слота
+        const slotElement = document.getElementById(lastAction.slotId);
+        if (slotElement) {
+            restoreSlotPlaceholder(slotElement, lastAction.slotId, lastAction.previousNickname); // Восстанавливаем с предыдущим ником
+        }
+
+        // Возвращаемся к предыдущему шагу
+        setLobbyItem('currentStep', lastAction.step);
+
+        // Сбрасываем флаг завершения и предпросмотр
+        setLobbyItem('isDraftComplete', false);
+        setLobbyItem('previewedChampionId', null);
+        setLobbyItem('previewedSlotId', null);
+
+        // Сбрасываем и перезапускаем таймер
+        resetTimerDisplay();
+        startTimer(); // Перезапускаем таймер для текущего (восстановленного) шага
+
+        // Обновляем UI
+        updateDraftUI();
+        filterChampions(); // Обновляем доступность чемпиона
+        showStatusMessage("actionUndone", 1500);
+    }
+
+    // --- НОВАЯ ЧАСТЬ: Управление Таймером ---
+
+    /**
+     * Форматирует время в секундах в строку MM:SS.
+     * @param {number} seconds - Время в секундах.
+     * @returns {string} - Отформатированная строка времени.
+     */
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    /**
+     * Останавливает интервал таймера.
+     */
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            console.log("Timer stopped.");
+        }
+        if (timerDisplay) {
+            timerDisplay.classList.remove('timer-running', 'timer-ending');
+        }
+    }
+
+    /**
+     * Сбрасывает отображение таймера к начальному значению (30 или 45 сек).
+     */
+    function resetTimerDisplay() {
+        stopTimer(); // Сначала останавливаем текущий таймер
+        const duration = getLobbyItem('draftTimerDuration', 30);
+        setLobbyItem('timerSeconds', duration); // Устанавливаем полное время
+        if (timerDisplay) {
+            timerDisplay.textContent = formatTime(duration);
+            // Доступность кнопки старта зависит от прав и состояния драфта (управляется в updateDraftUI)
+            timerDisplay.classList.remove('timer-disabled', 'timer-running', 'timer-ending');
+            timerDisplay.title = translations[currentLanguage].timerStartDraftTitle;
+            timerDisplay.setAttribute('aria-label', translations[currentLanguage].timerAriaLabelStart);
+        }
+    }
+
+    /**
+     * Запускает таймер обратного отсчета.
+     */
+    function startTimer() {
+        console.log("startTimer called");
+        // Проверка прав не нужна здесь, т.к. вызывается из handleStartDraft или handleConfirmPickBan/handleUndo
+        if (timerInterval) {
+             console.warn("Timer already running.");
+             return; // Не запускаем, если уже идет
+        }
+
+        let currentTimerSeconds = getLobbyItem('timerSeconds', getLobbyItem('draftTimerDuration', 30));
+        if (!timerDisplay) { console.warn("startTimer: timerDisplay not found"); return; }
+
+        // Начальное отображение
+        timerDisplay.textContent = formatTime(currentTimerSeconds);
+        timerDisplay.disabled = true; // Кнопка неактивна во время отсчета
+        timerDisplay.classList.add('timer-running', 'timer-disabled');
+        timerDisplay.title = translations[currentLanguage].timerDraftRunningTitle;
+        timerDisplay.setAttribute('aria-label', translations[currentLanguage].timerAriaLabelRunning.replace('{time}', formatTime(currentTimerSeconds)));
+
+        // Запускаем интервал
+        timerInterval = setInterval(() => {
+            currentTimerSeconds--;
+            setLobbyItem('timerSeconds', currentTimerSeconds); // Сохраняем текущее время
+
+            if (timerDisplay) {
+                timerDisplay.textContent = formatTime(currentTimerSeconds);
+                timerDisplay.setAttribute('aria-label', translations[currentLanguage].timerAriaLabelRunning.replace('{time}', formatTime(currentTimerSeconds)));
+
+                // Добавляем/убираем класс для подсветки последних секунд
+                if (currentTimerSeconds <= 10 && currentTimerSeconds > 0) {
+                    timerDisplay.classList.add('timer-ending');
+                } else {
+                    timerDisplay.classList.remove('timer-ending');
+                }
+            }
+
+            // Время вышло
+            if (currentTimerSeconds <= 0) {
+                stopTimer();
+                if(timerDisplay) timerDisplay.classList.add('timer-ending'); // Оставляем красным
+                console.log("Timer reached zero!");
+
+                const step = getLobbyItem('currentStep', 0);
+                const draftOrder = getDraftOrder();
+                const currentPreviewId = getLobbyItem('previewedChampionId', null);
+                const currentPreview = currentPreviewId ? getChampionById(currentPreviewId) : null;
+
+                if (step < draftOrder.length) {
+                    const currentAction = draftOrder[step];
+                    if (currentAction.type === 'pick') {
+                        // Если был предпросмотр пика - подтверждаем его
+                        if (currentPreview && hasPermission('confirmAction', currentAction.team)) {
+                            console.log("Timer ended during PICK phase. Auto-confirming:", currentPreview.id);
+                            showStatusMessage("timerEndedPickConfirm", 3000, { name: currentPreview.name[currentLanguage] });
+                            handleConfirmPickBan(); // Выполняем подтверждение
+                        } else {
+                            // Если не было предпросмотра или нет прав - сбрасываем текущую игру
+                            console.log("Timer ended during PICK phase. No champion previewed or no permission. Clearing current game.");
+                            showStatusMessage("timerEndedPickClear", 3000);
+                            if (hasPermission('clearDraft')) { // Проверяем права на сброс
+                                resetCurrentGamePicksBans(true, true); // Сбрасываем принудительно
+                            } else {
+                                // Если нет прав на сброс, просто останавливаемся
+                                setLobbyItem('isDraftComplete', true); // Считаем драфт условно завершенным (зависшим)
+                                updateDraftUI();
+                            }
+                        }
+                    } else if (currentAction.type === 'ban') {
+                        // Если время вышло на бане - пропускаем его
+                        console.log("Timer ended during BAN phase. Skipping ban.");
+                        showStatusMessage("timerEndedBanSkip", 2000);
+                        const slotElement = document.getElementById(currentAction.slot);
+                        if (slotElement) {
+                            restoreSlotPlaceholder(slotElement, currentAction.slot, ''); // Очищаем слот
+                        }
+                        // Переходим к следующему шагу без добавления в историю
+                        const nextStep = step + 1;
+                        setLobbyItem('currentStep', nextStep);
+                         // Проверяем завершение драфта
+                        if (nextStep >= draftOrder.length) {
+                            setLobbyItem('isDraftComplete', true);
+                            console.log("Draft complete after skipping ban!");
+                        } else {
+                            resetTimerDisplay(); // Сбрасываем таймер для след. хода
+                            startTimer(); // Запускаем таймер для след. хода
+                        }
+                        updateDraftUI(); // Обновляем UI
+                    }
+                } else {
+                    console.log("Timer ended but draft already complete?");
+                }
+            }
+        }, 1000); // Интервал в 1 секунду
+        console.log("Timer started.");
+    }
+
+    /**
+     * Обрабатывает клик по кнопке таймера (старт драфта).
+     */
+    function handleStartDraft() {
+        console.log("handleStartDraft called");
+        if (!hasPermission('startDraft')) {
+            showStatusMessage("permDeniedStartDraft", 2000);
+            return;
+        }
+        if (!getLobbyItem('isDraftStarted', false)) {
+            console.log(`Starting draft for lobby ${currentLobbyId}...`);
+            setLobbyItem('isDraftStarted', true);
+            setLobbyItem('isDraftComplete', false);
+            setLobbyItem('currentStep', 0); // Убедимся, что начинаем с 0 шага
+            // Сброс предпросмотра на всякий случай
+            setLobbyItem('previewedChampionId', null);
+            setLobbyItem('previewedSlotId', null);
+
+            resetTimerDisplay(); // Сбрасываем таймер на начальное значение
+            startTimer(); // Запускаем таймер
+            updateDraftUI(); // Обновляем UI (убираем блокировки и т.д.)
+        } else {
+             console.warn("Draft already started.");
+        }
+    }
+
+    /**
+     * Переключает длительность таймера между 30 и 45 секундами.
+     */
+    function handleToggleTimer() {
+         console.log("handleToggleTimer called");
+         if (!hasPermission('toggleTimerDuration')) {
+             showStatusMessage("permDeniedToggleTimer", 2000);
+             return;
+         }
+         // Нельзя менять во время активного драфта
+         if (getLobbyItem('isDraftStarted', false)) {
+             console.warn("Cannot toggle timer during an active draft.");
+             return;
+         }
+         let currentDuration = getLobbyItem('draftTimerDuration', 30);
+         currentDuration = currentDuration === 30 ? 45 : 30;
+         setLobbyItem('draftTimerDuration', currentDuration);
+         resetTimerDisplay(); // Обновляем отображение таймера
+         // Обновляем title кнопки
+         if(toggleTimerButton) toggleTimerButton.title = translations[currentLanguage].toggleTimerTitle;
+         showStatusMessage("timerToggled", 1500, { duration: currentDuration });
+         console.log("Timer duration set to:", currentDuration);
+     }
+
+    // --- НОВАЯ ЧАСТЬ: Функции сброса ---
+
+    /**
+     * Выполняет полный сброс драфта (пики, баны, ники, история, глобальные баны).
+     * Требует подтверждения пользователя.
+     * @param {boolean} [force=false] - Сбросить без подтверждения.
+     */
+    function resetDraftFull(force = false) {
+        console.log("resetDraftFull called, force:", force);
+        if (!hasPermission('resetDraft')) {
+            showStatusMessage("permDeniedReset", 2000);
+            return;
+        }
+        const confirmationMessage = translations[currentLanguage].resetFullConfirmation;
+        if (!force && !confirm(confirmationMessage)) {
+            console.log("Full reset cancelled by user.");
+            return;
+        }
+
+        console.log(`Resetting FULL state for lobby: ${currentLobbyId}`);
+        stopTimer(); // Останавливаем таймер
+
+        // Очищаем ВСЕ состояние лобби в localStorage
+        clearLobbyState();
+
+        // Очищаем все слоты в UI
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => {
+            restoreSlotPlaceholder(slot, slot.id, ''); // Используем функцию очистки
+            slot.classList.remove('highlight-action', 'preview-flash', 'swap-selected');
+        });
+
+        // Сбрасываем имена команд и счет в UI (они не хранятся в lobby state)
+        const lobbyTeam1Key = `${currentLobbyId}_team1Name`;
+        const lobbyTeam2Key = `${currentLobbyId}_team2Name`;
+        if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName;
+        if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName;
+        if (blueScoreEl) blueScoreEl.textContent = '';
+        if (redScoreEl) redScoreEl.textContent = '';
+
+        // Сбрасываем фильтры
+        if (championSearch) championSearch.value = '';
+        setLobbyItem('currentRoleFilter', 'All');
+        setLobbyItem('isPriorityFilterActive', false);
+        if (filterButtons) {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            const allButton = roleFilterButtonsContainer?.querySelector('[data-role="All"]');
+            if(allButton) allButton.classList.add('active');
+        }
+        if (newPriorityFilterButton) {
+            newPriorityFilterButton.setAttribute('aria-pressed', 'false');
+        }
+
+        // Обновляем UI
+        resetTimerDisplay(); // Сброс таймера
+        displayGloballyBanned(); // Очистка глобальных банов
+        updateChampionAvailability(); // Обновление доступности чемпионов
+        filterChampions(); // Применение сброшенных фильтров
+        updateDraftUI(); // Обновление общего состояния UI
+        updateUIText(currentLanguage); // Обновление текстов (на всякий случай)
+        showStatusMessage("resetFullComplete", 2000);
+    }
+
+    /**
+     * Сбрасывает только текущую игру (пики, баны, историю), сохраняя ники и глобальные баны.
+     * Используется кнопкой "Очистить".
+     * @param {boolean} [force=false] - Сбросить без подтверждения (если драфт идет).
+     * @param {boolean} [keepGlobal=true] - Сохранять ли глобальные баны (обычно true для этой кнопки).
+     */
+    function resetCurrentGamePicksBans(force = false, keepGlobal = true) {
+        console.log("--- resetCurrentGamePicksBans ---", { force, keepGlobal });
+        if (!hasPermission('clearDraft')) {
+            showStatusMessage("permDeniedClear", 2000);
+            return;
+        }
+
+        const isStarted = getLobbyItem('isDraftStarted', false);
+        const isComplete = getLobbyItem('isDraftComplete', false);
+
+        // Запрашиваем подтверждение, только если драфт активно идет
+        if (!force && isStarted && !isComplete) {
+            const confirmationMessage = translations[currentLanguage].resetCurrentConfirmation;
+            if (!confirm(confirmationMessage)) {
+                console.log("Clear current game cancelled by user.");
+                return;
+            }
+        }
+        console.log(`Resetting CURRENT GAME state for lobby: ${currentLobbyId}, KeepGlobal: ${keepGlobal}`);
+
+        stopTimer(); // Останавливаем таймер
+
+        // 1. Сохраняем никнеймы перед очисткой
+        const currentNicknames = getLobbyItem('pickNicknames', {});
+        console.log("Nicknames read before clearing slots:", currentNicknames);
+
+        // 2. Сбрасываем состояние текущего драфта
+        setLobbyItem('currentStep', 0);
+        setLobbyItem('draftHistory', []);
+        // НЕ сбрасываем 'pickNicknames'
+        setLobbyItem('isDraftComplete', false);
+        setLobbyItem('isDraftStarted', false); // Останавливаем драфт
+        setLobbyItem('previewedChampionId', null);
+        setLobbyItem('previewedSlotId', null);
+        setLobbyItem('timerSeconds', getLobbyItem('draftTimerDuration', 30)); // Сброс времени таймера
+
+        // 3. Обрабатываем selectedChampions и глобальные баны
+        let currentSelected = new Set();
+        if (keepGlobal) {
+            const currentGlobalDisabled = getLobbyItem('globallyDisabledChampions', new Set());
+            currentGlobalDisabled.forEach(id => currentSelected.add(id));
+            console.log("Keeping global bans.");
+            // Не трогаем 'globallyDisabledChampions' и 'globalBanHistory'
+        } else {
+             // Этот блок не должен выполняться для кнопки "Очистить", но полезен для полного сброса
+             setLobbyItem('globallyDisabledChampions', new Set());
+             setLobbyItem('globalBanHistory', []);
+             console.log("Global bans cleared for lobby.");
+        }
+        // Сохраняем только глобально забаненных (если keepGlobal=true)
+        setLobbyItem('selectedChampions', currentSelected);
+
+        // 4. Очищаем слоты в UI, сохраняя никнеймы
+        console.log("Clearing UI slots, preserving nicknames...");
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach((slot) => {
+            restoreSlotPlaceholder(slot, slot.id, currentNicknames[slot.id] || ''); // Восстанавливаем с сохраненным ником
+        });
+        console.log("Finished slot clearing loop.");
+
+        // 5. Обновляем UI
+        resetTimerDisplay(); // Обновляем таймер
+        displayGloballyBanned(); // Обновляем показ глобальных банов
+        updateChampionAvailability(); // Обновляем доступность чемпионов
+        filterChampions(); // Применяем фильтры
+        updateDraftUI(); // Обновляем общее состояние UI
+
+        showStatusMessage("resetCurrentGameKeptInfo", 2500); // Сообщение о сохранении ников/глоб. банов
+    }
+
+    // --- НОВАЯ ЧАСТЬ: Отображение глобальных банов ---
+
+    /**
+     * Отображает иконки глобально забаненных чемпионов.
+     */
+    function displayGloballyBanned() {
+        if (!globalBansBlueContainer || !globalBansRedContainer || !globallyBannedDisplay || !currentLobbyId) {
+             console.warn("Cannot display global bans: elements not found or lobbyId missing.");
+             return;
+        }
+        globalBansBlueContainer.innerHTML = ''; // Очищаем контейнеры
+        globalBansRedContainer.innerHTML = '';
+
+        const lobbyGlobalHistory = getLobbyItem('globalBanHistory', []); // Получаем историю глоб. банов
+
+        if (lobbyGlobalHistory.length > 0) {
+            globallyBannedDisplay.classList.remove('hidden'); // Показываем блок
+            const blueFragment = document.createDocumentFragment();
+            const redFragment = document.createDocumentFragment();
+
+            lobbyGlobalHistory.forEach(banInfo => {
+                const champ = getChampionById(banInfo.championId);
+                if (champ) {
+                    const iconDiv = document.createElement('div');
+                    iconDiv.className = 'global-ban-icon'; // Класс для стилизации
+
+                    // Формируем title (всплывающую подсказку)
+                    const banTeamText = banInfo.team === 'blue'
+                        ? translations[currentLanguage].globalBanTeamBlue
+                        : translations[currentLanguage].globalBanTeamRed;
+                    const titleText = translations[currentLanguage].globalBanTitle
+                        .replace('{name}', champ.name[currentLanguage])
+                        .replace('{team}', banTeamText);
+                    iconDiv.title = titleText;
+                    iconDiv.setAttribute('aria-label', titleText); // Для доступности
+
+                    // Добавляем изображение
+                    const img = document.createElement('img');
+                    img.src = champ.iconUrl;
+                    img.alt = ""; // Alt не нужен, есть aria-label
+                    img.loading = 'lazy';
+                    img.onerror = () => { // Обработчик ошибки загрузки
+                        img.remove(); // Удаляем сломанное изображение
+                        iconDiv.textContent = 'X'; // Показываем 'X' вместо иконки
+                        iconDiv.style.fontSize = '20px';
+                        iconDiv.style.textAlign = 'center';
+                        iconDiv.style.lineHeight = 'var(--global-ban-icon-size)';
+                    };
+                    iconDiv.appendChild(img);
+
+                    // Добавляем в нужный фрагмент
+                    if (banInfo.team === 'blue') {
+                        blueFragment.appendChild(iconDiv);
+                    } else {
+                        redFragment.appendChild(iconDiv);
+                    }
+                } else {
+                    console.warn(`Global ban display: Champion not found for ID ${banInfo.championId}`);
+                }
+            });
+            // Вставляем фрагменты в DOM
+            globalBansBlueContainer.appendChild(blueFragment);
+            globalBansRedContainer.appendChild(redFragment);
+        } else {
+            globallyBannedDisplay.classList.add('hidden'); // Скрываем блок, если банов нет
+        }
+    }
+
+
+    // --- Заглушки для функций, которые будут реализованы позже ---
     function handleSwapTeams() { console.warn("handleSwapTeams() not implemented yet."); }
-    function handleToggleTimer() { console.warn("handleToggleTimer() not implemented yet."); }
-    function handleConfirmPickBan() { console.warn("handleConfirmPickBan() not implemented yet."); }
     function handleNextDraft() { console.warn("handleNextDraft() not implemented yet."); }
     function handlePickContainerClick(event) { console.warn("handlePickContainerClick() not implemented yet."); }
-    function stopTimer() { console.warn("stopTimer() not implemented yet."); }
+    function deselectSwapSlots() { console.warn("deselectSwapSlots() not implemented yet."); if (selectedSwapSlotId) { const prevSelected = document.getElementById(selectedSwapSlotId); if (prevSelected) { prevSelected.classList.remove('swap-selected'); } selectedSwapSlotId = null; } }
     function isAdminOrJudge() { return currentUserRole === 'admin' || currentUserRole === 'judge'; } // Простая проверка
 
 
