@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Глобальные константы и переменные ---
 
-    // Переводы (структура сохранена, для краткости сами тексты опущены, но они должны быть здесь)
+    // Переводы (структура сохранена)
     const translations = {
         ru: {
             homeTitle: "LoL and Wild Rift Drafter",
@@ -250,8 +250,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Список приоритетных чемпионов
     const priorityChampions = new Set(['Aatrox', 'Ahri', 'Akali', 'Akshan', 'Alistar', 'Amumu', 'Annie', 'Ashe', 'AurelionSol', 'Blitzcrank', 'Brand', 'Braum', 'Caitlyn', 'Camille', 'Corki', 'Darius', 'Diana', 'DrMundo', 'Draven', 'Ekko', 'Evelynn', 'Ezreal', 'Fiddlesticks', 'Fiora', 'Fizz', 'Galio', 'Garen', 'Gnar', 'Gragas', 'Graves', 'Gwen', 'Hecarim', 'Heimerdinger', 'Irelia', 'Janna', 'JarvanIV', 'Jax', 'Jayce', 'Jhin', 'Jinx', 'Kaisa', 'Kalista', 'Karma', 'Kassadin', 'Katarina', 'Kayle', 'Kayn', 'Kennen', 'Khazix', 'Kindred', 'LeeSin', 'Leona', 'Lillia', 'Lissandra', 'Lucian', 'Lulu', 'Lux', 'Malphite', 'Maokai', 'MasterYi', 'Milio', 'MissFortune', 'Mordekaiser', 'Morgana', 'Nami', 'Nasus', 'Nautilus', 'Nilah', 'Nunu', 'Olaf', 'Orianna', 'Ornn', 'Pantheon', 'Poppy', 'Pyke', 'Rakan', 'Rammus', 'Renekton', 'Rengar', 'Riven', 'Rumble', 'Samira', 'Senna', 'Seraphine', 'Sett', 'Shen', 'Shyvana', 'Singed', 'Sion', 'Sivir', 'Sona', 'Soraka', 'Swain', 'Syndra', 'Talon', 'Teemo', 'Thresh', 'Tristana', 'Tryndamere', 'TwistedFate', 'Twitch', 'Urgot', 'Varus', 'Vayne', 'Veigar', 'Vex', 'Vi', 'Viego', 'Viktor', 'Vladimir', 'Volibear', 'Warwick', 'MonkeyKing', 'Xayah', 'XinZhao', 'Yasuo', 'Yone', 'Yuumi', 'Zac', 'Zed', 'Zeri', 'Ziggs', 'Zoe', 'Zyra', 'Ryze', 'Nocturne', 'Zilean', 'Renata', 'Belveth', 'Naafiri', 'Briar', 'Hwei', 'Smolder']);
 
-    // Карта ролей чемпионов (можно вынести в отдельный файл/конфиг)
-    const championRolesMap = { /* ... скопируйте сюда championRolesMap из вашего оригинального script.js ... */
+    // Карта ролей чемпионов
+    const championRolesMap = {
         'Aatrox': ['Top'], 'Ahri': ['Mid'], 'Akali': ['Mid', 'Top'], 'Akshan': ['Mid', 'Top'], 'Alistar': ['Support'], 'Amumu': ['Jungle', 'Support'], 'Anivia': ['Mid'], 'Annie': ['Mid', 'Support'], 'Aphelios': ['ADC'], 'Ashe': ['ADC', 'Support'], 'AurelionSol': ['Mid'], 'Azir': ['Mid'], 'Bard': ['Support'], 'Belveth': ['Jungle'], 'Blitzcrank': ['Support'], 'Brand': ['Support', 'Mid', 'Jungle'], 'Braum': ['Support'], 'Briar': ['Jungle'], 'Caitlyn': ['ADC'], 'Camille': ['Top'], 'Cassiopeia': ['Top', 'Mid'], 'Chogath': ['Top', 'Mid'], 'Corki': ['Mid', 'ADC'], 'Darius': ['Top', 'Jungle'], 'Diana': ['Jungle', 'Mid'], 'DrMundo': ['Top', 'Jungle'], 'Draven': ['ADC'], 'Ekko': ['Jungle', 'Mid'], 'Elise': ['Jungle'], 'Evelynn': ['Jungle'], 'Ezreal': ['ADC'], 'Fiddlesticks': ['Jungle'], 'Fiora': ['Top'], 'Fizz': ['Mid'], 'Galio': ['Mid', 'Support'], 'Gangplank': ['Top'], 'Garen': ['Top'], 'Gnar': ['Top'], 'Gragas': ['Jungle', 'Top', 'Mid', 'Support'], 'Graves': ['Jungle'], 'Gwen': ['Top', 'Jungle'], 'Hecarim': ['Jungle'], 'Heimerdinger': ['Top', 'Mid', 'Support'], 'Hwei': ['Mid', 'Support'], 'Illaoi': ['Top'], 'Irelia': ['Top', 'Mid'], 'Ivern': ['Jungle', 'Support'], 'Janna': ['Support'], 'JarvanIV': ['Jungle'], 'Jax': ['Top', 'Jungle'], 'Jayce': ['Top', 'Mid'], 'Jhin': ['ADC'], 'Jinx': ['ADC'], 'Kaisa': ['ADC'], 'Kalista': ['ADC'], 'Karma': ['Support', 'Mid'], 'Karthus': ['Jungle', 'Mid'], 'Kassadin': ['Mid'], 'Katarina': ['Mid'], 'Kayle': ['Top', 'Mid'], 'Kayn': ['Jungle'], 'Kennen': ['Top', 'Mid'], 'Khazix': ['Jungle'], 'Kindred': ['Jungle'], 'Kled': ['Top', 'Mid'], 'KogMaw': ['ADC'], 'KSante': ['Top'], 'Leblanc': ['Mid'], 'LeeSin': ['Jungle'], 'Leona': ['Support'], 'Lillia': ['Jungle'], 'Lissandra': ['Mid'], 'Lucian': ['ADC'], 'Lulu': ['Support'], 'Lux': ['Mid', 'Support'], 'Malphite': ['Top', 'Support', 'Mid'], 'Malzahar': ['Mid'], 'Maokai': ['Jungle', 'Support'], 'MasterYi': ['Jungle'], 'Milio': ['Support'], 'MissFortune': ['ADC'], 'Mordekaiser': ['Top', 'Jungle'], 'Morgana': ['Support', 'Mid', 'Jungle'], 'Naafiri': ['Jungle', 'Mid'], 'Nami': ['Support'], 'Nasus': ['Top'], 'Nautilus': ['Support'], 'Neeko': ['Mid', 'Support'], 'Nidalee': ['Jungle'], 'Nilah': ['ADC'], 'Nocturne': ['Jungle'], 'Nunu': ['Jungle'], 'Olaf': ['Top', 'Jungle'], 'Orianna': ['Mid'], 'Ornn': ['Top'], 'Pantheon': ['Top', 'Mid', 'Support', 'Jungle'], 'Poppy': ['Top', 'Jungle', 'Support'], 'Pyke': ['Support', 'Mid'], 'Qiyana': ['Jungle', 'Mid'], 'Quinn': ['Top', 'Mid'], 'Rakan': ['Support'], 'Rammus': ['Jungle'], 'RekSai': ['Jungle'], 'Rell': ['Support', 'Jungle'], 'Renata': ['Support'], 'Renekton': ['Top'], 'Rengar': ['Jungle', 'Top'], 'Riven': ['Top'], 'Rumble': ['Top', 'Mid', 'Jungle'], 'Ryze': ['Top', 'Mid'], 'Samira': ['ADC'], 'Sejuani': ['Jungle'], 'Senna': ['Support', 'ADC'], 'Seraphine': ['Support', 'Mid', 'ADC'], 'Sett': ['Top', 'Support'], 'Shaco': ['Jungle', 'Support'], 'Shen': ['Top', 'Support'], 'Shyvana': ['Jungle'], 'Singed': ['Top'], 'Sion': ['Top', 'Mid'], 'Sivir': ['ADC'], 'Skarner': ['Jungle', 'Top'], 'Smolder': ['ADC', 'Mid'], 'Sona': ['Support'], 'Soraka': ['Support'], 'Swain': ['Support', 'Mid', 'ADC'], 'Sylas': ['Mid', 'Jungle'], 'Syndra': ['Mid'], 'TahmKench': ['Top', 'Support'], 'Taliyah': ['Jungle', 'Mid'], 'Talon': ['Jungle', 'Mid'], 'Taric': ['Support'], 'Teemo': ['Top'], 'Thresh': ['Support'], 'Tristana': ['ADC', 'Mid'], 'Trundle': ['Top', 'Jungle'], 'Tryndamere': ['Top'], 'TwistedFate': ['Mid', 'ADC'], 'Twitch': ['ADC', 'Jungle'], 'Udyr': ['Jungle', 'Top'], 'Urgot': ['Top'], 'Varus': ['ADC', 'Mid'], 'Vayne': ['ADC', 'Top'], 'Veigar': ['Mid', 'ADC', 'Support'], 'Velkoz': ['Mid', 'Support'], 'Vex': ['Mid'], 'Vi': ['Jungle'], 'Viego': ['Jungle'], 'Viktor': ['Mid'], 'Vladimir': ['Top', 'Mid'], 'Volibear': ['Top', 'Jungle'], 'Warwick': ['Jungle', 'Top'], 'MonkeyKing': ['Top', 'Jungle'], 'Xayah': ['ADC'], 'Xerath': ['Mid', 'Support'], 'XinZhao': ['Jungle'], 'Yasuo': ['Mid', 'Top', 'ADC'], 'Yone': ['Top', 'Mid'], 'Yorick': ['Top', 'Jungle'], 'Yuumi': ['Support'], 'Zac': ['Jungle'], 'Zed': ['Mid', 'Jungle'], 'Zeri': ['ADC'], 'Ziggs': ['Mid', 'ADC', 'Support'], 'Zilean': ['Support', 'Mid'], 'Zoe': ['Mid', 'Support'], 'Zyra': ['Support', 'Jungle', 'Mid']
     };
 
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let statusTimeout = null;
     let timerInterval = null;
     let selectedSwapSlotId = null;
-    let tooltipTimeout = null; // Таймаут для тултипа
+    let tooltipTimeout = null;
 
     // Глобальные данные о чемпионах
     let allChampionsData = { en: null, ru: null };
@@ -361,26 +361,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!currentUserRole || !currentLobbyId) throw new Error(`Invalid state: Role (${currentUserRole}) or Lobby ID (${currentLobbyId}) not set.`);
             if (!checkDraftElements()) throw new Error("One or more draft page elements were not found during initialization!");
 
-            updateUIText(currentLanguage); // Обновить текст индикатора загрузки
+            updateUIText(currentLanguage);
 
-            // Загружаем данные чемпионов, ТОЛЬКО если их еще нет
             if (processedChampions.length === 0) {
-                const dataLoaded = await loadChampionData(); // РЕАЛИЗОВАНО НИЖЕ
+                const dataLoaded = await loadChampionData();
                 if (!dataLoaded) throw new Error("Failed to load champion data.");
             } else {
                  console.log("Champion data already loaded.");
             }
 
             console.log("Champion data loaded/verified. Initializing UI...");
-            displayChampions(); // РЕАЛИЗОВАНО НИЖЕ
-            restoreDraftStateFromStorage(); // Заглушка
+            displayChampions();
+            restoreDraftStateFromStorage(); // РЕАЛИЗОВАНО НИЖЕ
             const lobbyTeam1Key = `${currentLobbyId}_team1Name`;
             const lobbyTeam2Key = `${currentLobbyId}_team2Name`;
             if (blueTeamNameH2) blueTeamNameH2.textContent = localStorage.getItem(lobbyTeam1Key) || translations[currentLanguage].blueTeamDefaultName;
             if (redTeamNameH2) redTeamNameH2.textContent = localStorage.getItem(lobbyTeam2Key) || translations[currentLanguage].redTeamDefaultName;
-            applyRolePermissions(currentUserRole); // Заглушка
-            addDraftEventListeners(); // Заглушка
-            updateDraftUI(); // Заглушка
+            applyRolePermissions(currentUserRole); // РЕАЛИЗОВАНО НИЖЕ
+            addDraftEventListeners(); // РЕАЛИЗОВАНО НИЖЕ
+            updateDraftUI(); // РЕАЛИЗОВАНО НИЖЕ
 
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (mainLayout) mainLayout.classList.remove('hidden');
@@ -436,271 +435,772 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
     }
 
-    // --- НОВАЯ ЧАСТЬ: Загрузка данных чемпионов ---
-
-    /**
-     * Загружает данные о чемпионах с Riot Data Dragon API.
-     * Получает последнюю версию, затем данные на английском и русском языках.
-     * Обрабатывает данные и сохраняет в processedChampions.
-     * @returns {Promise<boolean>} - true в случае успеха, false в случае ошибки.
-     */
+    // --- Загрузка данных чемпионов ---
     async function loadChampionData() {
         console.log("Loading champion data from DDragon...");
-        // Предотвращаем повторную загрузку, если данные уже есть
         if (processedChampions.length > 0) {
             console.log("Champion data already loaded.");
             return true;
         }
         try {
-            // 1. Получаем последнюю версию DDragon
             const versionsResponse = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
-            if (!versionsResponse.ok) {
-                throw new Error(translations[currentLanguage].errorLoadingVersions.replace('{status}', versionsResponse.statusText));
-            }
+            if (!versionsResponse.ok) throw new Error(translations[currentLanguage].errorLoadingVersions.replace('{status}', versionsResponse.statusText));
             const versions = await versionsResponse.json();
-            ddragonVersion = versions[0]; // Берем самую свежую версию
+            ddragonVersion = versions[0];
             console.log(`Using DDragon version: ${ddragonVersion}`);
-
-            // Формируем базовые URL для иконок и сплеш-артов
             baseIconUrl = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/`;
             baseSplashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/`;
-
-            // 2. Формируем URL для данных на разных языках
             const dataUrlEn = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`;
             const dataUrlRu = `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/ru_RU/champion.json`;
-
-            // 3. Загружаем данные параллельно
-            const [enResponse, ruResponse] = await Promise.all([
-                fetch(dataUrlEn),
-                fetch(dataUrlRu)
-            ]);
-
-            // 4. Обрабатываем ответ en_US (обязательный)
-            if (!enResponse.ok) {
-                throw new Error(translations[currentLanguage].errorLoadingDataEN.replace('{status}', enResponse.statusText));
-            }
+            const [enResponse, ruResponse] = await Promise.all([fetch(dataUrlEn), fetch(dataUrlRu)]);
+            if (!enResponse.ok) throw new Error(translations[currentLanguage].errorLoadingDataEN.replace('{status}', enResponse.statusText));
             allChampionsData.en = (await enResponse.json()).data;
-
-            // 5. Обрабатываем ответ ru_RU (опциональный, с fallback на en_US)
             if (!ruResponse.ok) {
                 console.warn(translations[currentLanguage].errorLoadingDataRU.replace('{status}', ruResponse.statusText));
                 showStatusMessage("errorLoadingDataRU", 4000, { status: ruResponse.statusText });
-                allChampionsData.ru = null; // Используем null как флаг отсутствия русских данных
+                allChampionsData.ru = null;
             } else {
                 allChampionsData.ru = (await ruResponse.json()).data;
             }
-
-            // 6. Обрабатываем и объединяем данные
             processedChampions = Object.keys(allChampionsData.en).map(champId => {
                 const enData = allChampionsData.en[champId];
-                // Если русские данные есть и содержат этого чемпиона, используем их, иначе - английские
                 const ruData = allChampionsData.ru?.[champId] || enData;
-                return {
-                    id: enData.id, // ID чемпиона (например, "Aatrox")
-                    key: enData.key, // Числовой ключ чемпиона (например, "266")
-                    name: { // Имена на разных языках
-                        en: enData.name,
-                        ru: ruData.name
-                    },
-                    title: { // Титулы на разных языках
-                        en: enData.title,
-                        ru: ruData.title
-                    },
-                    roles: championRolesMap[enData.id] || [], // Роли из нашей карты
-                    iconUrl: `${baseIconUrl}${enData.image.full}`, // URL иконки
-                    splashUrl: `${baseSplashUrl}${enData.id}_0.jpg` // URL сплеш-арта (основного)
-                };
+                return { id: enData.id, key: enData.key, name: { en: enData.name, ru: ruData.name }, title: { en: enData.title, ru: ruData.title }, roles: championRolesMap[enData.id] || [], iconUrl: `${baseIconUrl}${enData.image.full}`, splashUrl: `${baseSplashUrl}${enData.id}_0.jpg` };
             });
-
-            // 7. Сортируем чемпионов по имени на текущем языке
             processedChampions.sort((a, b) => a.name[currentLanguage].localeCompare(b.name[currentLanguage], currentLanguage));
-
             console.log(`Successfully loaded and processed ${processedChampions.length} champions.`);
-            return true; // Успех
-
+            return true;
         } catch (error) {
             console.error("Error loading champion data:", error);
             showStatusMessage("errorLoadingChampions", 5000, { error: error.message });
-            // Очищаем массив, если загрузка не удалась
             processedChampions = [];
             allChampionsData = { en: null, ru: null };
-            return false; // Ошибка
+            return false;
         }
     }
 
-    // --- НОВАЯ ЧАСТЬ: Отображение чемпионов и Тултипы ---
-
-    /**
-     * Создает HTML-элемент (кнопку) для карточки чемпиона.
-     * @param {object} champ - Объект с данными чемпиона из processedChampions.
-     * @returns {HTMLButtonElement} - Готовый DOM-элемент карточки.
-     */
+    // --- Отображение чемпионов и Тултипы ---
     function createChampionCard(champ) {
         const card = document.createElement('button');
-        card.className = 'champion-card'; // Класс для стилизации
-        card.dataset.championId = champ.id; // Сохраняем ID в data-атрибуте
-        // Сохраняем имена для поиска (в нижнем регистре)
+        card.className = 'champion-card';
+        card.dataset.championId = champ.id;
         card.dataset.championNameEn = champ.name.en.toLowerCase();
         card.dataset.championNameRu = champ.name.ru.toLowerCase();
-        card.dataset.roles = champ.roles.join(','); // Сохраняем роли через запятую
-        card.setAttribute('role', 'gridcell'); // Роль для доступности
-        card.setAttribute('aria-label', champ.name[currentLanguage]); // Имя для скринридеров
-
-        // Изображение чемпиона
+        card.dataset.roles = champ.roles.join(',');
+        card.setAttribute('role', 'gridcell');
+        card.setAttribute('aria-label', champ.name[currentLanguage]);
         const img = document.createElement('img');
         img.src = champ.iconUrl;
-        img.alt = ""; // Альтернативный текст не нужен, т.к. есть aria-label у кнопки
-        img.className = 'w-full h-full object-cover block pointer-events-none'; // Стили Tailwind + запрет событий мыши
-        img.loading = 'lazy'; // Ленивая загрузка изображений
-
-        // Обработчик ошибки загрузки изображения
-        img.onerror = () => {
-            console.warn(`Failed to load image for ${champ.id}`);
-            // Можно показать плейсхолдер или текст ошибки
-            card.innerHTML = `<span class="text-xs text-red-500">Err</span>`;
-            card.setAttribute('aria-label', `${champ.name[currentLanguage]} (Ошибка загрузки изображения)`);
-        };
+        img.alt = "";
+        img.className = 'w-full h-full object-cover block pointer-events-none';
+        img.loading = 'lazy';
+        img.onerror = () => { console.warn(`Failed to load image for ${champ.id}`); card.innerHTML = `<span class="text-xs text-red-500">Err</span>`; card.setAttribute('aria-label', `${champ.name[currentLanguage]} (Ошибка загрузки изображения)`); };
         card.appendChild(img);
-
-        // Добавляем слушатели событий
-        card.addEventListener('click', () => handleChampionPreview(champ)); // Клик для предпросмотра (будет позже)
-        card.addEventListener('mouseover', (event) => showChampionTooltip(event, champ)); // Показать тултип при наведении
-        card.addEventListener('mouseout', hideChampionTooltip); // Скрыть тултип при уходе мыши
-        card.addEventListener('focus', (event) => showChampionTooltip(event, champ)); // Показать тултип при фокусе (клавиатура)
-        card.addEventListener('blur', hideChampionTooltip); // Скрыть тултип при потере фокуса
-
+        card.addEventListener('click', () => handleChampionPreview(champ)); // РЕАЛИЗОВАНО НИЖЕ
+        card.addEventListener('mouseover', (event) => showChampionTooltip(event, champ));
+        card.addEventListener('mouseout', hideChampionTooltip);
+        card.addEventListener('focus', (event) => showChampionTooltip(event, champ));
+        card.addEventListener('blur', hideChampionTooltip);
         return card;
     }
-
-    /**
-     * Отображает карточки чемпионов в сетке (#championGrid).
-     * Очищает сетку и заполняет ее заново созданными карточками.
-     */
     function displayChampions() {
-        if (!championGridElement) {
-            console.error("displayChampions: championGridElement not found");
-            return;
-        }
+        if (!championGridElement) { console.error("displayChampions: championGridElement not found"); return; }
         console.log(`Displaying ${processedChampions.length} champions...`);
-
-        // Используем DocumentFragment для оптимизации добавления в DOM
         const fragment = document.createDocumentFragment();
-
-        // Сортируем перед отображением (на случай, если язык изменился)
         processedChampions.sort((a, b) => a.name[currentLanguage].localeCompare(b.name[currentLanguage], currentLanguage));
-
-        // Создаем и добавляем карточку для каждого чемпиона
-        processedChampions.forEach(champ => {
-            fragment.appendChild(createChampionCard(champ));
-        });
-
-        // Очищаем сетку и вставляем все карточки разом
+        processedChampions.forEach(champ => { fragment.appendChild(createChampionCard(champ)); });
         championGridElement.innerHTML = '';
         championGridElement.appendChild(fragment);
-
-        // Применяем текущие фильтры после отображения
-        filterChampions(); // Функция будет добавлена позже
-        updateChampionAvailability(); // Функция будет добавлена позже
+        filterChampions(); // РЕАЛИЗОВАНО НИЖЕ
+        updateChampionAvailability(); // РЕАЛИЗОВАНО НИЖЕ
     }
+    function showChampionTooltip(event, champion) { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { if (!championTooltip || !champion) return; championTooltip.innerHTML = `<strong class="tooltip-title">${champion.name[currentLanguage]}</strong><span class="tooltip-name">${champion.title[currentLanguage]}</span>`; championTooltip.style.visibility = 'hidden'; championTooltip.style.display = 'block'; const tooltipRect = championTooltip.getBoundingClientRect(); championTooltip.style.visibility = ''; championTooltip.style.display = ''; const targetRect = event.target.getBoundingClientRect(); let top = targetRect.top - tooltipRect.height - 8; let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2); if (top < 0) top = targetRect.bottom + 8; if (left < 0) left = 5; else if (left + tooltipRect.width > window.innerWidth) left = window.innerWidth - tooltipRect.width - 5; championTooltip.style.left = `${left}px`; championTooltip.style.top = `${top}px`; championTooltip.classList.add('visible'); }, 100); }
+    function hideChampionTooltip() { clearTimeout(tooltipTimeout); if (championTooltip) { championTooltip.classList.remove('visible'); } }
+
+
+    // --- НОВАЯ ЧАСТЬ: Восстановление состояния, Права, Слушатели драфта, Обновление UI ---
 
     /**
-     * Показывает всплывающую подсказку с информацией о чемпионе.
-     * @param {MouseEvent | FocusEvent} event - Событие (для получения координат).
-     * @param {object} champion - Объект чемпиона.
+     * Восстанавливает состояние драфта из localStorage при загрузке страницы драфта.
      */
-    function showChampionTooltip(event, champion) {
-        clearTimeout(tooltipTimeout); // Отменяем предыдущий таймаут (если есть)
-        // Небольшая задержка перед показом
-        tooltipTimeout = setTimeout(() => {
-            if (!championTooltip || !champion) return;
+    function restoreDraftStateFromStorage() {
+        if (!currentLobbyId) return;
+        console.log(`Restoring state for lobby: ${currentLobbyId}`);
 
-            // Заполняем тултип данными
-            championTooltip.innerHTML = `
-                <strong class="tooltip-title">${champion.name[currentLanguage]}</strong>
-                <span class="tooltip-name">${champion.title[currentLanguage]}</span>
-            `;
+        // Получаем сохраненные значения или дефолтные
+        const loadedStep = getLobbyItem('currentStep', 0);
+        const loadedIsStarted = getLobbyItem('isDraftStarted', false);
+        const loadedIsComplete = getLobbyItem('isDraftComplete', false);
+        const loadedTimerDuration = getLobbyItem('draftTimerDuration', 30);
+        const loadedTimerSeconds = getLobbyItem('timerSeconds', loadedTimerDuration);
+        const loadedRoleFilter = getLobbyItem('currentRoleFilter', 'All');
+        const loadedPriorityFilter = getLobbyItem('isPriorityFilterActive', false);
+        const loadedBlueScore = getLobbyItem('blueScore', '');
+        const loadedRedScore = getLobbyItem('redScore', '');
+        const loadedSelectedChamps = getLobbyItem('selectedChampions', new Set()); // Теперь Set по умолчанию
+        const loadedDraftHistory = getLobbyItem('draftHistory', []);
+        const loadedPickNicknames = getLobbyItem('pickNicknames', {});
+        const loadedGloballyDisabled = getLobbyItem('globallyDisabledChampions', new Set()); // Теперь Set по умолчанию
+        const loadedGlobalBanHistory = getLobbyItem('globalBanHistory', []);
+        const loadedPreviewedChampionId = getLobbyItem('previewedChampionId', null);
 
-            // Позиционируем тултип относительно курсора/элемента
-            // Сначала делаем невидимым, чтобы измерить размеры
-            championTooltip.style.visibility = 'hidden';
-            championTooltip.style.display = 'block';
-            const tooltipRect = championTooltip.getBoundingClientRect();
-            championTooltip.style.visibility = ''; // Возвращаем видимость
-            championTooltip.style.display = '';
+        // Очищаем все слоты перед восстановлением
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach(slot => {
+            restoreSlotPlaceholder(slot, slot.id, ''); // Очистка с сохранением структуры ника
+        });
 
-            const targetRect = event.target.getBoundingClientRect();
-            let top = targetRect.top - tooltipRect.height - 8; // По умолчанию над элементом
-            let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2); // По центру элемента
-
-            // Корректируем позицию, если тултип выходит за пределы экрана
-            if (top < 0) { // Если не помещается сверху
-                top = targetRect.bottom + 8; // Показываем снизу
+        // Заполняем слоты на основе истории
+        loadedDraftHistory.forEach(action => {
+            const champ = getChampionById(action.championId);
+            const slotElement = document.getElementById(action.slotId);
+            const nickname = loadedPickNicknames[action.slotId] || ''; // Берем ник из сохраненного состояния
+            if (champ && slotElement) {
+                fillSlot(slotElement, champ, action.type, nickname); // Заполняем слот
+            } else {
+                 console.warn(`Could not restore slot ${action.slotId}: Champion ${action.championId} or slot element not found.`);
             }
-            if (left < 0) { // Если уходит влево
-                left = 5;
-            } else if (left + tooltipRect.width > window.innerWidth) { // Если уходит вправо
-                left = window.innerWidth - tooltipRect.width - 5;
-            }
+        });
 
-            championTooltip.style.left = `${left}px`;
-            championTooltip.style.top = `${top}px`;
-            championTooltip.classList.add('visible'); // Показываем тултип
-        }, 100); // Задержка 100 мс
-    }
+        // Восстанавливаем счет
+        if (blueScoreEl) blueScoreEl.textContent = loadedBlueScore;
+        if (redScoreEl) redScoreEl.textContent = loadedRedScore;
 
-    /**
-     * Скрывает всплывающую подсказку.
-     */
-    function hideChampionTooltip() {
-        clearTimeout(tooltipTimeout); // Отменяем таймаут показа
-        if (championTooltip) {
-            championTooltip.classList.remove('visible'); // Скрываем тултип
+        // Восстанавливаем фильтры
+        if (championSearch) championSearch.value = ''; // Очищаем поиск при загрузке
+        setLobbyItem('currentRoleFilter', loadedRoleFilter); // Обновляем состояние фильтра роли
+        if (filterButtons) {
+            filterButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.role === loadedRoleFilter);
+            });
         }
+        setLobbyItem('isPriorityFilterActive', loadedPriorityFilter); // Обновляем состояние фильтра приоритета
+        if (newPriorityFilterButton) {
+            newPriorityFilterButton.setAttribute('aria-pressed', loadedPriorityFilter.toString());
+            // Title кнопки обновится в updateUIText
+        }
+        filterChampions(); // Применяем фильтры
+
+        // Восстанавливаем предпросмотр (если был)
+        setLobbyItem('previewedChampionId', loadedPreviewedChampionId);
+        if (loadedPreviewedChampionId) {
+            const previewChamp = getChampionById(loadedPreviewedChampionId);
+            const draftOrder = getDraftOrder(); // Получаем порядок драфта
+            if (previewChamp && loadedStep < draftOrder.length) {
+                const previewSlotId = draftOrder[loadedStep].slot;
+                setLobbyItem('previewedSlotId', previewSlotId); // Сохраняем слот предпросмотра
+                const previewSlotElement = document.getElementById(previewSlotId);
+                if (previewSlotElement) {
+                    // Заполняем слот для предпросмотра (без сохранения в историю)
+                    const nickname = loadedPickNicknames[previewSlotId] || '';
+                    fillSlot(previewSlotElement, previewChamp, draftOrder[loadedStep].type, nickname);
+                    previewSlotElement.classList.add('preview-flash');
+                }
+            } else {
+                // Сбрасываем предпросмотр, если он невалиден
+                setLobbyItem('previewedChampionId', null);
+                setLobbyItem('previewedSlotId', null);
+            }
+        } else {
+             setLobbyItem('previewedSlotId', null);
+        }
+
+
+        // Восстанавливаем таймер
+        setLobbyItem('draftTimerDuration', loadedTimerDuration);
+        setLobbyItem('timerSeconds', loadedTimerSeconds);
+        resetTimerDisplay(); // Обновляем отображение таймера
+
+        // Отображаем глобальные баны
+        displayGloballyBanned(); // РЕАЛИЗОВАНО НИЖЕ
+
+        console.log(`State restored for lobby ${currentLobbyId}. Step: ${loadedStep}`);
+        // Обновляем весь UI в конце
+        updateDraftUI();
+    }
+
+     /**
+     * Проверяет, имеет ли текущий пользователь разрешение на выполнение действия.
+     * @param {string} action - Название действия (ключ в permissions).
+     * @param {string | null} [team=null] - Команда, к которой относится действие ('blue' или 'red'), если применимо.
+     * @returns {boolean} - true, если разрешение есть, иначе false.
+     */
+     function hasPermission(action, team = null) {
+        const rolePerms = permissions[currentUserRole] || permissions.default;
+        const isAdmin = currentUserRole === 'admin';
+        const hasBasicPermission = isAdmin || rolePerms[action];
+
+        if (!hasBasicPermission) {
+            return false; // Нет базового разрешения
+        }
+
+        // Админ может все
+        if (isAdmin) {
+            return true;
+        }
+
+        // Проверка для командных действий (пик/бан/подтверждение/отмена)
+        if ((action === 'pickChampion' || action === 'banChampion' || action === 'confirmAction' || action === 'undoAction') && team) {
+            // Разрешено, если роль совпадает со стороной команды
+            return userTeamSide === team;
+        }
+
+        // Для остальных действий достаточно базового разрешения
+        return true;
+    }
+
+    /**
+     * Применяет разрешения к элементам UI в зависимости от роли пользователя.
+     * Включает/выключает кнопки, делает поля редактируемыми/нередактируемыми.
+     * @param {string} role - Текущая роль пользователя.
+     */
+    function applyRolePermissions(role) {
+        console.log(`Applying permissions for role: ${role}`);
+        const can = (action, team = null) => hasPermission(action, team); // Удобная обертка
+
+        // Основные кнопки управления
+        if(timerDisplay) timerDisplay.disabled = !can('startDraft');
+        if(resetButton) resetButton.disabled = !can('resetDraft');
+        if(clearPicksButton) clearPicksButton.disabled = !can('clearDraft');
+        if(undoButton) undoButton.disabled = !can('undoAction'); // Доступность undo зависит еще и от истории
+        if(swapButton) swapButton.disabled = !can('swapSides');
+        if(toggleTimerButton) toggleTimerButton.disabled = !can('toggleTimerDuration');
+        if(confirmPickBanButton) confirmPickBanButton.disabled = !can('confirmAction'); // Доступность зависит еще и от предпросмотра
+        if(newPriorityFilterButton) newPriorityFilterButton.disabled = !can('togglePriorityFilter');
+        if(nextDraftButton) nextDraftButton.disabled = !can('nextDraft'); // Доступность зависит еще и от завершения драфта
+        if(returnHomeButton) returnHomeButton.disabled = !can('returnHome');
+
+        // Фильтры
+        if(filterButtons) {
+            filterButtons.forEach(btn => { btn.disabled = !can('useRoleFilters'); });
+        }
+        if(championSearch) championSearch.disabled = !can('useRoleFilters'); // Поиск тоже зависит от прав на фильтры
+
+        // Редактируемые поля
+        if(blueTeamNameH2) blueTeamNameH2.contentEditable = can('editTeamName');
+        if(redTeamNameH2) redTeamNameH2.contentEditable = can('editTeamName');
+        if(blueScoreEl) blueScoreEl.contentEditable = can('editScore');
+        if(redScoreEl) redScoreEl.contentEditable = can('editScore');
+
+        // Блокировка колонок для команд (визуальная)
+        // if (blueColumn) blueColumn.classList.toggle('role-disabled', role === 'team2' || role === 'spectator');
+        // if (redColumn) redColumn.classList.toggle('role-disabled', role === 'team1' || role === 'spectator');
+        // if (role === 'admin' || role === 'judge') { // Админ и судья видят обе колонки активными
+        //     if(blueColumn) blueColumn.classList.remove('role-disabled');
+        //     if(redColumn) redColumn.classList.remove('role-disabled');
+        // }
+        // Перенес логику блокировки колонок в updateDraftUI, т.к. она зависит и от хода драфта
+
+        // Обновляем редактируемость никнеймов
+        updateNicknameEditability();
+    }
+
+    /**
+     * Обновляет атрибут contentEditable у полей для никнеймов.
+     */
+    function updateNicknameEditability() {
+        const canEdit = hasPermission('editNicknames');
+        document.querySelectorAll('.nickname-input').forEach(input => {
+            input.contentEditable = canEdit;
+            input.style.cursor = canEdit ? 'text' : 'default';
+        });
+    }
+
+    /**
+     * Добавляет слушатели событий к элементам управления на странице драфта.
+     * Вызывается один раз при инициализации страницы.
+     */
+    function addDraftEventListeners() {
+        console.log("Attaching draft page event listeners...");
+
+        // Кнопка старта/Таймер
+        if (timerDisplay) timerDisplay.addEventListener('click', handleStartDraft); // Будет реализовано
+        else console.warn("Listener not attached: timerDisplay not found");
+
+        // Кнопка полного сброса
+        if (resetButton) resetButton.addEventListener('click', () => {
+            console.log("Reset button clicked");
+            resetDraftFull(false); // Будет реализовано
+        });
+        else console.warn("Listener not attached: resetButton not found");
+
+        // Кнопка очистки текущей игры
+        if (clearPicksButton) clearPicksButton.addEventListener('click', () => {
+            console.log("Clear Picks button clicked");
+            resetCurrentGamePicksBans(false, true); // Будет реализовано (true - сохранять глоб. баны)
+        });
+        else console.warn("Listener not attached: clearPicksButton not found");
+
+        // Кнопка отмены
+        if (undoButton) undoButton.addEventListener('click', handleUndo); // Будет реализовано
+        else console.warn("Listener not attached: undoButton not found");
+
+        // Кнопка смены сторон
+        if (swapButton) swapButton.addEventListener('click', handleSwapTeams); // Будет реализовано
+        else console.warn("Listener not attached: swapButton not found");
+
+        // Кнопка смены длительности таймера
+        if (toggleTimerButton) toggleTimerButton.addEventListener('click', handleToggleTimer); // Будет реализовано
+        else console.warn("Listener not attached: toggleTimerButton not found");
+
+        // Кнопка подтверждения пика/бана
+        if (confirmPickBanButton) confirmPickBanButton.addEventListener('click', handleConfirmPickBan); // Будет реализовано
+        else console.warn("Listener not attached: confirmPickBanButton not found");
+
+        // Кнопка фильтра приоритета
+        if (newPriorityFilterButton) newPriorityFilterButton.addEventListener('click', handleNewPriorityFilterToggle); // Будет реализовано
+        else console.warn("Listener not attached: newPriorityFilterButton not found");
+
+        // Кнопка следующего драфта
+        if (nextDraftButton) nextDraftButton.addEventListener('click', handleNextDraft); // Будет реализовано
+        else console.warn("Listener not attached: nextDraftButton not found");
+
+        // Поле поиска
+        if (championSearch) championSearch.addEventListener('input', debouncedFilter); // debouncedFilter вызывает filterChampions
+        else console.warn("Listener not attached: championSearch not found");
+
+        // Кнопки фильтра ролей
+        if (filterButtons) {
+            filterButtons.forEach((button) => {
+                if (button) {
+                    button.addEventListener('click', handleRoleFilterClick); // РЕАЛИЗОВАНО НИЖЕ
+                } else {
+                    console.warn(`Listener not attached: a filter button was null`);
+                }
+            });
+        } else { console.warn("Listener not attached: filterButtons collection is null/empty"); }
+
+        // Клики по колонкам (для обмена пиками)
+        if (blueColumn) blueColumn.addEventListener('click', handlePickContainerClick); // Будет реализовано
+        else console.warn("Listener not attached: blueColumn not found");
+        if (redColumn) redColumn.addEventListener('click', handlePickContainerClick); // Будет реализовано
+        else console.warn("Listener not attached: redColumn not found");
+
+        // Кнопка "Домой"
+        if (returnHomeButton) returnHomeButton.addEventListener('click', () => {
+            console.log("Return Home button clicked");
+            navigateTo('home');
+        });
+        else console.warn("Listener not attached: returnHomeButton not found");
+
+        // Слушатели для редактирования имен и счета
+        [blueTeamNameH2, redTeamNameH2, blueScoreEl, redScoreEl].forEach(el => {
+            if (el) {
+                // Сохранение при потере фокуса
+                el.addEventListener('blur', (e) => {
+                    const isName = el.id.includes('name');
+                    const permissionNeeded = isName ? 'editTeamName' : 'editScore';
+                    if (!hasPermission(permissionNeeded)) return; // Проверка прав
+
+                    const newValue = e.target.textContent.trim();
+                    e.target.textContent = newValue; // Обновляем текст в элементе
+
+                    const key = isName
+                        ? (el.id.includes('blue') ? 'team1Name' : 'team2Name')
+                        : (el.id.includes('blue') ? 'blueScore' : 'redScore');
+
+                    if (isName) {
+                        // Имена команд хранятся отдельно от основного состояния лобби
+                        localStorage.setItem(`${currentLobbyId}_${key}`, newValue);
+                    } else {
+                        // Счет хранится как часть состояния лобби
+                        setLobbyItem(key, newValue);
+                    }
+                    console.log(`Saved ${key}: ${newValue}`);
+                });
+                // Сохранение по Enter
+                el.addEventListener('keydown', (e) => {
+                    const permissionNeeded = el.id.includes('name') ? 'editTeamName' : 'editScore';
+                    if (!hasPermission(permissionNeeded)) return; // Проверка прав
+                    if (e.key === 'Enter') {
+                        e.preventDefault(); // Предотвращаем перенос строки
+                        e.target.blur(); // Снимаем фокус, что вызовет событие 'blur' и сохранение
+                    }
+                });
+            } else {
+                console.warn("Listener not attached: An editable H2/Score element was not found");
+            }
+        });
+
+        console.log("Draft page event listeners attached.");
+    }
+
+    /**
+     * Обновляет состояние UI страницы драфта (кнопки, подсветка, блокировки).
+     * Вызывается после каждого изменения состояния драфта.
+     */
+    function updateDraftUI() {
+        if (!isDraftInitialized || !currentLobbyId) {
+             console.warn("updateDraftUI called before draft initialization or without lobbyId.");
+             return;
+        }
+        console.log(`Updating Draft UI for lobby ${currentLobbyId}`);
+
+        // Получаем текущее состояние из localStorage
+        const step = getLobbyItem('currentStep', 0);
+        const isStarted = getLobbyItem('isDraftStarted', false);
+        const isComplete = getLobbyItem('isDraftComplete', false);
+        const history = getLobbyItem('draftHistory', []);
+        const previewId = getLobbyItem('previewedChampionId', null);
+        const previewChamp = previewId ? getChampionById(previewId) : null;
+        const draftOrder = getDraftOrder(); // Получаем порядок действий
+
+        // Сначала применяем общие права доступа для роли
+        applyRolePermissions(currentUserRole);
+
+        // Затем корректируем доступность кнопок в зависимости от состояния драфта
+
+        // Убираем подсветку со всех слотов
+        document.querySelectorAll('.pick-slot, .ban-slot').forEach(el => {
+            el.classList.remove('highlight-action', 'preview-flash', 'swap-selected');
+        });
+
+        let currentActionTeam = null; // Команда, чей ход сейчас
+        let currentActionType = null; // Тип действия (pick/ban)
+        let currentActionSlotId = null; // ID текущего слота
+
+        if (step < draftOrder.length) {
+            const currentAction = draftOrder[step];
+            currentActionTeam = currentAction.team;
+            currentActionType = currentAction.type;
+            currentActionSlotId = currentAction.slot;
+        }
+
+        // --- Управление доступностью кнопок ---
+        const canConfirm = hasPermission('confirmAction', currentActionTeam);
+        if (confirmPickBanButton) confirmPickBanButton.disabled = !canConfirm || !previewChamp || !isStarted || isComplete;
+
+        const lastAction = history[history.length - 1];
+        const canUndo = hasPermission('undoAction', lastAction?.team);
+        if (undoButton) undoButton.disabled = !canUndo || history.length === 0 || !isStarted || isComplete; // Нельзя отменять до старта или после завершения
+
+        const canStart = hasPermission('startDraft');
+        const canClear = hasPermission('clearDraft');
+        const canReset = hasPermission('resetDraft');
+        const canSwap = hasPermission('swapSides');
+        const canToggleTimer = hasPermission('toggleTimerDuration');
+        const canNext = hasPermission('nextDraft');
+        const canUseFilters = hasPermission('useRoleFilters');
+        const canTogglePriority = hasPermission('togglePriorityFilter');
+
+        if(timerDisplay) timerDisplay.disabled = !canStart || isStarted; // Нельзя стартовать, если уже начато
+        if(resetButton) resetButton.disabled = !canReset;
+        if(clearPicksButton) clearPicksButton.disabled = !canClear;
+        if(swapButton) swapButton.disabled = !canSwap || (isStarted && !isComplete); // Нельзя менять во время драфта
+        if(toggleTimerButton) toggleTimerButton.disabled = !canToggleTimer || isStarted; // Нельзя менять во время драфта
+        if(nextDraftButton) nextDraftButton.disabled = !canNext || !isComplete; // Только после завершения
+        if(newPriorityFilterButton) newPriorityFilterButton.disabled = !canTogglePriority || isStarted; // Нельзя менять во время драфта
+        if(filterButtons) filterButtons.forEach(btn => btn.disabled = !canUseFilters || isStarted); // Нельзя менять во время драфта
+        if(championSearch) championSearch.disabled = !canUseFilters || isStarted; // Нельзя менять во время драфта
+
+
+        // --- Управление состоянием UI в зависимости от фазы драфта ---
+
+        if (!isStarted) {
+            // --- Состояние: Драфт не начат ---
+            resetTimerDisplay(); // Сбрасываем таймер
+            if (blueColumn) blueColumn.classList.add('draft-disabled');
+            if (redColumn) redColumn.classList.add('draft-disabled');
+            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Сетка неактивна
+            // Кнопки nextDraft, swap, toggleTimer, priority, filters уже настроены выше
+        } else if (!isComplete) {
+            // --- Состояние: Драфт идет ---
+            if (blueColumn) blueColumn.classList.remove('draft-disabled');
+            if (redColumn) redColumn.classList.remove('draft-disabled');
+
+            // Подсветка активного слота
+            const activeSlotElement = document.getElementById(currentActionSlotId);
+            if (activeSlotElement) {
+                // Подсвечиваем, если админ/судья или если это ход команды пользователя
+                 if (currentUserRole === 'admin' || currentUserRole === 'judge' || userTeamSide === currentActionTeam) {
+                     activeSlotElement.classList.add('highlight-action');
+                 }
+            }
+
+             // Подсветка предпросмотра
+            const previewSlotId = getLobbyItem('previewedSlotId', null);
+            if (previewChamp && previewSlotId === currentActionSlotId) {
+                 const previewSlotElement = document.getElementById(previewSlotId);
+                 if (previewSlotElement) {
+                     previewSlotElement.classList.add('preview-flash');
+                 }
+            }
+
+            // Блокировка сетки для команды, чей не ход
+            const isGridInteractive = hasPermission(currentActionType === 'pick' ? 'pickChampion' : 'banChampion', currentActionTeam);
+            if (championGridElement) {
+                championGridElement.style.pointerEvents = isGridInteractive ? 'auto' : 'none';
+            }
+
+            // Блокировка чужой колонки (визуально)
+            if (blueColumn) blueColumn.classList.toggle('role-disabled', !isAdminOrJudge() && userTeamSide === 'red');
+            if (redColumn) redColumn.classList.toggle('role-disabled', !isAdminOrJudge() && userTeamSide === 'blue');
+
+
+            // Запускаем таймер, если он еще не запущен (например, после отмены)
+            if (!timerInterval && hasPermission('startDraft')) { // Проверяем права на всякий случай
+                // startTimer(); // Функция будет реализована позже
+            }
+
+        } else {
+            // --- Состояние: Драфт завершен ---
+            stopTimer(); // Останавливаем таймер
+            if (timerDisplay) {
+                timerDisplay.textContent = translations[currentLanguage].timerDraftCompleteText;
+                timerDisplay.classList.add('timer-disabled'); // Визуально неактивен
+                timerDisplay.disabled = true; // Функционально неактивен
+                timerDisplay.title = translations[currentLanguage].timerDraftCompleteTitle;
+            }
+            if (blueColumn) blueColumn.classList.remove('draft-disabled', 'role-disabled');
+            if (redColumn) redColumn.classList.remove('draft-disabled', 'role-disabled');
+            if (championGridElement) championGridElement.style.pointerEvents = 'none'; // Сетка неактивна
+
+            // Разрешаем смену сторон и переход к след. драфту (доступность кнопок настроена выше)
+            // Делаем пики кликабельными для обмена
+            document.querySelectorAll('.pick-slot').forEach(slot => {
+                const champId = getSlotChampionId(slot.id); // Функция будет реализована позже
+                const canSwapPicks = canSwap && champId; // Можно менять, если есть чемп и права
+                slot.style.cursor = canSwapPicks ? 'pointer' : 'default';
+                slot.title = canSwapPicks ? translations[currentLanguage].swapPickSelect : '';
+            });
+        }
+
+        // Обновляем доступность чемпионов в сетке (серые/активные)
+        updateChampionAvailability();
+        // Обновляем отображение глобальных банов
+        displayGloballyBanned();
+        // Обновляем редактируемость никнеймов
+        updateNicknameEditability();
+
+        console.log("Draft UI updated.");
+    }
+
+    // --- НОВАЯ ЧАСТЬ: Фильтрация и доступность чемпионов ---
+
+    /**
+     * Фильтрует чемпионов в сетке по поиску, роли и приоритету.
+     */
+    function filterChampions() {
+        if (!isDraftInitialized || !championSearch || !championGridElement) return;
+
+        const searchTerm = championSearch.value.toLowerCase().trim();
+        const roleFilter = getLobbyItem('currentRoleFilter', 'All');
+        const priorityFilterActive = getLobbyItem('isPriorityFilterActive', false);
+
+        console.log(`Filtering champions: Role=${roleFilter}, Priority=${priorityFilterActive}, Search="${searchTerm}"`);
+
+        championGridElement.querySelectorAll('.champion-card').forEach(card => {
+            const champId = card.dataset.championId;
+            const nameEn = card.dataset.championNameEn || '';
+            const nameRu = card.dataset.championNameRu || '';
+            const champRoles = card.dataset.roles ? card.dataset.roles.split(',') : [];
+
+            // Проверка совпадения по поиску (ID или имя на любом языке)
+            const searchMatch = searchTerm === '' ||
+                                nameEn.includes(searchTerm) ||
+                                nameRu.includes(searchTerm) ||
+                                champId.toLowerCase().includes(searchTerm);
+
+            // Проверка совпадения по роли
+            const roleMatch = roleFilter === 'All' || champRoles.includes(roleFilter);
+
+            // Проверка на приоритет
+            const isPriority = priorityChampions.has(champId);
+            const hideByPriorityFilter = priorityFilterActive && !isPriority;
+
+            // Показываем карточку, если все условия выполнены
+            const isVisible = searchMatch && roleMatch && !hideByPriorityFilter;
+            card.style.display = isVisible ? 'flex' : 'none'; // Используем flex для выравнивания контента, если нужно
+        });
+
+        // Обновляем доступность после фильтрации (на всякий случай)
+        updateChampionAvailability();
+    }
+    // Создаем debounced-версию для поля поиска
+    const debouncedFilter = debounce(filterChampions, 250); // Задержка 250 мс
+
+    /**
+     * Обновляет классы 'disabled' и 'selected' у карточек чемпионов
+     * в зависимости от текущего состояния драфта (selectedChampions, globallyDisabledChampions).
+     */
+    function updateChampionAvailability() {
+        if (!isDraftInitialized || !currentLobbyId) return;
+
+        const selectedSet = getLobbyItem('selectedChampions', new Set());
+        const globallyDisabledSet = getLobbyItem('globallyDisabledChampions', new Set());
+        const combinedDisabled = new Set([...selectedSet, ...globallyDisabledSet]);
+
+        document.querySelectorAll('.champion-card').forEach(card => {
+            const champId = card.dataset.championId;
+            const isDisabled = combinedDisabled.has(champId);
+            const isSelected = selectedSet.has(champId); // Отдельно для .selected
+
+            card.classList.toggle('selected', isSelected && !isDisabled); // Выбран, но не глобально забанен
+            card.classList.toggle('disabled', isDisabled); // Любой бан/пик делает неактивным
+            card.disabled = isDisabled; // Блокируем кнопку
+            card.setAttribute('aria-disabled', isDisabled.toString());
+        });
+         console.log("Champion availability updated.");
+    }
+
+    // --- НОВАЯ ЧАСТЬ: Логика действий драфта (Предпросмотр, Фильтры) ---
+
+    /**
+     * Обрабатывает клик по карточке чемпиона в сетке (предпросмотр).
+     * @param {object} champion - Объект выбранного чемпиона.
+     */
+    function handleChampionPreview(champion) {
+        const isStarted = getLobbyItem('isDraftStarted', false);
+        const isComplete = getLobbyItem('isDraftComplete', false);
+        const step = getLobbyItem('currentStep', 0);
+        const draftOrder = getDraftOrder();
+
+        // Нельзя выбирать до старта или после завершения
+        if (!isStarted || isComplete || step >= draftOrder.length) return;
+
+        const currentAction = draftOrder[step];
+        const permissionNeeded = currentAction.type === 'pick' ? 'pickChampion' : 'banChampion';
+        const permKey = currentAction.type === 'pick' ? 'permDeniedPreviewPick' : 'permDeniedPreviewBan';
+
+        // Проверяем права на пик/бан для текущей команды
+        if (!hasPermission(permissionNeeded, currentAction.team)) {
+            showStatusMessage(permKey, 2000);
+            return;
+        }
+
+        // Проверяем, не выбран ли уже или глобально забанен
+        const selectedSet = getLobbyItem('selectedChampions', new Set());
+        const globallyDisabledSet = getLobbyItem('globallyDisabledChampions', new Set());
+        const isDisabled = selectedSet.has(champion.id) || globallyDisabledSet.has(champion.id);
+        if (isDisabled) {
+            showStatusMessage("championAlreadySelected", 2000, { name: champion.name[currentLanguage] });
+            return;
+        }
+
+        // Находим слот для текущего действия
+        const slotElement = document.getElementById(currentAction.slot);
+        if (slotElement) {
+            // Убираем предыдущий предпросмотр
+            document.querySelectorAll('.preview-flash').forEach(el => el.classList.remove('preview-flash'));
+
+            // Сохраняем ID чемпиона и слота для предпросмотра
+            setLobbyItem('previewedChampionId', champion.id);
+            setLobbyItem('previewedSlotId', currentAction.slot);
+
+            // Получаем текущий никнейм из состояния (если есть)
+            const nicknames = getLobbyItem('pickNicknames', {});
+            const existingNickname = nicknames[currentAction.slot] || '';
+
+            // Отображаем чемпиона в слоте
+            fillSlot(slotElement, champion, currentAction.type, existingNickname); // Функция будет реализована позже
+            slotElement.classList.add('preview-flash'); // Добавляем анимацию
+
+            // Обновляем состояние кнопки подтверждения
+            updateDraftUI();
+        } else {
+            console.warn(`Preview failed: Slot element ${currentAction.slot} not found.`);
+        }
+    }
+
+    /**
+    * Обрабатывает клик по кнопке фильтра ролей.
+    * @param {Event} event - Событие клика.
+    */
+    function handleRoleFilterClick(event) {
+        const clickedButton = event.currentTarget;
+        if (!clickedButton || clickedButton.disabled) return; // Игнорируем клики по неактивным кнопкам
+
+        const role = clickedButton.dataset.role;
+        if (!role) return; // Если у кнопки нет data-role
+
+        if (!hasPermission('useRoleFilters')) {
+            showStatusMessage("permDeniedRoleFilter", 2000);
+            return;
+        }
+
+        // Сохраняем выбранный фильтр в localStorage
+        setLobbyItem('currentRoleFilter', role);
+
+        // Обновляем активный класс у кнопок
+        if (filterButtons) {
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            clickedButton.classList.add('active');
+        }
+
+        // Применяем фильтры к сетке чемпионов
+        filterChampions();
+    }
+
+    /**
+     * Обрабатывает клик по кнопке фильтра приоритета.
+     */
+    function handleNewPriorityFilterToggle() {
+        if (!hasPermission('togglePriorityFilter')) {
+            showStatusMessage("permDeniedPriorityFilter", 2000);
+            return;
+        }
+
+        // Инвертируем текущее состояние фильтра
+        let currentPriorityState = getLobbyItem('isPriorityFilterActive', false);
+        currentPriorityState = !currentPriorityState;
+        setLobbyItem('isPriorityFilterActive', currentPriorityState);
+
+        // Обновляем атрибуты кнопки
+        if (newPriorityFilterButton) {
+            newPriorityFilterButton.setAttribute('aria-pressed', currentPriorityState.toString());
+            const titleKey = currentPriorityState ? 'priorityFilterShowAllTitle' : 'priorityFilterShowPriorityTitle';
+            newPriorityFilterButton.title = translations[currentLanguage][titleKey] || titleKey;
+        }
+
+        // Применяем фильтры
+        filterChampions();
+
+        // Показываем сообщение
+        showStatusMessage(currentPriorityState ? "priorityFilterOn" : "priorityFilterOff", 2000);
     }
 
     // --- Заглушки для функций, которые будут реализованы позже ---
-    function restoreDraftStateFromStorage() { console.warn("restoreDraftStateFromStorage() not implemented yet."); }
-    function applyRolePermissions(role) { console.warn("applyRolePermissions() not implemented yet.", role); }
-    function addDraftEventListeners() { console.warn("addDraftEventListeners() not implemented yet."); }
-    function updateDraftUI() { console.warn("updateDraftUI() not implemented yet."); }
-    function filterChampions() { console.warn("filterChampions() not implemented yet."); }
-    function updateChampionAvailability() { console.warn("updateChampionAvailability() not implemented yet."); }
-    function handleChampionPreview(champion) { console.warn("handleChampionPreview() not implemented yet.", champion); }
+    // function restoreDraftStateFromStorage() { console.warn("restoreDraftStateFromStorage() called but partially implemented."); } // Частично реализована выше
+    // function applyRolePermissions(role) { console.warn("applyRolePermissions() called but partially implemented.", role); } // Частично реализована выше
+    // function addDraftEventListeners() { console.warn("addDraftEventListeners() called but partially implemented."); } // Частично реализована выше
+    // function updateDraftUI() { console.warn("updateDraftUI() called but partially implemented."); } // Частично реализована выше
+    // function filterChampions() { console.warn("filterChampions() called but partially implemented."); } // Частично реализована выше
+    // function updateChampionAvailability() { console.warn("updateChampionAvailability() called but partially implemented."); } // Частично реализована выше
+    // function handleChampionPreview(champion) { console.warn("handleChampionPreview() called but partially implemented.", champion); } // Частично реализована выше
+
+    function getDraftOrder() { console.warn("getDraftOrder() not implemented yet."); return []; }
+    function resetTimerDisplay() { console.warn("resetTimerDisplay() not implemented yet."); }
+    function displayGloballyBanned() { console.warn("displayGloballyBanned() not implemented yet."); }
+    function fillSlot(slotElement, champion, type, nicknameText = '') { console.warn("fillSlot() not implemented yet."); }
+    function addNicknameInput(slotElement, text = '') { console.warn("addNicknameInput() not implemented yet."); }
+    function restoreSlotPlaceholder(slotElement, slotId, nicknameText = '') { console.warn("restoreSlotPlaceholder() not implemented yet."); }
+    function getSlotChampionId(slotId) { console.warn("getSlotChampionId() not implemented yet."); return null; }
+    function handleStartDraft() { console.warn("handleStartDraft() not implemented yet."); }
+    function resetDraftFull(force = false) { console.warn("resetDraftFull() not implemented yet."); }
+    function resetCurrentGamePicksBans(force = false, keepGlobal = true) { console.warn("resetCurrentGamePicksBans() not implemented yet."); }
+    function handleUndo() { console.warn("handleUndo() not implemented yet."); }
+    function handleSwapTeams() { console.warn("handleSwapTeams() not implemented yet."); }
+    function handleToggleTimer() { console.warn("handleToggleTimer() not implemented yet."); }
+    function handleConfirmPickBan() { console.warn("handleConfirmPickBan() not implemented yet."); }
+    function handleNextDraft() { console.warn("handleNextDraft() not implemented yet."); }
+    function handlePickContainerClick(event) { console.warn("handlePickContainerClick() not implemented yet."); }
+    function stopTimer() { console.warn("stopTimer() not implemented yet."); }
+    function isAdminOrJudge() { return currentUserRole === 'admin' || currentUserRole === 'judge'; } // Простая проверка
 
 
     // --- Инициализация Роутинга при загрузке ---
-
-    // ИСПРАВЛЕНИЕ: Показываем кнопки управления сразу
     if(adminButton) adminButton.classList.remove('hidden');
     if(themeToggleButton) themeToggleButton.classList.remove('hidden');
     if(languageToggleButton) languageToggleButton.classList.remove('hidden');
-
-    applyTheme(currentTheme); // Применяем сохраненную или дефолтную тему
-    document.documentElement.lang = currentLanguage; // Устанавливаем начальный язык документа
-    updateUIText(currentLanguage); // Устанавливаем начальные тексты
-
-
+    applyTheme(currentTheme);
+    document.documentElement.lang = currentLanguage;
+    updateUIText(currentLanguage);
     const initialParams = getParamsFromHash();
-    if (initialParams) {
-        navigateTo('draft');
-    } else {
-        navigateTo('home');
-    }
+    if (initialParams) { navigateTo('draft'); } else { navigateTo('home'); }
 
     // --- Слушатель изменения хэша URL ---
-    window.addEventListener('hashchange', () => {
-        console.log("Hash changed:", window.location.hash);
-        const newParams = getParamsFromHash();
-
-        if (newParams) {
-            if (currentPage !== 'draft' || newParams.lobbyId !== currentLobbyId || newParams.role !== currentUserRole) {
-                isDraftInitialized = false; // Сбрасываем флаг при смене лобби/роли
-                navigateTo('draft');
-            }
-        } else if (currentPage !== 'home') {
-            navigateTo('home');
-        }
-    });
+    window.addEventListener('hashchange', () => { console.log("Hash changed:", window.location.hash); const newParams = getParamsFromHash(); if (newParams) { if (currentPage !== 'draft' || newParams.lobbyId !== currentLobbyId || newParams.role !== currentUserRole) { isDraftInitialized = false; navigateTo('draft'); } } else if (currentPage !== 'home') { navigateTo('home'); } });
 
     console.log("Initial setup complete. Application is running.");
 
