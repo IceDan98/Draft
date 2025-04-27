@@ -1,0 +1,1948 @@
+/* style.css - v16.1 - Universe Redesign: Make Admin/Settings buttons square */
+:root {
+    /* --- Redesign v15.0: Обновление базовых переменных --- */
+    /* Базовые размеры - Пока оставляем без изменений, корректируем элементы позже */
+    --gap-size: 0.5rem;
+    --gap-half: calc(var(--gap-size) / 2);
+    --gap-double: calc(var(--gap-size) * 2);
+
+    /* Размеры - Пока оставляем без изменений */
+    --ban-size: 5.5vmin;
+    --card-size: 12vh;
+    --nick-height: 3.5vh;
+    --nick-font-size: 2.8vh;
+    --button-size: 4.2vh;
+    --timer-font-size: 2vh;
+    --score-size: 4.2vh;
+    --score-font-size: 2vh;
+    --filter-button-size: 3.8vh;
+    --global-ban-icon-size: 6.4vh;
+    /* v16.0: Переименовано для ясности */
+    --top-button-size: 2.5rem; /* Размер кнопок в углу */
+    --modal-max-width: 250px;
+    --lobby-modal-max-width: 500px;
+    --modal-max-height: 90vh;
+
+    /* Минимальные размеры - Пока оставляем без изменений */
+    --ban-min-size: 28px;
+    --pick-min-height: 55px;
+    --card-min-size: 63px;
+    --nick-min-height: 16px;
+    --button-min-size: 28px;
+    --score-min-size: 28px;
+    --team-name-min-height: 30px;
+    --team-col-min-width: 240px;
+    --global-ban-icon-min-size: 35px;
+     /* v16.0: Переименовано для ясности */
+    --top-button-min-size: 36px;
+
+    /* --- Redesign v15.0: Обновленная Цветовая Палитра (Темная тема) --- */
+    --color-background: #030A1A; /* Глубокий темно-синий */
+    --color-surface-1: #0B1120; /* Темно-синий/серый для поверхностей */
+    --color-surface-2: #1E293B; /* Чуть светлее серо-синий для кнопок/слотов */
+    --color-text-primary: #CDD6F4; /* Светлый серо-голубой (почти белый) */
+    --color-text-secondary: #6C7A8F; /* Приглушенный серо-голубой */
+    --color-text-placeholder: #5A6882; /* Темнее для плейсхолдеров */
+    --color-border: #111827; /* Очень темная рамка, почти сливается с фоном */
+    --color-border-medium: #5A5A5A; /* Темно-серый для рамок по умолчанию */
+    --color-accent-gold: #C89B3C; /* Насыщенный золотой */
+    --color-accent-blue: #0AC8B9; /* Яркий бирюзовый/голубой */
+    --color-accent-red: #C83244; /* Глубокий красный */
+    --color-accent-green: #1DB954; /* Насыщенный зеленый */
+    --color-accent-purple: #8A5BF1; /* Фиолетовый (оставим похожим) */
+    --color-accent-blue-dark: #1E3A8A; /* Темно-синий для акцентов (напр. кнопка админа) */
+
+    --color-blue-team: var(--color-accent-blue); /* Используем новый акцентный синий */
+    --color-red-team: var(--color-accent-red); /* Используем новый акцентный красный */
+
+    /* Прозрачные фоны для колонок, используем новые акцентные цвета */
+    --color-blue-bg-transparent: rgba(10, 200, 185, 0.15); /* Прозрачный бирюзовый */
+    --color-red-bg-transparent: rgba(200, 50, 68, 0.15); /* Прозрачный красный */
+
+    --color-tooltip-bg: rgba(3, 10, 26, 0.95); /* Фон подсказки - почти как основной фон */
+    --color-tooltip-text: var(--color-text-primary); /* Текст подсказки - основной светлый */
+
+    /* Redesign v15.6: Обновляем переменные модальных окон */
+    --color-modal-backdrop: rgba(3, 10, 26, 0.85); /* Фон модального окна - темнее */
+    --color-modal-bg: var(--color-background); /* Фон контента модалки - основной */
+    --color-modal-border: var(--color-accent-gold); /* Рамка модалки - золотая */
+    --color-modal-button-bg: var(--color-surface-2); /* Фон кнопок модалки */
+    --color-modal-button-hover-bg: var(--color-border-medium); /* Фон кнопок при наведении */
+    --color-modal-button-text: var(--color-text-primary); /* Текст кнопок */
+    --color-segment-bg: var(--color-surface-1); /* Фон сегм. контрола */
+    --color-segment-border: var(--color-accent-gold); /* Рамка сегм. контрола - золотая */
+    --color-segment-text: var(--color-text-secondary); /* Текст кнопок сегм. контрола */
+    --color-segment-active-bg: var(--color-accent-blue); /* Фон активной кнопки сегмента */
+    --color-segment-active-text: #FFFFFF; /* Текст активной кнопки сегмента */
+
+    /* --- Redesign v15.0: Обновленные Тени --- */
+    /* Более темные и сфокусированные тени */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 3px 5px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 12px rgba(0,0,0,0.5);
+    /* Свечение с новыми акцентными цветами */
+    --shadow-glow-gold: 0 0 8px 0px var(--color-accent-gold);
+    --shadow-glow-blue: 0 0 8px 0px var(--color-accent-blue);
+    --shadow-glow-red: 0 0 7px 0px var(--color-accent-red);
+    /* Тени для элементов управления - сделать более плоскими */
+    --shadow-control: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-slot: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-container: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-text-input: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-text-nickname: 1px 1px 3px rgba(0, 0, 0, 0.9); /* Тень для ника можно оставить потемнее */
+}
+
+/* --- Redesign v15.0: Обновленная Цветовая Палитра (Светлая тема) --- */
+html[data-theme='light'] :root {
+    /* Redesign v1.2: Делаем светлую тему светлее и контрастнее */
+    --color-background: #FFFFFF; /* Белый фон */
+    --color-surface-1: #F0F2F5; /* Очень светло-серый */
+    --color-surface-2: #E4E7EB; /* Светло-серый */
+    --color-text-primary: #111827; /* Почти черный текст */
+    --color-text-secondary: #4B5563; /* Темно-серый */
+    --color-text-placeholder: #6C757D; /* Средне-серый */
+    --color-border: #DDE1E6; /* Светло-серая рамка */
+    --color-border-medium: #BCC1C7; /* Средне-серая рамка */
+    /* Акцентные цвета - яркие, но контрастные на светлом */
+    --color-accent-gold: #B8860B; /* Темное золото */
+    --color-accent-blue: #007B8A; /* Темный бирюзовый */
+    --color-accent-red: #B02A37; /* Темный красный */
+    --color-accent-green: #178C41; /* Темный зеленый */
+    --color-accent-purple: #6A44D2; /* Темный фиолетовый */
+    --color-accent-blue-dark: #1A2C6B; /* Очень темно-синий */
+
+    --color-blue-team: var(--color-accent-blue);
+    --color-red-team: var(--color-accent-red);
+
+    /* Прозрачные фоны для колонок */
+    --color-blue-bg-transparent: rgba(0, 123, 138, 0.08); /* Очень легкий бирюзовый */
+    --color-red-bg-transparent: rgba(176, 42, 55, 0.08); /* Очень легкий красный */
+
+    --color-tooltip-bg: rgba(248, 249, 250, 0.95); /* Фон подсказки - светлый */
+    --color-tooltip-text: var(--color-text-primary); /* Текст подсказки - темный */
+
+    /* Redesign v15.6: Обновляем переменные модальных окон для светлой темы */
+    --color-modal-backdrop: rgba(222, 226, 230, 0.8); /* Фон модалки - светлее */
+    --color-modal-bg: #FFFFFF; /* Фон контента модалки - белый */
+    --color-modal-border: var(--color-accent-gold); /* Рамка модалки - темное золото */
+    --color-modal-button-bg: var(--color-surface-1);
+    --color-modal-button-hover-bg: var(--color-surface-2);
+    --color-modal-button-text: var(--color-text-primary);
+    --color-segment-bg: var(--color-surface-1);
+    --color-segment-border: var(--color-accent-gold); /* Рамка сегм. контрола - темное золото */
+    --color-segment-text: var(--color-text-secondary);
+    --color-segment-active-bg: var(--color-accent-blue); /* Фон активной кнопки */
+    --color-segment-active-text: #FFFFFF; /* Текст активной кнопки */
+
+    /* --- Redesign v15.0: Обновленные Тени (Светлая тема) --- */
+    /* Более мягкие тени для светлой темы */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+    --shadow-md: 0 3px 5px rgba(0,0,0,0.1);
+    --shadow-lg: 0 6px 10px rgba(0,0,0,0.12);
+    /* Свечение с новыми акцентными цветами */
+    --shadow-glow-gold: 0 0 8px 0px var(--color-accent-gold);
+    --shadow-glow-blue: 0 0 8px 0px var(--color-accent-blue);
+    --shadow-glow-red: 0 0 7px 0px var(--color-accent-red);
+    /* Тени для элементов управления */
+    --shadow-control: 0 1px 2px rgba(0, 0, 0, 0.15);
+    --shadow-slot: 1px 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-container: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-text-input: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-text-nickname: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Тень ника можно оставить потемнее */
+}
+
+/* --- Глобальные стили --- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Стилизация скроллбара для Firefox */
+    scrollbar-color: var(--color-border-medium) var(--color-surface-1);
+    scrollbar-width: thin;
+}
+/* Стилизация скроллбара для Webkit (Chrome, Safari) */
+body::-webkit-scrollbar { width: 8px; }
+body::-webkit-scrollbar-track { background: var(--color-surface-1); }
+body::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; border: 2px solid var(--color-surface-1); }
+/* Redesign v15.0: Hover для скроллбара */
+body::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+
+/* Скроллбар светлой темы */
+html[data-theme='light'] body::-webkit-scrollbar-track { background: var(--color-surface-1); }
+html[data-theme='light'] body::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-color: var(--color-surface-1); }
+html[data-theme='light'] body::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+
+
+body {
+    font-family: 'Inter', sans-serif; /* Шрифт по умолчанию */
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    height: 100vh; /* Полная высота окна */
+    overflow: hidden; /* Предотвратить прокрутку body */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Body светлой темы */
+html[data-theme='light'] body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+/* Основной контейнер приложения */
+#app-container {
+    width: 100%;
+    height: 100%;
+    max-width: 2600px; /* Опциональная макс. ширина */
+    padding: var(--gap-size);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Для абсолютного позиционирования дочерних элементов */
+}
+
+/* Базовый контейнер страницы */
+.page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Утилитарный класс для скрытия элементов */
+.hidden {
+    display: none !important;
+}
+
+/* Оверлей индикатора загрузки */
+#loadingIndicator {
+    display: flex;
+    position: fixed;
+    inset: 0; /* Покрыть все окно */
+    background-color: rgba(3, 10, 26, 0.85); /* Используем новый фон */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Убедиться, что он наверху */
+    transition: opacity 0.5s ease-out;
+    opacity: 1;
+    color: var(--color-text-primary); /* Используем основной цвет текста */
+}
+/* Индикатор загрузки светлой темы */
+html[data-theme='light'] #loadingIndicator {
+    background-color: rgba(248, 249, 250, 0.85); /* Светлый фон */
+    color: var(--color-text-primary); /* Темный текст */
+}
+/* Плавное скрытие индикатора загрузки */
+#loadingIndicator.hidden {
+    opacity: 0;
+    pointer-events: none; /* Предотвратить взаимодействие при скрытии */
+}
+/* Redesign v15.0: Убираем стандартный animate-pulse, если будем заменять на SVG анимацию */
+#loadingIndicator > div {
+   /* animate-pulse убран */
+}
+
+
+/* --- Стили Главной страницы --- */
+#homePage {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* Скрыть выходящий фон */
+    background-size: cover; /* Масштабировать фон */
+    background-position: center center;
+    background-repeat: no-repeat;
+    transition: opacity 1s ease-in-out, background-image 0.5s ease-in-out;
+    opacity: 1;
+}
+#homePage.background-fade-active { }
+/* Redesign v15.0: Добавляем псевдоэлемент для затемнения фона */
+#homePage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(3,10,26,0.1), rgba(3,10,26,0.6), rgba(3,10,26,0.1));
+    z-index: 0; /* Помещаем под контент */
+    pointer-events: none; /* Не мешает кликам */
+}
+html[data-theme='light'] #homePage::before {
+     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(240, 242, 245, 0.4), rgba(255, 255, 255, 0.1)); /* Светлее виньетка */
+}
+
+
+/* --- Стили Обертки контента главной страницы --- */
+.home-content-wrapper {
+    position: relative; /* Чтобы был над псевдоэлементом #homePage */
+    z-index: 1; /* Помещаем над псевдоэлементом #homePage */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Redesign v15.1: Стилизация под камень/металл (добавляем текстуру) */
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 30%); /* Полупрозрачный темный фон */
+    /* background-image: url('path/to/stone_texture.png'); */ /* TODO: Добавить путь к текстуре */
+    /* background-blend-mode: overlay; */
+    border: 2px solid var(--color-accent-gold); /* Золотая рамка */
+    border-radius: 0.375rem; /* Оставляем скругление или уменьшаем до 3px */
+    box-shadow: var(--shadow-lg), inset 0 0 10px rgba(0,0,0,0.5); /* Тень + внутренняя тень */
+    padding: 2.5rem; /* Увеличиваем отступы */
+    max-width: 400px; /* Можно чуть увеличить */
+    width: 90%;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+html[data-theme='light'] .home-content-wrapper {
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 15%);
+    border-color: var(--color-accent-gold); /* Используем темное золото */
+    box-shadow: var(--shadow-lg), inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Заголовок главной страницы */
+#homeTitle {
+    font-family: 'Cinzel', serif;
+    color: var(--color-accent-gold);
+    /* Redesign v15.1: Добавляем тень */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    font-size: clamp(2.2rem, 6.5vmin, 3.8rem); /* Чуть увеличиваем */
+    font-weight: 700; /* Делаем жирнее */
+    margin-bottom: 2.5rem; /* Увеличиваем отступ */
+}
+html[data-theme='light'] #homeTitle {
+    color: var(--color-accent-gold); /* Используем темное золото */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Стили полей ввода лобби */
+.lobby-input {
+    /* Redesign v15.1: Стилизация */
+    background-color: var(--color-surface-1);
+    border: 1px solid var(--color-border-medium);
+    color: var(--color-text-primary);
+    text-shadow: var(--shadow-text-input);
+    border-radius: 3px; /* Меньше скругления */
+    padding: 0.6rem 1rem; /* Чуть больше паддинг */
+    margin-bottom: 1.2rem; /* Увеличиваем отступ */
+    width: 85%;
+    max-width: 320px;
+    text-align: center;
+    font-size: clamp(1rem, 2.5vh, 1.3rem);
+    font-weight: 500;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+#team1NameInput { color: var(--color-blue-team); }
+#team2NameInput { color: var(--color-red-team); }
+html[data-theme='light'] .lobby-input {
+     background-color: var(--color-surface-1);
+     border-color: var(--color-border-medium);
+     color: var(--color-text-primary);
+     text-shadow: var(--shadow-text-input);
+}
+html[data-theme='light'] #team1NameInput { color: var(--color-blue-team); }
+html[data-theme='light'] #team2NameInput { color: var(--color-red-team); }
+.lobby-input::placeholder {
+    color: var(--color-text-placeholder);
+    font-weight: 400;
+    text-shadow: none;
+    opacity: 0.8;
+}
+html[data-theme='light'] .lobby-input::placeholder {
+    color: var(--color-text-placeholder);
+    text-shadow: none;
+}
+.lobby-input:focus {
+    outline: none;
+    border-color: var(--color-accent-gold); /* Фокус - золотой */
+    box-shadow: var(--shadow-glow-gold); /* Золотое свечение */
+    background-color: var(--color-surface-2); /* Чуть светлее фон при фокусе */
+}
+html[data-theme='light'] .lobby-input:focus {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-glow-gold);
+    background-color: var(--color-surface-2);
+}
+
+/* Кнопка Создать Лобби/Драфт */
+#createLobbyButton {
+    /* Redesign v15.7: Используем переменные для градиента */
+    font-family: 'Cinzel', serif;
+    background: linear-gradient(to bottom, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 30%)); /* Градиент */
+    border: 1px solid var(--color-accent-gold);
+    color: var(--color-accent-gold);
+    padding: 0.9rem 2.2rem;
+    font-size: clamp(1.1rem, 2.8vh, 1.4rem);
+    min-width: 160px;
+    font-weight: 700;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, border-color 0.2s ease, color 0.2s ease;
+    box-shadow: var(--shadow-md);
+    margin-top: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+#createLobbyButton:hover:not(:disabled) {
+    background: linear-gradient(to bottom, var(--color-surface-1), var(--color-surface-2)); /* Светлее градиент */
+    border-color: color-mix(in srgb, var(--color-accent-gold), #fff 20%);
+    color: color-mix(in srgb, var(--color-accent-gold), #fff 30%);
+    box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-gold);
+}
+#createLobbyButton:active:not(:disabled) {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm), inset 1px 1px 3px rgba(0,0,0,0.6);
+    background: linear-gradient(to top, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 30%)); /* Инверсия градиента */
+}
+html[data-theme='light'] #createLobbyButton {
+     background: linear-gradient(to bottom, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 10%));
+     border-color: var(--color-accent-gold);
+     color: var(--color-accent-gold);
+}
+html[data-theme='light'] #createLobbyButton:hover:not(:disabled) {
+     background: linear-gradient(to bottom, var(--color-surface-1), var(--color-surface-2));
+     border-color: color-mix(in srgb, var(--color-accent-gold), #000 10%);
+     color: color-mix(in srgb, var(--color-accent-gold), #000 20%);
+     box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-gold);
+}
+html[data-theme='light'] #createLobbyButton:active:not(:disabled) {
+    background: linear-gradient(to top, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 10%));
+    box-shadow: var(--shadow-sm), inset 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Кнопка ссылки Telegram (Слева вверху) */
+/* Redesign v16.0: Стили для кнопки Telegram (теперь часть #topLeftButtonsContainer) */
+#telegramLinkButton {
+    /* Убираем position: absolute */
+    width: var(--top-button-size);
+    height: var(--top-button-size);
+    min-width: var(--top-button-min-size);
+    min-height: var(--top-button-min-size);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border-medium);
+    background: linear-gradient(to bottom, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 30%)); /* Градиент */
+    color: var(--color-accent-blue);
+    font-size: 1.1rem;
+    line-height: 1;
+}
+.lucide-icon-in-button {
+    width: 60%;
+    height: 60%;
+    stroke: currentColor;
+    stroke-width: 2.5; /* Увеличиваем толщину */
+    vertical-align: middle;
+}
+#telegramLinkButton:hover {
+    background: linear-gradient(to bottom, var(--color-surface-1), var(--color-surface-2));
+    color: color-mix(in srgb, var(--color-accent-blue), #fff 30%);
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-blue);
+}
+#telegramLinkButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm), inset 1px 1px 3px rgba(0,0,0,0.6);
+    background: linear-gradient(to top, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 30%));
+}
+html[data-theme='light'] #telegramLinkButton {
+    background: linear-gradient(to bottom, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 10%));
+    color: var(--color-accent-blue);
+    border-color: var(--color-border-medium);
+}
+html[data-theme='light'] #telegramLinkButton:hover {
+    background: linear-gradient(to bottom, var(--color-surface-1), var(--color-surface-2));
+    color: color-mix(in srgb, var(--color-accent-blue), #000 20%);
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-blue);
+}
+html[data-theme='light'] #telegramLinkButton:active {
+    background: linear-gradient(to top, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2), #000 10%));
+    box-shadow: var(--shadow-sm), inset 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Контейнер для кнопок Настройки и Админ (Справа вверху) */
+/* Redesign v16.0: Удаляем старое правило позиционирования */
+/* #topRightButtons { ... } */
+
+/* Redesign v16.0: Стилизуем новый контейнер слева */
+#topLeftButtonsContainer {
+    position: absolute;
+    top: var(--gap-double);
+    left: var(--gap-double);
+    z-index: 10;
+    display: flex; /* Кнопки в ряд */
+    align-items: center; /* Выравнивание по центру по вертикали */
+    gap: var(--gap-size); /* Отступ между кнопками */
+}
+
+/* Кнопка Настройки */
+#settingsButton {
+    /* Стили наследуются от .action-button, .icon-button */
+    /* Убедимся, что нет конфликтующих правил */
+    position: static; /* Убираем возможное абсолютное позиционирование */
+    color: var(--color-text-secondary); /* Цвет иконки */
+    /* Устанавливаем размер явно, т.к. переменная была для правого угла */
+    width: var(--top-button-size);
+    height: var(--top-button-size);
+    min-width: var(--top-button-min-size);
+    min-height: var(--top-button-min-size);
+}
+#settingsButton:hover {
+    color: var(--color-text-primary); /* Цвет иконки при наведении */
+    border-color: var(--color-accent-gold); /* Золотая рамка при наведении */
+    box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-gold); /* Тень + свечение */
+}
+html[data-theme='light'] #settingsButton {
+    color: var(--color-text-secondary);
+}
+html[data-theme='light'] #settingsButton:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-gold);
+}
+
+/* Кнопка Админ */
+#adminButton {
+    /* Стили наследуются от .action-button */
+    /* Убедимся, что нет конфликтующих правил */
+    position: static; /* Убираем возможное абсолютное позиционирование */
+    /* v16.1: Делаем кнопку квадратной и убираем внутренние отступы */
+    width: var(--top-button-size);
+    height: var(--top-button-size);
+    min-width: var(--top-button-min-size);
+    min-height: var(--top-button-min-size);
+    padding: 0; /* Убираем паддинг */
+    background: linear-gradient(to bottom, var(--color-accent-blue-dark), color-mix(in srgb, var(--color-accent-blue-dark), #000 30%)); /* Темно-синий градиент */
+    border: 1px solid var(--color-accent-blue); /* Бирюзовая рамка */
+    color: var(--color-text-primary); /* Светлый текст (для иконки) */
+    font-family: 'Inter', sans-serif;
+    /* font-size: 0.8rem; */ /* Убираем размер шрифта, т.к. будет иконка */
+    /* font-weight: 600; */
+    /* text-transform: uppercase; */
+}
+#adminButton:hover:not(:disabled) {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-blue-dark), #fff 10%), var(--color-accent-blue-dark)); /* Светлее градиент */
+    border-color: color-mix(in srgb, var(--color-accent-blue), #fff 30%);
+    box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-blue);
+}
+#adminButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm), inset 1px 1px 3px rgba(0,0,0,0.6);
+    background: linear-gradient(to top, var(--color-accent-blue-dark), color-mix(in srgb, var(--color-accent-blue-dark), #000 30%));
+}
+html[data-theme='light'] #adminButton {
+    background: linear-gradient(to bottom, var(--color-accent-blue-dark), color-mix(in srgb, var(--color-accent-blue-dark), #000 20%));
+    border-color: var(--color-accent-blue);
+    color: #FFFFFF; /* Белый текст (для иконки) */
+}
+html[data-theme='light'] #adminButton:hover:not(:disabled) {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-blue-dark), #fff 10%), var(--color-accent-blue-dark));
+    border-color: color-mix(in srgb, var(--color-accent-blue), #000 10%);
+    box-shadow: var(--shadow-lg), 0 0 5px var(--color-accent-blue);
+}
+html[data-theme='light'] #adminButton:active:not(:disabled) {
+    background: linear-gradient(to top, var(--color-accent-blue-dark), color-mix(in srgb, var(--color-accent-blue-dark), #000 20%));
+    box-shadow: var(--shadow-sm), inset 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* --- Стили Страницы Драфта --- */
+#draftPage { height: 100%; overflow: hidden; }
+
+/* Заголовки названий команд (Синяя/Красная) */
+.team-name {
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    font-size: clamp(1.5rem, 4.2vmin, 2.2rem); /* Чуть увеличим */
+    font-weight: 700;
+    flex-shrink: 1;
+    min-height: var(--team-name-min-height);
+    line-height: var(--team-name-min-height);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    background-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+    cursor: default;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Усилим тень */
+}
+#blue-team-name-h2 { justify-self: center; color: var(--color-blue-team); }
+#red-team-name-h2 { justify-self: center; color: var(--color-red-team); }
+html[data-theme='light'] #blue-team-name-h2 { color: var(--color-blue-team); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); }
+html[data-theme='light'] #red-team-name-h2 { color: var(--color-red-team); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); }
+.team-name[contenteditable="true"]:hover {
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 70%); /* Полупрозрачный фон при наведении */
+    text-shadow: 1px 1px 5px currentColor; /* Легкое свечение */
+}
+html[data-theme='light'] .team-name[contenteditable="true"]:hover {
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 50%);
+    text-shadow: 1px 1px 3px currentColor;
+}
+.team-name[contenteditable="true"]:focus {
+    outline: none; /* Убираем стандартный аутлайн */
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 50%);
+    white-space: normal;
+    overflow: visible;
+    box-shadow: 0 0 5px 1px var(--color-accent-gold); /* Золотое свечение */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Возвращаем стандартную тень */
+}
+html[data-theme='light'] .team-name[contenteditable="true"]:focus {
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 30%);
+    box-shadow: 0 0 5px 1px var(--color-accent-gold);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Поля ввода никнеймов внутри слотов пиков */
+.nickname-input {
+    font-family: 'Inter', sans-serif;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный темный фон */
+    color: #FFFFFF; /* Белый текст */
+    border-radius: 3px;
+    padding: 4px 8px; /* Немного увеличим паддинг */
+    text-shadow: var(--shadow-text-nickname);
+    position: absolute;
+    bottom: 6px; /* Чуть выше */
+    width: auto;
+    max-width: calc(100% - 16px);
+    z-index: 1;
+    font-size: calc(var(--nick-font-size) * 0.85); /* Можно чуть уменьшить */
+    font-weight: 500;
+    height: auto;
+    min-height: var(--nick-min-height);
+    pointer-events: auto;
+    cursor: text;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    border: 1px solid transparent; /* Прозрачная рамка по умолчанию */
+    display: block;
+}
+.nickname-input[contenteditable="true"]:empty::before {
+    content: attr(data-placeholder);
+    color: rgba(255, 255, 255, 0.6); /* Чуть тусклее плейсхолдер */
+    font-style: italic; /* Курсив для плейсхолдера */
+    text-shadow: none;
+    opacity: 1;
+}
+.nickname-input:not([contenteditable="true"]) {
+    cursor: default;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.4); /* Менее прозрачный фон для нередактируемых */
+}
+[id^="blue-pick-"] .nickname-input { right: 8px; left: auto; text-align: right; }
+[id^="red-pick-"] .nickname-input { left: 8px; right: auto; text-align: left; }
+.nickname-input[contenteditable="true"]:focus {
+    outline: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    border: 1px solid var(--color-accent-gold); /* Золотая рамка при фокусе */
+    box-shadow: var(--shadow-glow-gold); /* Золотое свечение */
+    background-color: rgba(11, 17, 32, 0.7); /* Фон при фокусе чуть светлее */
+}
+html[data-theme='light'] .nickname-input {
+    color: #FFFFFF; /* Оставляем белый текст для читаемости на сплеш-артах */
+    background-color: rgba(33, 37, 41, 0.6); /* Темный фон для светлой темы */
+    text-shadow: var(--shadow-text-nickname);
+}
+html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
+     color: rgba(255, 255, 255, 0.6);
+     text-shadow: none;
+}
+html[data-theme='light'] .nickname-input[contenteditable="true"]:focus {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-glow-gold);
+    background-color: rgba(73, 80, 87, 0.7);
+}
+
+/* v14.3: Класс для скрытия никнеймов через настройки */
+.nicknames-hidden-by-setting .nickname-input {
+    display: none !important;
+}
+
+/* Основная сетка макета для страницы драфта */
+#mainLayout {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: auto minmax(300px, 1fr) auto;
+    gap: var(--gap-size);
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+#mainLayout:not(.hidden) { opacity: 1; }
+
+/* Контейнер для элементов верхней строки */
+#topRowContainer {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: var(--gap-size);
+    align-items: center;
+    margin-bottom: var(--gap-size);
+    min-height: calc(var(--button-size) + var(--gap-size));
+}
+.top-row-cell { display: flex; align-items: center; gap: var(--gap-size); min-width: 0; }
+.top-row-cell.blue-info { grid-column: 1; justify-content: flex-start; }
+.top-row-cell.center-controls { grid-column: 2; justify-content: center; }
+.top-row-cell.red-info { grid-column: 3; justify-content: flex-end; }
+.center-controls-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content max-content max-content minmax(0, 1fr);
+    align-items: center;
+    gap: var(--gap-size);
+    width: 100%;
+}
+
+/* Поля ввода счета */
+.score-input {
+    width: var(--score-size);
+    height: var(--score-size);
+    min-width: var(--score-min-size);
+    min-height: var(--score-min-size);
+    border: 1px solid var(--color-border-medium); /* Темно-серая рамка */
+    border-radius: 3px; /* Меньше скругления */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--score-font-size);
+    font-weight: 700; /* Жирнее */
+    flex-shrink: 0;
+    justify-self: center;
+    background-color: var(--color-surface-1); /* Темный фон */
+    cursor: default;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-control);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Тень для текста */
+}
+html[data-theme='light'] .score-input {
+    border-color: var(--color-border-medium);
+    background-color: var(--color-surface-1);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-control);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+}
+.score-input[contenteditable="true"] { cursor: text; }
+.score-input[contenteditable="true"]:hover { background-color: var(--color-surface-2); border-color: var(--color-accent-gold); }
+html[data-theme='light'] .score-input[contenteditable="true"]:hover { background-color: var(--color-surface-2); border-color: var(--color-accent-gold); }
+.score-input[contenteditable="true"]:focus {
+    outline: none;
+    border-color: var(--color-accent-gold);
+    background-color: var(--color-surface-2);
+    box-shadow: var(--shadow-glow-gold), var(--shadow-control);
+}
+html[data-theme='light'] .score-input[contenteditable="true"]:focus {
+    border-color: var(--color-accent-gold);
+    background-color: var(--color-surface-2);
+    box-shadow: var(--shadow-glow-gold), var(--shadow-control);
+}
+.score-input:empty::before { content: "0"; color: var(--color-text-secondary); font-style: normal; }
+html[data-theme='light'] .score-input:empty::before { color: var(--color-text-secondary); }
+#blue-score { color: var(--color-blue-team); }
+#red-score { color: var(--color-red-team); }
+
+/* Отображение таймера / Кнопка Старт */
+.timer-display-button {
+    /* Redesign v15.2: Стилизация кнопки таймера */
+    font-family: 'Inter', sans-serif;
+    font-size: var(--timer-font-size);
+    font-weight: 700; /* Жирнее */
+    color: #FFFFFF; /* Белый текст */
+    min-width: 12ch;
+    height: calc(var(--button-size) * 1.1);
+    min-height: calc(var(--button-min-size) * 1.1);
+    text-align: center;
+    background: linear-gradient(to bottom, var(--color-accent-green), #15803D); /* Зеленый градиент */
+    border: 1px solid color-mix(in srgb, var(--color-accent-green), #000 30%); /* Темно-зеленая рамка */
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px; /* Меньше скругления */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-control);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+html[data-theme='light'] .timer-display-button {
+    background: linear-gradient(to bottom, var(--color-accent-green), #115E32);
+    color: #FFFFFF;
+    border-color: color-mix(in srgb, var(--color-accent-green), #000 30%);
+    box-shadow: var(--shadow-control);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+}
+.timer-display-button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-green), #fff 15%), var(--color-accent-green)); /* Светлее градиент */
+    border-color: color-mix(in srgb, var(--color-accent-green), #fff 20%);
+    box-shadow: var(--shadow-control), 0 0 5px var(--color-accent-green); /* Свечение */
+}
+html[data-theme='light'] .timer-display-button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-green), #fff 15%), var(--color-accent-green));
+    border-color: color-mix(in srgb, var(--color-accent-green), #fff 20%);
+    box-shadow: var(--shadow-control), 0 0 5px var(--color-accent-green);
+}
+.timer-display-button:disabled, .timer-display-button.timer-disabled {
+    cursor: default;
+    background: linear-gradient(to bottom, var(--color-surface-2), #151E2A); /* Серый градиент */
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-medium);
+    opacity: 0.7;
+    box-shadow: var(--shadow-control);
+    text-shadow: none;
+}
+html[data-theme='light'] .timer-display-button:disabled, html[data-theme='light'] .timer-display-button.timer-disabled {
+    background: linear-gradient(to bottom, var(--color-surface-2), #E9ECEF);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-control);
+    text-shadow: none;
+}
+.timer-display-button.timer-running {
+    background: linear-gradient(to bottom, var(--color-surface-2), #151E2A); /* Серый градиент */
+    color: var(--color-text-primary);
+    border-color: var(--color-border-medium);
+    cursor: default;
+    opacity: 1;
+    box-shadow: var(--shadow-control);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+html[data-theme='light'] .timer-display-button.timer-running {
+    background: linear-gradient(to bottom, var(--color-surface-2), #E9ECEF);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-control);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+}
+.timer-display-button.timer-ending {
+    color: var(--color-accent-red); /* Красный текст */
+    border-color: var(--color-accent-red); /* Красная рамка */
+    animation: pulse-red-border 1s infinite; /* Анимация рамки */
+}
+html[data-theme='light'] .timer-display-button.timer-ending {
+    color: var(--color-accent-red);
+    border-color: var(--color-accent-red);
+}
+/* Redesign v15.0: Новая анимация для рамки */
+@keyframes pulse-red-border {
+  0%, 100% { box-shadow: var(--shadow-control), 0 0 0 0 var(--color-accent-red); }
+  50% { box-shadow: var(--shadow-control), 0 0 5px 2px color-mix(in srgb, var(--color-accent-red), transparent 50%); }
+}
+@keyframes pulse-gold-border { /* Новая анимация для золотой рамки */
+  0%, 100% { box-shadow: var(--shadow-control), 0 0 0 0px var(--color-accent-gold); }
+  50% { box-shadow: var(--shadow-control), 0 0 6px 3px color-mix(in srgb, var(--color-accent-gold), transparent 40%); }
+}
+.timer-display-button.timer-awaiting-confirmation {
+    background: linear-gradient(to bottom, var(--color-accent-gold), #A88C54); /* Золотой градиент */
+    color: #FFFFFF; /* Белый текст */
+    border-color: color-mix(in srgb, var(--color-accent-gold), #000 30%); /* Темно-золотая рамка */
+    animation: pulse-gold-border 1.5s infinite ease-in-out; /* Анимация золотой рамки */
+    cursor: pointer;
+    opacity: 1;
+}
+html[data-theme='light'] .timer-display-button.timer-awaiting-confirmation {
+    background: linear-gradient(to bottom, var(--color-accent-gold), #91743A);
+    color: #FFFFFF;
+    border-color: color-mix(in srgb, var(--color-accent-gold), #000 30%);
+}
+
+/* Контейнер для слотов банов в верхней строке */
+.bans-container { display: flex; justify-content: center; gap: var(--gap-half); flex-shrink: 0; }
+
+/* Сетка основной области драфта */
+#draftArea {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: var(--gap-size);
+    overflow: hidden;
+    min-height: 0;
+    align-items: stretch;
+}
+
+/* Стилизация для колонок синей и красной команд */
+.team-column {
+    min-width: var(--team-col-min-width);
+    width: auto;
+    max-width: 480px;
+    flex: 0 1 var(--team-col-min-width);
+    padding: var(--gap-size);
+    border-radius: 0.5rem; /* Оставляем скругление для колонок */
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: opacity 0.3s ease, filter 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid var(--color-border); /* Темная рамка */
+    background-color: transparent; /* Убираем цвет фона по умолчанию */
+}
+html[data-theme='light'] .team-column { border-color: var(--color-border); }
+/* Redesign v15.0: Используем новые прозрачные фоны */
+.team-column.blue-column { background-color: var(--color-blue-bg-transparent); border-color: color-mix(in srgb, var(--color-blue-team), transparent 60%); }
+.team-column.red-column { background-color: var(--color-red-bg-transparent); border-color: color-mix(in srgb, var(--color-red-team), transparent 60%);}
+html[data-theme='light'] .team-column.blue-column { background-color: var(--color-blue-bg-transparent); border-color: color-mix(in srgb, var(--color-blue-team), transparent 60%); }
+html[data-theme='light'] .team-column.red-column { background-color: var(--color-red-bg-transparent); border-color: color-mix(in srgb, var(--color-red-team), transparent 60%);}
+.team-column::-webkit-scrollbar { display: none; }
+.team-column.draft-disabled { pointer-events: none; opacity: 0.6; filter: grayscale(60%); }
+.team-column.role-disabled { opacity: 0.7; filter: grayscale(30%); pointer-events: none; }
+.team-column.role-disabled .pick-slot, .team-column.role-disabled .ban-slot { pointer-events: none; cursor: not-allowed; }
+.team-column.role-disabled .nickname-input { pointer-events: none; cursor: not-allowed; }
+
+/* Контейнер для слотов пиков внутри колонки команды */
+.picks-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-size);
+    flex-grow: 1;
+    justify-content: space-around;
+    width: 100%;
+    min-height: 0;
+    margin-top: var(--gap-size);
+}
+
+/* Базовый стиль для слотов пиков и банов */
+.pick-slot, .ban-slot {
+    /* Redesign v15.2: Стилизация слотов */
+    background-color: var(--color-surface-1); /* Темный фон для пустых */
+    /* background-image: url('path/to/stone_texture.png'); */ /* TODO: Добавить текстуру для пустых */
+    border: 2px solid var(--color-border-medium); /* Заметная рамка */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    border-radius: 3px; /* Меньше скругления */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: var(--shadow-slot);
+}
+html[data-theme='light'] .pick-slot, html[data-theme='light'] .ban-slot {
+    background-color: var(--color-surface-1);
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-slot);
+}
+.ban-slot {
+    width: var(--ban-size);
+    height: var(--ban-size);
+    min-width: var(--ban-min-size);
+    min-height: var(--ban-min-size);
+    /* Redesign v15.2: Добавляем фильтр для забаненных чемпионов */
+}
+.ban-slot img.slot-image {
+    filter: grayscale(1) brightness(0.6); /* Обесцвечиваем и затемняем баны */
+}
+html[data-theme='light'] .ban-slot img.slot-image {
+    filter: grayscale(1) brightness(0.7);
+}
+.pick-slot { min-height: var(--pick-min-height); width: 100%; height: auto; flex-grow: 1; position: relative; }
+.pick-slot img.slot-image, .ban-slot img.slot-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transition: filter 0.3s ease, opacity 0.3s ease, transform 0.5s ease-out;
+}
+
+/* Анимация при подтверждении пика */
+@keyframes pickAnimation {
+  0% { transform: scale(1.1); opacity: 0.7; } /* Меньше масштаб */
+  100% { transform: scale(1); opacity: 1; }
+}
+.pick-slot img.slot-image.animate-pick {
+  animation: pickAnimation 0.4s ease-out; /* Чуть быстрее */
+}
+
+/* Стиль выделения для текущего активного слота действия */
+.highlight-action {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-slot), 0 0 10px 3px var(--color-accent-gold); /* Тень + свечение */
+    /* background-color убран, чтобы не перекрывать текстуру/картинку */
+}
+html[data-theme='light'] .highlight-action {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-slot), 0 0 10px 3px var(--color-accent-gold);
+}
+/* Стиль выделения для выбранного слота обмена */
+.swap-selected {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-slot), 0 0 8px 2px var(--color-accent-blue); /* Синее свечение */
+}
+html[data-theme='light'] .swap-selected {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-slot), 0 0 8px 2px var(--color-accent-blue);
+}
+/* Анимация мигания для предпросматриваемого чемпиона */
+/* Redesign v15.0: Используем новую анимацию свечения */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: var(--shadow-slot), 0 0 8px 3px var(--color-accent-gold); }
+  50% { box-shadow: var(--shadow-slot), 0 0 12px 5px var(--color-accent-gold); }
+}
+.preview-flash { /* Переименовать или использовать существующий класс */
+    animation: pulse-glow 1.5s infinite ease-in-out;
+}
+/* Убираем старую анимацию */
+/* @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } } */
+/* .preview-flash > img.slot-image { animation: flash 1s infinite ease-in-out; } */
+
+/* Контейнер для центральной области */
+#championGridContainer {
+    grid-column: 2;
+    background-color: transparent;
+    border-radius: 0.5rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 300px;
+    border: none;
+}
+
+/* Контейнер для отображения глобально забаненных чемпионов */
+#globallyBannedDisplay {
+    flex-shrink: 0;
+    margin-bottom: var(--gap-size);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-half);
+    width: 100%;
+    border-bottom: 1px solid var(--color-border-medium); /* Используем новую рамку */
+    padding-bottom: var(--gap-half);
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin 0.3s ease-in-out, padding 0.3s ease-in-out, border 0.3s ease-in-out;
+    opacity: 1;
+    max-height: 300px;
+    overflow: hidden;
+}
+html[data-theme='light'] #globallyBannedDisplay { border-bottom-color: var(--color-border-medium); }
+#globallyBannedDisplay.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+/* Строка, содержащая глобальные баны синих и красных */
+.global-bans-row { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; gap: var(--gap-size); }
+
+/* Контейнеры для иконок глобальных банов синих/красных */
+#global-bans-blue, #global-bans-red {
+    display: grid;
+    grid-template-columns: repeat(5, var(--global-ban-icon-size));
+    gap: var(--gap-half);
+    align-items: center;
+    align-content: flex-start;
+    min-height: var(--global-ban-icon-min-size);
+    flex-grow: 1;
+}
+#global-bans-blue { justify-items: start; justify-content: flex-start; }
+#global-bans-red { justify-items: end; justify-content: flex-end; }
+
+
+/* Индивидуальная иконка глобального бана */
+.global-ban-icon {
+    /* Redesign v15.1: Стилизация */
+    width: var(--global-ban-icon-size);
+    height: var(--global-ban-icon-size);
+    min-width: var(--global-ban-icon-min-size);
+    min-height: var(--global-ban-icon-min-size);
+    background-size: cover;
+    background-position: center;
+    border-radius: 3px; /* Меньше скругления */
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-surface-1); /* Темный фон */
+    border: 1px solid var(--color-border); /* Темная рамка */
+    opacity: 0.7; /* Делаем чуть менее прозрачным */
+    cursor: not-allowed;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    filter: grayscale(1) brightness(0.5); /* Обесцвечиваем и затемняем */
+}
+/* Redesign v15.1: Добавляем псевдоэлемент с крестиком */
+.global-ban-icon::after {
+    content: '✖';
+    color: var(--color-accent-red);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--global-ban-icon-size) * 0.5); /* Размер крестика */
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black;
+    opacity: 0.8; /* Полупрозрачный крестик */
+}
+html[data-theme='light'] .global-ban-icon {
+    background-color: var(--color-surface-1);
+    border-color: var(--color-border);
+    filter: grayscale(1) brightness(0.7); /* Чуть светлее для светлой темы */
+}
+.global-ban-icon img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; /* Делаем саму картинку полупрозрачной */ }
+
+/* Стили для плейсхолдеров глобальных банов */
+.global-ban-placeholder {
+    width: var(--global-ban-icon-size);
+    height: var(--global-ban-icon-size);
+    min-width: var(--global-ban-icon-min-size);
+    min-height: var(--global-ban-icon-min-size);
+    border-radius: 3px;
+    flex-shrink: 0;
+    background-color: var(--color-surface-1); /* Темный фон */
+    border: 1px dashed var(--color-text-secondary); /* Пунктирная рамка */
+    box-shadow: none;
+    cursor: default;
+    position: relative; /* Для псевдоэлемента */
+}
+/* Redesign v15.1: Добавляем знак вопроса */
+.global-ban-placeholder::after {
+    content: '?';
+    color: var(--color-text-secondary);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--global-ban-icon-size) * 0.5);
+    font-weight: bold;
+}
+html[data-theme='light'] .global-ban-placeholder {
+    background-color: var(--color-surface-1);
+    border-color: var(--color-text-secondary);
+}
+html[data-theme='light'] .global-ban-placeholder::after {
+    color: var(--color-text-secondary);
+}
+
+
+/* Обертка для поля поиска и кнопок управления */
+.search-controls-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-half);
+    margin-bottom: var(--gap-size);
+    flex-shrink: 0;
+    overflow-x: auto;
+    padding: var(--gap-half);
+    /* Redesign v15.3: Стилизация */
+    background-color: var(--color-surface-1); /* Темный фон */
+    border-radius: 3px; /* Меньше скругления */
+    border: 1px solid var(--color-border-medium); /* Рамка */
+    box-shadow: var(--shadow-container);
+    flex-wrap: wrap;
+}
+html[data-theme='light'] .search-controls-wrapper {
+    background-color: var(--color-surface-1);
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-container);
+}
+/* Стилизуем скроллбар */
+.search-controls-wrapper::-webkit-scrollbar { height: 6px; }
+.search-controls-wrapper::-webkit-scrollbar-track { background: transparent; }
+.search-controls-wrapper::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 3px; }
+.search-controls-wrapper::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+html[data-theme='light'] .search-controls-wrapper::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); }
+html[data-theme='light'] .search-controls-wrapper::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+.search-controls-wrapper .action-button { flex-shrink: 0; }
+
+/* Поле ввода поиска чемпионов */
+#championSearch {
+    flex-grow: 1;
+    flex-shrink: 1;
+    font-size: clamp(0.85rem, 2vmin, 1rem);
+    min-width: 100px;
+    height: var(--filter-button-size);
+    min-height: 30px;
+    /* Redesign v15.3: Стилизация */
+    background-color: var(--color-surface-1);
+    border: 1px solid var(--color-border-medium);
+    border-radius: 3px;
+    padding: 0 0.7rem; /* Увеличим паддинг */
+    color: var(--color-text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-control);
+}
+html[data-theme='light'] #championSearch {
+    background-color: var(--color-surface-1);
+    border-color: var(--color-border-medium);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-control);
+}
+#championSearch::placeholder { color: var(--color-text-placeholder); }
+html[data-theme='light'] #championSearch::placeholder { color: var(--color-text-placeholder); }
+#championSearch:focus {
+    outline: none;
+    border-color: var(--color-accent-gold); /* Золотая рамка */
+    box-shadow: var(--shadow-glow-gold), var(--shadow-control); /* Свечение */
+    background-color: var(--color-surface-2); /* Фон чуть светлее */
+}
+html[data-theme='light'] #championSearch:focus {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-glow-gold), var(--shadow-control);
+    background-color: var(--color-surface-2);
+}
+
+/* Контейнер для кнопок фильтра ролей */
+#roleFilterButtons { display: flex; gap: var(--gap-half); flex-shrink: 0; }
+
+/* Базовый стиль для кнопок действий */
+.action-button {
+    /* Redesign v15.3: Общая стилизация кнопок */
+    width: var(--button-size);
+    height: var(--button-size);
+    min-width: var(--button-min-size);
+    min-height: var(--button-min-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 3px; /* Меньше скругления */
+    font-weight: 600; /* Жирнее */
+    transition: background 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.1s ease, border-color 0.2s ease;
+    border: 1px solid var(--color-border-medium); /* Рамка */
+    cursor: pointer;
+    font-size: calc(var(--button-size) * 0.45);
+    line-height: 1;
+    flex-shrink: 0;
+    background: linear-gradient(to bottom, var(--color-surface-2), #151E2A); /* Градиент */
+    box-shadow: var(--shadow-control);
+    color: var(--color-text-secondary); /* Цвет иконки/текста по умолчанию */
+}
+html[data-theme='light'] .action-button {
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-medium);
+    background: linear-gradient(to bottom, var(--color-surface-2), #F1F3F5);
+    box-shadow: var(--shadow-control);
+}
+.action-button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, var(--color-surface-1), #1E293B); /* Светлее градиент */
+    border-color: var(--color-accent-gold); /* Золотая рамка */
+    color: var(--color-text-primary); /* Ярче текст/иконка */
+    box-shadow: var(--shadow-control), 0 0 5px var(--color-accent-gold); /* Свечение */
+}
+html[data-theme='light'] .action-button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, var(--color-surface-1), #F8F9FA);
+    border-color: var(--color-accent-gold);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-control), 0 0 5px var(--color-accent-gold);
+}
+.action-button:active:not(:disabled) {
+    transform: scale(0.95);
+    background: linear-gradient(to top, var(--color-surface-2), #151E2A); /* Инверсия градиента */
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6); /* Вдавливание */
+}
+html[data-theme='light'] .action-button:active:not(:disabled) {
+    background: linear-gradient(to top, var(--color-surface-2), #F1F3F5);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
+}
+.action-button:focus-visible {
+    outline: none; /* Убираем стандартный */
+    border-color: var(--color-accent-blue); /* Голубая рамка */
+    box-shadow: var(--shadow-glow-blue), var(--shadow-control); /* Голубое свечение */
+}
+html[data-theme='light'] .action-button:focus-visible {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue), var(--shadow-control);
+}
+.action-button:disabled {
+    opacity: 0.6; /* Чуть менее прозрачные */
+    cursor: not-allowed;
+    background: linear-gradient(to bottom, #2A3858, #1A2340); /* Темно-серый градиент */
+    border-color: var(--color-border-medium);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-control);
+}
+html[data-theme='light'] .action-button:disabled {
+    background: linear-gradient(to bottom, #E9ECEF, #DEE2E6);
+    border-color: var(--color-border-medium);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-control);
+}
+.icon-button { font-size: calc(var(--button-size) * 0.55); width: var(--button-size); }
+/* Redesign v15.1: Увеличиваем толщину иконок */
+.icon-button .lucide-icon-in-button {
+    stroke-width: 2.5;
+}
+
+/* Стили для конкретных кнопок */
+#resetButton, #nextDraftButton, #swapTeamsButton, #addGlobalBanPlaceholderButton, #undoButton, #returnHomeButton {
+    /* Цвет иконки задается индивидуально */
+}
+#resetButton { color: var(--color-accent-red); }
+html[data-theme='light'] #resetButton { color: var(--color-accent-red); }
+#nextDraftButton { color: var(--color-accent-green); }
+html[data-theme='light'] #nextDraftButton { color: var(--color-accent-green); }
+#swapTeamsButton { color: var(--color-accent-gold); }
+html[data-theme='light'] #swapTeamsButton { color: var(--color-accent-gold); }
+#addGlobalBanPlaceholderButton { color: var(--color-accent-purple); }
+html[data-theme='light'] #addGlobalBanPlaceholderButton { color: var(--color-accent-purple); }
+#undoButton { color: var(--color-accent-blue); } /* Синий для отмены */
+html[data-theme='light'] #undoButton { color: var(--color-accent-blue); }
+#returnHomeButton { color: var(--color-text-secondary); } /* Серый для домой */
+html[data-theme='light'] #returnHomeButton { color: var(--color-text-secondary); }
+
+/* Hover-эффекты для конкретных кнопок (меняем цвет иконки/текста на основной) */
+#resetButton:hover:not(:disabled),
+#nextDraftButton:hover:not(:disabled),
+#swapTeamsButton:hover:not(:disabled),
+#addGlobalBanPlaceholderButton:hover:not(:disabled),
+#undoButton:hover:not(:disabled),
+#returnHomeButton:hover:not(:disabled) {
+    color: var(--color-text-primary); /* Основной цвет текста при наведении */
+    /* Остальные стили hover берутся из .action-button:hover */
+}
+
+/* Кнопки фильтра ролей */
+.filter-button {
+    /* Redesign v15.3: Применяем стили кнопок */
+    background: linear-gradient(to bottom, var(--color-surface-2), #151E2A);
+    width: var(--filter-button-size);
+    height: var(--filter-button-size);
+    font-size: calc(var(--filter-button-size) * 0.35); /* Чуть меньше шрифт */
+    font-weight: 600;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 0 2px;
+    border: 1px solid var(--color-border-medium);
+    color: var(--color-text-secondary); /* Текст по умолчанию */
+    box-shadow: var(--shadow-control);
+    border-radius: 3px;
+    text-transform: uppercase; /* Заглавные */
+}
+html[data-theme='light'] .filter-button {
+    background: linear-gradient(to bottom, var(--color-surface-2), #F1F3F5);
+    border-color: var(--color-border-medium);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-control);
+}
+.filter-button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, var(--color-surface-1), #1E293B);
+    color: var(--color-text-primary); /* Ярче текст */
+    border-color: var(--color-accent-gold); /* Золотая рамка */
+    box-shadow: var(--shadow-control), 0 0 5px var(--color-accent-gold); /* Свечение */
+}
+html[data-theme='light'] .filter-button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, var(--color-surface-1), #F8F9FA);
+    color: var(--color-text-primary);
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-control), 0 0 5px var(--color-accent-gold);
+}
+.filter-button.active {
+    background: linear-gradient(to bottom, var(--color-accent-blue), #088F83); /* Бирюзовый градиент */
+    border-color: color-mix(in srgb, var(--color-accent-blue), #fff 30%); /* Яркая бирюзовая рамка */
+    color: #FFFFFF; /* Белый текст */
+    box-shadow: var(--shadow-glow-blue), var(--shadow-control); /* Свечение */
+    font-weight: 700; /* Жирнее */
+}
+html[data-theme='light'] .filter-button.active {
+    background: linear-gradient(to bottom, var(--color-accent-blue), #067D71);
+    border-color: color-mix(in srgb, var(--color-accent-blue), #000 10%);
+    color: #FFFFFF;
+    box-shadow: var(--shadow-glow-blue), var(--shadow-control);
+}
+
+/* Сетка выбора чемпионов */
+#championGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap-half);
+    overflow-y: auto;
+    align-content: flex-start;
+    flex-grow: 1;
+    min-height: 0;
+    transition: opacity 0.3s ease;
+    padding: var(--gap-size);
+    /* Redesign v15.4: Стилизация */
+    background-color: var(--color-surface-1); /* Темный фон */
+    border-radius: 0.5rem; /* Оставляем скругление */
+    border: 1px solid var(--color-border-medium); /* Рамка */
+    box-shadow: var(--shadow-container);
+}
+html[data-theme='light'] #championGrid {
+    background-color: var(--color-surface-1);
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-container);
+}
+/* Стилизуем скроллбар */
+#championGrid::-webkit-scrollbar { width: 8px; }
+#championGrid::-webkit-scrollbar-track { background: transparent; }
+#championGrid::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; }
+#championGrid::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+#championGrid { scrollbar-width: thin; scrollbar-color: var(--color-border-medium) transparent; }
+html[data-theme='light'] #championGrid { scrollbar-color: var(--color-border-medium) transparent; }
+
+/* Карточка чемпиона в сетке */
+.champion-card {
+    width: var(--card-size);
+    height: var(--card-size);
+    min-width: var(--card-min-size);
+    min-height: var(--card-min-size);
+    border-radius: 3px; /* Меньше скругления */
+    overflow: hidden;
+    background-color: var(--color-surface-2); /* Фон для загрузки */
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+    border: 2px solid var(--color-border-medium); /* Рамка */
+    box-shadow: var(--shadow-sm);
+}
+html[data-theme='light'] .champion-card {
+    background-color: var(--color-surface-2);
+    border-color: var(--color-border-medium);
+}
+.champion-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.2s ease, transform 0.2s ease; }
+.champion-card:hover {
+    transform: scale(1.05);
+    border-color: var(--color-accent-gold); /* Золотая рамка */
+    box-shadow: var(--shadow-md), 0 0 8px 2px var(--color-accent-gold); /* Тень + свечение */
+}
+html[data-theme='light'] .champion-card:hover {
+    border-color: var(--color-accent-gold);
+    box-shadow: var(--shadow-md), 0 0 8px 2px var(--color-accent-gold);
+}
+.champion-card:hover img { transform: scale(1.03); } /* Небольшое увеличение картинки */
+.champion-card:focus-visible {
+    outline: none; /* Убираем стандартный */
+    border-color: var(--color-accent-blue); /* Голубая рамка */
+    box-shadow: var(--shadow-glow-blue); /* Голубое свечение */
+    transform: scale(1.03);
+}
+html[data-theme='light'] .champion-card:focus-visible {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue);
+}
+/* Redesign v15.4: Стилизация выбранных/отключенных */
+.champion-card.selected {
+    border-color: var(--color-accent-gold);
+}
+.champion-card.selected::before { /* Псевдоэлемент для наложения цвета */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: color-mix(in srgb, var(--color-accent-gold), transparent 70%); /* Полупрозрачное золото */
+    z-index: 1;
+    pointer-events: none;
+}
+.champion-card.selected img {
+    /* filter: grayscale(50%) brightness(80%); */ /* Можно убрать фильтр */
+    opacity: 0.8;
+}
+html[data-theme='light'] .champion-card.selected {
+    border-color: var(--color-accent-gold);
+}
+html[data-theme='light'] .champion-card.selected::before {
+    background-color: color-mix(in srgb, var(--color-accent-gold), transparent 70%);
+}
+.champion-card.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    filter: grayscale(1) brightness(0.6); /* Сильнее затемняем и обесцвечиваем */
+}
+.champion-card.disabled::before { /* Псевдоэлемент для затемнения */
+     content: '';
+     position: absolute;
+     inset: 0;
+     background-color: rgba(0,0,0,0.5);
+     z-index: 1;
+     pointer-events: none;
+}
+.champion-card.disabled img {
+    /* Убираем специфичные фильтры для img, используем filter на всей карточке */
+    transform: none;
+}
+html[data-theme='light'] .champion-card.disabled {
+    filter: grayscale(1) brightness(0.7);
+    opacity: 0.7;
+}
+html[data-theme='light'] .champion-card.disabled::before {
+     background-color: rgba(255,255,255,0.3);
+}
+.champion-card.disabled:hover {
+    transform: none;
+    border-color: var(--color-border-medium);
+    box-shadow: none;
+}
+html[data-theme='light'] .champion-card.disabled:hover {
+    border-color: var(--color-border-medium);
+}
+
+/* Всплывающая подсказка для чемпиона */
+.tooltip {
+    position: fixed;
+    /* Redesign v15.1: Стилизация */
+    background-color: var(--color-background); /* Основной темный фон */
+    color: var(--color-text-primary); /* Светлый текст */
+    padding: 0.6rem 1rem; /* Увеличим паддинг */
+    border-radius: 3px; /* Меньше скругления */
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    box-shadow: var(--shadow-lg); /* Используем новую тень */
+    border: 1px solid var(--color-accent-gold); /* Золотая рамка */
+}
+html[data-theme='light'] .tooltip {
+    background-color: var(--color-background); /* Светлый фон */
+    color: var(--color-text-primary); /* Темный текст */
+    border-color: var(--color-accent-gold); /* Темно-золотая рамка */
+    box-shadow: var(--shadow-lg);
+}
+.tooltip.visible { opacity: 1; }
+.tooltip-title {
+    font-weight: 700; /* Жирнее */
+    display: block;
+    margin-bottom: 0.2rem; /* Больше отступ */
+    color: var(--color-accent-gold); /* Золотой цвет */
+    font-family: 'Cinzel', serif; /* Шрифт заголовков */
+    font-size: 1rem; /* Чуть больше */
+}
+html[data-theme='light'] .tooltip-title { color: var(--color-accent-gold); }
+.tooltip-name {
+    font-weight: 400;
+    color: var(--color-text-secondary); /* Второстепенный цвет */
+    font-size: 0.8rem;
+}
+html[data-theme='light'] .tooltip-name { color: var(--color-text-secondary); }
+
+/* Сообщение статуса (внизу по центру) */
+#statusMessage {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Redesign v15.1: Стилизация */
+    background-color: var(--color-surface-1); /* Темный фон */
+    color: var(--color-text-primary); /* Светлый текст */
+    padding: 0.7rem 1.4rem; /* Увеличим паддинг */
+    border-radius: 3px; /* Меньше скругления */
+    z-index: 90;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid var(--color-border-medium); /* Рамка */
+    box-shadow: var(--shadow-md); /* Тень */
+    transform: translate(-50%, 10px);
+}
+html[data-theme='light'] #statusMessage {
+    background-color: var(--color-surface-1);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-medium);
+    box-shadow: var(--shadow-md);
+}
+#statusMessage.visible { opacity: 1; transform: translate(-50%, 0); }
+
+/* --- Стили Модальных окон --- */
+/* Redesign v15.6: Стилизация модальных окон */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: var(--color-modal-backdrop); /* Используем переменную */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    padding: 1rem;
+}
+.modal-backdrop:not(.hidden) {
+    opacity: 1;
+}
+html[data-theme='light'] .modal-backdrop {
+    background-color: var(--color-modal-backdrop); /* Используем переменную */
+}
+
+.modal-content {
+    background-color: var(--color-modal-bg); /* Используем переменную */
+    /* background-image: url('path/to/dark_texture.png'); */ /* TODO: Добавить текстуру */
+    padding: 1.5rem 1.8rem; /* Увеличим паддинг */
+    border-radius: 0.5rem; /* Оставляем скругление */
+    box-shadow: var(--shadow-lg), 0 0 15px rgba(0,0,0,0.5); /* Тень */
+    position: relative;
+    width: 100%;
+    max-height: var(--modal-max-height);
+    overflow-y: auto;
+    border: 2px solid var(--color-modal-border); /* Используем переменную */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-medium) transparent; /* Стилизация скроллбара */
+}
+#settingsModal .modal-content {
+    max-width: var(--modal-max-width);
+}
+#lobbyModal .modal-content {
+     max-width: var(--lobby-modal-max-width);
+}
+/* Стилизация скроллбара Webkit */
+.modal-content::-webkit-scrollbar { width: 8px; }
+.modal-content::-webkit-scrollbar-track { background: transparent; }
+.modal-content::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; }
+.modal-content::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+html[data-theme='light'] .modal-content {
+    background-color: var(--color-modal-bg); /* Используем переменную */
+    border-color: var(--color-modal-border); /* Используем переменную */
+    scrollbar-color: var(--color-border-medium) transparent;
+}
+html[data-theme='light'] .modal-content::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); }
+html[data-theme='light'] .modal-content::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-gold); }
+
+.modal-close-button {
+    position: absolute;
+    top: 0.75rem; /* Чуть сместим */
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.8rem; /* Крупнее */
+    line-height: 1;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    z-index: 1;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+.modal-close-button:hover {
+    color: var(--color-accent-red); /* Красный при наведении */
+    transform: scale(1.1); /* Увеличение */
+}
+html[data-theme='light'] .modal-close-button {
+    color: var(--color-text-secondary);
+}
+html[data-theme='light'] .modal-close-button:hover {
+    color: var(--color-accent-red);
+}
+
+.modal-button {
+    /* Redesign v15.6: Применяем общие стили кнопок, но с переменными модалки */
+    background: linear-gradient(to bottom, var(--color-modal-button-bg), color-mix(in srgb, var(--color-modal-button-bg), #000 20%)); /* Градиент */
+    color: var(--color-modal-button-text);
+    border: 1px solid var(--color-modal-border); /* Используем золотую рамку модалки */
+    padding: 0.7rem 1.4rem; /* Увеличим паддинг */
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    box-shadow: var(--shadow-control);
+}
+.modal-button:hover {
+    background: linear-gradient(to bottom, var(--color-modal-button-hover-bg), color-mix(in srgb, var(--color-modal-button-hover-bg), #000 10%)); /* Градиент при наведении */
+    border-color: color-mix(in srgb, var(--color-modal-border), #fff 20%); /* Ярче рамка */
+    box-shadow: 0 0 5px var(--color-accent-gold); /* Свечение */
+}
+html[data-theme='light'] .modal-button {
+    background: linear-gradient(to bottom, var(--color-modal-button-bg), color-mix(in srgb, var(--color-modal-button-bg), #000 5%));
+    color: var(--color-modal-button-text);
+    border-color: var(--color-modal-border); /* Темное золото */
+}
+html[data-theme='light'] .modal-button:hover {
+    background: linear-gradient(to bottom, var(--color-modal-button-hover-bg), color-mix(in srgb, var(--color-modal-button-hover-bg), #000 5%));
+    border-color: color-mix(in srgb, var(--color-modal-border), #000 10%);
+    box-shadow: 0 0 5px var(--color-accent-gold);
+}
+
+#lobbyLinksContainer .copy-button {
+    /* Redesign v15.6: Стилизуем кнопки копирования/открытия */
+    background: linear-gradient(to bottom, var(--color-accent-purple), #6D28D9); /* Фиолетовый градиент */
+    color: #FFFFFF;
+    border: 1px solid color-mix(in srgb, var(--color-accent-purple), #000 30%);
+    padding: 0.2rem 0.5rem; /* Паддинг */
+    font-size: 0.75em;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    font-weight: 500;
+}
+#lobbyLinksContainer .copy-button:hover {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-purple), #fff 15%), var(--color-accent-purple));
+    border-color: color-mix(in srgb, var(--color-accent-purple), #fff 20%);
+}
+html[data-theme='light'] #lobbyLinksContainer .copy-button {
+    background: linear-gradient(to bottom, var(--color-accent-purple), #5B21B6);
+    border-color: color-mix(in srgb, var(--color-accent-purple), #000 30%);
+}
+html[data-theme='light'] #lobbyLinksContainer .copy-button:hover {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-purple), #fff 15%), var(--color-accent-purple));
+    border-color: color-mix(in srgb, var(--color-accent-purple), #fff 20%);
+}
+#lobbyLinksContainer span {
+    color: var(--color-accent-blue); /* Цвет ссылки */
+    background-color: var(--color-surface-1); /* Фон */
+    padding: 0.3rem 0.6rem; /* Паддинг */
+    border-radius: 3px;
+    border: 1px solid var(--color-border-medium); /* Рамка */
+    word-break: break-all;
+    display: inline-block;
+    max-width: calc(100% - 120px); /* Адаптируем под кнопки */
+    font-family: monospace; /* Моноширинный шрифт для ссылки */
+}
+html[data-theme='light'] #lobbyLinksContainer span {
+    color: var(--color-accent-blue);
+    background-color: var(--color-surface-1);
+    border-color: var(--color-border-medium);
+}
+
+/* --- Специфичные стили модального окна Настроек --- */
+.setting-group {
+    margin-bottom: 1rem; /* Больше отступ */
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-medium); /* Заметнее разделитель */
+}
+.setting-group:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+html[data-theme='light'] .setting-group {
+    border-bottom-color: var(--color-border-medium);
+}
+
+.setting-label {
+    display: block;
+    margin-bottom: 0.5rem; /* Больше отступ */
+    font-weight: 600; /* Жирнее */
+    color: var(--color-text-secondary);
+    font-size: 0.9rem; /* Чуть крупнее */
+    text-transform: uppercase; /* Заглавные */
+    letter-spacing: 0.5px;
+}
+html[data-theme='light'] .setting-label {
+    color: var(--color-text-secondary);
+}
+
+.segmented-control {
+    display: flex;
+    border-radius: 3px; /* Меньше скругления */
+    overflow: hidden;
+    border: 1px solid var(--color-segment-border); /* Используем переменную */
+    background-color: var(--color-segment-bg); /* Используем переменную */
+}
+html[data-theme='light'] .segmented-control {
+    border-color: var(--color-segment-border);
+    background-color: var(--color-segment-bg);
+}
+
+.segment-button {
+    flex-grow: 1;
+    padding: 0.5rem 0.7rem; /* Увеличим паддинг */
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    color: var(--color-segment-text); /* Используем переменную */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 0.85rem; /* Чуть крупнее */
+    position: relative;
+    line-height: 1.2;
+    font-weight: 500;
+}
+.segment-button span {
+    display: inline-block;
+}
+.segment-button:not(:last-child) {
+    border-right: 1px solid var(--color-border-medium); /* Разделитель */
+}
+html[data-theme='light'] .segment-button {
+    color: var(--color-segment-text);
+}
+html[data-theme='light'] .segment-button:not(:last-child) {
+    border-right-color: var(--color-border-medium);
+}
+.segment-button.active {
+    background-color: var(--color-segment-active-bg); /* Используем переменную */
+    color: var(--color-segment-active-text); /* Используем переменную */
+    font-weight: 700; /* Жирнее */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); /* Внутренняя тень */
+}
+html[data-theme='light'] .segment-button.active {
+    background-color: var(--color-segment-active-bg);
+    color: var(--color-segment-active-text);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+.segment-button:hover:not(.active) {
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 50%); /* Фон при наведении */
+    color: var(--color-text-primary); /* Ярче текст */
+}
+html[data-theme='light'] .segment-button:hover:not(.active) {
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 50%);
+    color: var(--color-text-primary);
+}
+
+/* --- Адаптивные настройки --- */
+/* Оставляем адаптивные настройки как есть, но стили внутри них будут наследоваться от новых базовых стилей */
+@media (max-width: 1280px) {
+     .search-controls-wrapper { flex-wrap: wrap; }
+     #championSearch { min-width: 180px; }
+     #settingsModal .modal-content { max-width: 300px; }
+}
+
+@media (max-width: 1024px) {
+    :root {
+        /* Корректируем размеры для планшетов, если нужно */
+        --card-size: 11.5vh;
+        --ban-size: 5.2vmin;
+        --button-size: 4.1vh;
+        --filter-button-size: 3.6vh;
+        --score-size: 4.1vh;
+        --nick-font-size: 2.6vh;
+        --gap-size: 0.4rem;
+        --team-col-min-width: 220px;
+        --global-ban-icon-size: 6vh;
+        --global-ban-icon-min-size: 32px;
+    }
+     .team-name { font-size: clamp(1.3rem, 3.8vmin, 1.9rem); max-width: 200px;}
+     .search-controls-wrapper { margin-bottom: var(--gap-size); padding: var(--gap-half); }
+     #championSearch { min-width: 150px; }
+     .timer-display-button { min-width: 11ch; }
+     .modal-content { max-width: 90%; }
+     #settingsModal .modal-content { max-width: 280px; }
+     #lobbyModal .modal-content { max-width: 90%; }
+     .home-content-wrapper { max-width: 90%; padding: 2rem; }
+     .setting-group { margin-bottom: 0.8rem; padding-bottom: 0.8rem; }
+     .setting-label { margin-bottom: 0.3rem; font-size: 0.85rem; }
+     .segment-button { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
+     #global-bans-blue, #global-bans-red { grid-template-columns: repeat(5, var(--global-ban-icon-size)); }
+}
+
+@media (max-width: 768px) {
+     :root {
+        /* Корректируем размеры для мобильных */
+        --card-size: 11vh;
+        --ban-size: 4.8vh;
+        --button-size: 3.9vh;
+        --filter-button-size: 3.4vh;
+        --score-size: 3.9vh;
+        --nick-font-size: 2.3vh;
+        --team-col-min-width: 180px;
+        --global-ban-icon-size: 5.5vh;
+        --global-ban-icon-min-size: 30px;
+     }
+    #mainLayout { grid-template-columns: auto minmax(150px, 1fr) auto; gap: var(--gap-half); }
+     .center-controls-wrapper { grid-template-columns: 1fr auto auto auto 1fr; gap: var(--gap-half); }
+    .team-name { max-width: 150px; font-size: clamp(1.1rem, 3.2vmin, 1.7rem);}
+    .bans-container { gap: 3px; }
+    .search-controls-wrapper { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    #championSearch { width: auto; flex-grow: 1; min-width: 120px; }
+    #roleFilterButtons { justify-content: flex-start; }
+    .picks-container { gap: 3px; }
+    .timer-display-button { min-width: 10ch; padding: 0.15rem 0.5rem; font-size: calc(var(--timer-font-size) * 0.95); }
+    .modal-content { padding: 1.2rem 1.2rem; }
+    #settingsModal .modal-content { max-width: 260px; }
+    .segmented-control { flex-wrap: wrap; }
+    .segment-button { flex-basis: 50%; }
+    .segment-button:not(:last-child) { border-right: none; }
+    .segment-button:nth-child(odd) { border-right: 1px solid var(--color-border-medium); }
+    html[data-theme='light'] .segment-button:nth-child(odd) { border-right-color: var(--color-border-medium); }
+    .segment-button:nth-child(1), .segment-button:nth-child(2) { border-bottom: 1px solid var(--color-border-medium); }
+     html[data-theme='light'] .segment-button:nth-child(1), html[data-theme='light'] .segment-button:nth-child(2) { border-bottom-color: var(--color-border-medium); }
+    .home-content-wrapper { padding: 1.8rem; max-width: 375px; }
+     .setting-group { margin-bottom: 0.7rem; padding-bottom: 0.7rem; }
+     .setting-label { margin-bottom: 0.25rem; font-size: 0.8rem; }
+     .segment-button { padding: 0.35rem 0.5rem; font-size: 0.75rem; }
+     #global-bans-blue, #global-bans-red { grid-template-columns: repeat(5, var(--global-ban-icon-size)); }
+}
+
+@media (max-width: 480px) {
+    body { padding: 3px; }
+     #app-container { padding: 3px; }
+    :root {
+        /* Корректируем размеры для самых маленьких экранов */
+        --card-size: 10vh;
+        --ban-size: 4.2vh;
+        --button-size: 3.6vh;
+        --filter-button-size: 3.1vh;
+        --score-size: 3.6vh;
+        --nick-font-size: 2.1vh;
+        --card-min-size: 55px;
+        --ban-min-size: 26px;
+        --button-min-size: 28px;
+        --score-min-size: 28px;
+        --team-col-min-width: 90px;
+        --top-button-size: 2.1rem; /* v16.0: Переименовано */
+        --top-button-min-size: 32px; /* v16.0: Переименовано */
+        --global-ban-icon-size: 5vh;
+        --global-ban-icon-min-size: 28px;
+    }
+     #mainLayout { grid-template-columns: auto minmax(100px, 1fr) auto; gap: 3px; }
+     #topRowContainer { grid-template-columns: 1fr auto 1fr; }
+     .top-row-cell.blue-info { grid-column: 1; }
+     .top-row-cell.center-controls { grid-column: 2; }
+     .top-row-cell.red-info { grid-column: 3; }
+     .center-controls-wrapper { display: flex; flex-wrap: wrap; justify-content: center; }
+     #timerDisplay { order: -1; margin-bottom: var(--gap-half); min-width: 10ch; }
+     .team-name { max-width: 100px; font-size: clamp(0.9rem, 2.8vmin, 1.2rem); }
+     .bans-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+     #blue-ban-4, #blue-ban-5, #red-ban-4, #red-ban-5 { margin-top: 3px; }
+     .filter-button { min-width: 28px; min-height: 28px; font-size: 0.65rem; }
+     #championGrid { gap: 3px; }
+     .team-column { padding: var(--gap-half); }
+     .picks-container { gap: 2px; }
+     .search-controls-wrapper { overflow-x: visible; flex-wrap: wrap; }
+     #championSearch { min-width: 100px; }
+     /* Redesign v15.9: Обновляем позиционирование для маленьких экранов */
+     #topLeftButtonsContainer { top: var(--gap-size); left: var(--gap-size); gap: var(--gap-half); }
+     /* #topRightButtons { left: calc(var(--gap-size) + var(--top-right-button-size) + var(--gap-half)); gap: var(--gap-half); } */
+     /* #telegramLinkButton { left: var(--gap-size); } */
+     .modal-content { max-width: calc(100% - 1.5rem); padding: 1rem; }
+     #settingsModal .modal-content { max-width: calc(100% - 1.5rem); }
+     .setting-label { font-size: 0.75rem; margin-bottom: 0.2rem;}
+     .segment-button { font-size: 0.7rem; padding: 0.3rem 0.4rem; }
+     #lobbyLinksContainer span { max-width: calc(100% - 80px); }
+     .home-content-wrapper { padding: 1.2rem; max-width: calc(100% - 1rem); width: calc(100% - 1rem); }
+     #homeTitle { font-size: clamp(1.6rem, 5.5vmin, 2.6rem); margin-bottom: 1.2rem;}
+     .lobby-input { width: 90%; }
+     #createLobbyButton { padding: 0.7rem 1.6rem; font-size: clamp(0.9rem, 2.3vh, 1.1rem); }
+     #global-bans-blue, #global-bans-red {
+        grid-template-columns: repeat(5, var(--global-ban-icon-size));
+        justify-content: center;
+        width: auto;
+        flex-basis: 100%;
+     }
+     #global-bans-blue { margin-bottom: var(--gap-half); }
+}
+
+/* Дополнительные стили для адаптивности сегментированных контролов в модальном окне */
+@media (max-width: 320px) { /* Очень маленькие экраны */
+    .segment-button {
+        flex-basis: 100%; /* Одна кнопка на строку */
+        border-right: none !important;
+        border-bottom: 1px solid var(--color-border-medium);
+    }
+    html[data-theme='light'] .segment-button {
+        border-bottom-color: var(--color-border-medium);
+    }
+    .segment-button:last-child {
+        border-bottom: none;
+    }
+    html[data-theme='light'] .segment-button:last-child {
+        border-bottom: none;
+    }
+}
