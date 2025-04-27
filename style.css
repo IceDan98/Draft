@@ -1,0 +1,1654 @@
+/* style.css - v13.2 - Updated Nickname Shadow for Text and Placeholder */
+:root {
+    /* Базовые размеры */
+    --gap-size: 0.5rem; /* Основной размер отступа */
+    --gap-half: calc(var(--gap-size) / 2); /* Половина отступа */
+    --gap-double: calc(var(--gap-size) * 2); /* Двойной отступ */
+
+    /* Размеры (vmin/vh для масштабируемости) */
+    --ban-size: 5.5vmin; /* Размер слотов для банов */
+    --card-size: 12vh; /* Размер карточек чемпионов (Увеличен) */
+    --nick-height: 3.5vh; /* Базовая высота поля никнейма */
+    --nick-font-size: 2.8vh; /* Базовый размер шрифта никнейма */
+    --button-size: 4.2vh; /* Базовый размер кнопок */
+    --timer-font-size: 2vh; /* Размер шрифта таймера */
+    --score-size: 4.2vh; /* Размер поля счета */
+    --score-font-size: 2vh; /* Размер шрифта счета */
+    --filter-button-size: 3.8vh; /* Размер кнопок фильтра ролей */
+    --global-ban-icon-size: 6.4vh; /* Фиксированный размер иконок глобальных банов */
+    --top-right-button-size: 2.5rem; /* Размер кнопок настроек/админа (эквивалент 40px) */
+    --modal-max-width: 250px; /* Макс. ширина модального окна настроек */
+    --lobby-modal-max-width: 500px; /* Макс. ширина модального окна лобби */
+    --modal-max-height: 90vh; /* Макс. высота модальных окон */
+
+    /* Минимальные размеры */
+    --ban-min-size: 28px; /* Мин. размер слотов банов */
+    --pick-min-height: 55px; /* Мин. высота слотов пиков */
+    --card-min-size: 63px; /* Мин. размер карточек чемпионов (Увеличен) */
+    --nick-min-height: 16px; /* Мин. высота поля никнейма */
+    --button-min-size: 28px; /* Мин. размер кнопок */
+    --score-min-size: 28px; /* Мин. размер поля счета */
+    --team-name-min-height: 30px; /* Мин. высота заголовков команд */
+    --team-col-min-width: 240px; /* Мин. ширина колонок команд */
+    --global-ban-icon-min-size: 35px; /* Мин. размер иконок глобальных банов */
+    --top-right-button-min-size: 36px; /* Мин. размер кнопок справа вверху */
+
+
+    /* Цвета - Темная тема (По умолчанию) */
+    --color-background: #0a0f1f; /* Основной фон */
+    --color-surface-1: #10182f; /* Чуть светлее фон (напр., фон сетки) */
+    --color-surface-2: #1a2340; /* Еще светлее фон (напр., кнопки, слоты) */
+    --color-text-primary: #e0e8f0; /* Основной цвет текста */
+    --color-text-secondary: #8095b0; /* Второстепенный цвет текста (напр., метки, плейсхолдеры) */
+    --color-text-placeholder: #cccccc; /* Цвет плейсхолдера (Светлее для контраста) */
+    --color-border: #2a3858; /* Цвет рамки по умолчанию */
+    --color-border-medium: #405075; /* Чуть более заметная рамка */
+    --color-accent-gold: #c8aa6e; /* Золотой акцент (напр., выделение, заголовки) */
+    --color-accent-blue: #50a0f0; /* Синий акцент (напр., синяя команда, активный фильтр) */
+    --color-accent-red: #f05050; /* Красный акцент (напр., красная команда, кнопка сброса) */
+    --color-accent-green: #40f0a0; /* Зеленый акцент (напр., старт таймера, след. драфт) */
+    --color-accent-purple: #a070f0; /* Фиолетовый акцент (напр., кнопка копирования) */
+    --color-accent-blue-dark: #313850; /* Темно-синий (напр., фон кнопки админа) */
+
+    --color-blue-team: var(--color-accent-blue); /* Цвет для элементов синей команды */
+    --color-red-team: var(--color-accent-red); /* Цвет для элементов красной команды */
+
+    --color-blue-bg-transparent: rgba(80, 160, 240, 0.4); /* Прозрачный синий фон для колонки синих */
+    --color-red-bg-transparent: rgba(240, 80, 80, 0.4); /* Прозрачный красный фон для колонки красных */
+
+    --color-tooltip-bg: rgba(10, 15, 31, 0.9); /* Фон всплывающей подсказки */
+    --color-tooltip-text: var(--color-text-primary); /* Текст всплывающей подсказки */
+
+    --color-modal-backdrop: rgba(10, 15, 31, 0.7); /* Цвет фона модального окна (Темный) */
+    --color-modal-bg: var(--color-surface-1); /* Фон контента модального окна */
+    --color-modal-border: var(--color-border-medium); /* Рамка контента модального окна */
+    --color-modal-button-bg: var(--color-surface-2); /* Фон кнопок модального окна */
+    --color-modal-button-hover-bg: var(--color-border-medium); /* Фон кнопок модального окна при наведении */
+    --color-modal-button-text: var(--color-text-primary); /* Текст кнопок модального окна */
+    --color-segment-bg: var(--color-surface-2); /* Фон сегментированного контрола */
+    --color-segment-border: var(--color-border); /* Рамка сегментированного контрола */
+    --color-segment-text: var(--color-text-secondary); /* Текст кнопок сегментированного контрола */
+    --color-segment-active-bg: var(--color-accent-blue); /* Фон активной кнопки сегмента */
+    --color-segment-active-text: #FFFFFF; /* Текст активной кнопки сегмента */
+
+    /* Тени - ТЗ v2.3: Обновленные/добавленные тени */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.1); /* Маленькая тень */
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.15); /* Средняя тень */
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.2); /* Большая тень */
+    --shadow-glow-gold: 0 0 10px 0px rgba(200, 170, 110, 0.5); /* Золотое свечение */
+    --shadow-glow-blue: 0 0 10px 0px rgba(80, 160, 240, 0.5); /* Синее свечение */
+    --shadow-glow-red: 0 0 8px 0px rgba(240, 80, 80, 0.4); /* Красное свечение */
+    --shadow-control: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Тень для кнопок, поиска, счета, таймера */
+    --shadow-slot: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Тень для слотов пиков/банов */
+    --shadow-container: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для обертки сетки/контролов */
+    --shadow-text-input: 1px 1px 2px rgba(0, 0, 0, 0.25); /* Тень для текста в полях ввода лобби */
+    /* --- ИЗМЕНЕНО: Тень для никнейма стала "жирнее" --- */
+    --shadow-text-nickname: 2px 2px 4px rgba(0, 0, 0, 1); /* Тень для текста никнейма */
+}
+
+/* --- Определения переменных Светлой темы --- */
+html[data-theme='light'] :root {
+    --color-background: #FFFFFF;
+    --color-surface-1: #F3F4F6; /* gray-100 */
+    --color-surface-2: #E5E7EB; /* gray-200 */
+    --color-text-primary: #111827; /* gray-900 */
+    --color-text-secondary: #6B7280; /* gray-500 */
+    --color-text-placeholder: #4b5563; /* Темный плейсхолдер для светлой темы */
+    --color-border: #D1D5DB; /* gray-300 */
+    --color-border-medium: #9CA3AF; /* gray-400 */
+    --color-accent-gold: #D97706; /* amber-600 */
+    --color-accent-blue: #2563EB; /* blue-600 */
+    --color-accent-red: #DC2626; /* red-600 */
+    --color-accent-green: #16A34A; /* green-600 */
+    --color-accent-purple: #7C3AED; /* violet-600 */
+    --color-accent-blue-dark: #1E40AF; /* blue-800 */
+
+    --color-blue-team: var(--color-accent-blue);
+    --color-red-team: var(--color-accent-red);
+
+    --color-blue-bg-transparent: rgba(37, 99, 235, 0.2);
+    --color-red-bg-transparent: rgba(220, 38, 38, 0.2);
+
+    --color-tooltip-bg: rgba(243, 244, 246, 0.95);
+    --color-tooltip-text: var(--color-text-primary);
+
+    --color-modal-backdrop: rgba(229, 231, 235, 0.7); /* Светлый фон */
+    --color-modal-bg: #FFFFFF; /* Базовый цвет модального окна */
+    --color-modal-border: var(--color-border);
+    --color-modal-button-bg: var(--color-surface-1);
+    --color-modal-button-hover-bg: var(--color-surface-2);
+    --color-modal-button-text: var(--color-text-primary);
+    --color-segment-bg: var(--color-surface-1);
+    --color-segment-border: var(--color-border);
+    --color-segment-text: var(--color-text-secondary);
+    --color-segment-active-bg: var(--color-accent-blue);
+    --color-segment-active-text: #FFFFFF;
+
+    /* Светлые тени - ТЗ v2.3: Обновленные/добавленные тени */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.07);
+    --shadow-glow-gold: 0 0 10px 0px rgba(217, 119, 6, 0.3);
+    --shadow-glow-blue: 0 0 10px 0px rgba(37, 99, 235, 0.3);
+    --shadow-glow-red: 0 0 8px 0px rgba(220, 38, 38, 0.3);
+    --shadow-control: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Светлая тень для контролов */
+    --shadow-slot: 2px 2px 4px rgba(0, 0, 0, 0.15); /* Светлая тень для слотов */
+    --shadow-container: 0 2px 5px rgba(0, 0, 0, 0.1); /* Светлая тень для контейнеров */
+    --shadow-text-input: 1px 1px 2px rgba(0, 0, 0, 0.25); /* Та же тень для текста */
+    /* --- ИЗМЕНЕНО: Тень для никнейма стала "жирнее" (используется та же переменная) --- */
+    --shadow-text-nickname: 2px 2px 4px rgba(0, 0, 0, 1); /* Та же тень для текста */
+}
+
+/* --- Глобальные стили --- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Стилизация скроллбара для Firefox */
+    scrollbar-color: var(--color-border-medium) var(--color-surface-1);
+    scrollbar-width: thin;
+}
+/* Стилизация скроллбара для Webkit (Chrome, Safari) */
+body::-webkit-scrollbar { width: 8px; }
+body::-webkit-scrollbar-track { background: var(--color-surface-1); }
+body::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 4px; border: 2px solid var(--color-surface-1); }
+/* Скроллбар светлой темы */
+html[data-theme='light'] body::-webkit-scrollbar-track { background: #F3F4F6; }
+html[data-theme='light'] body::-webkit-scrollbar-thumb { background-color: #9CA3AF; border-color: #F3F4F6; }
+
+
+body {
+    font-family: 'Inter', sans-serif; /* Шрифт по умолчанию */
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    height: 100vh; /* Полная высота окна */
+    overflow: hidden; /* Предотвратить прокрутку body */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Body светлой темы */
+html[data-theme='light'] body {
+    background-color: #FFFFFF;
+    color: #111827;
+}
+
+/* Основной контейнер приложения */
+#app-container {
+    width: 100%;
+    height: 100%;
+    max-width: 2600px; /* Опциональная макс. ширина */
+    padding: var(--gap-size);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Для абсолютного позиционирования дочерних элементов */
+}
+
+/* Базовый контейнер страницы */
+.page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Утилитарный класс для скрытия элементов */
+.hidden {
+    display: none !important;
+}
+
+/* Оверлей индикатора загрузки */
+#loadingIndicator {
+    display: flex;
+    position: fixed;
+    inset: 0; /* Покрыть все окно */
+    background-color: rgba(10, 15, 31, 0.85); /* Полупрозрачный темный фон */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Убедиться, что он наверху */
+    transition: opacity 0.5s ease-out;
+    opacity: 1;
+}
+/* Индикатор загрузки светлой темы */
+html[data-theme='light'] #loadingIndicator {
+    background-color: rgba(243, 244, 246, 0.85);
+    color: #111827;
+}
+/* Плавное скрытие индикатора загрузки */
+#loadingIndicator.hidden {
+    opacity: 0;
+    pointer-events: none; /* Предотвратить взаимодействие при скрытии */
+}
+
+
+/* --- Стили Главной страницы --- */
+#homePage {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* Скрыть выходящий фон */
+    background-size: cover; /* Масштабировать фон */
+    background-position: center center;
+    background-repeat: no-repeat;
+    /* ТЗ v2.3: Плавный переход opacity для смены фона */
+    transition: opacity 1s ease-in-out, background-image 0.5s ease-in-out; /* Добавлен переход для background-image */
+    opacity: 1; /* Начать полностью видимым */
+}
+/* ТЗ v2.3: Класс, добавляемый JS для запуска затухания (может быть не нужен с переходом opacity) */
+#homePage.background-fade-active {
+    /* Этот класс может быть просто маркером, переход на #homePage обрабатывает визуализацию */
+}
+
+
+/* --- Стили Обертки контента главной страницы --- */
+.home-content-wrapper {
+    position: relative; /* Убедиться, что контент над фоном */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 50%); /* Полупрозрачный фон */
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-md);
+    padding: 2rem;
+    max-width: 375px; /* Ограничить ширину */
+    width: 90%; /* Адаптивная ширина */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+/* Обертка контента главной страницы светлой темы */
+html[data-theme='light'] .home-content-wrapper {
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 30%);
+    border-color: var(--color-border);
+}
+
+/* Заголовок главной страницы */
+#homeTitle {
+    font-family: 'Cinzel', serif; /* Специальный шрифт для заголовка */
+    color: var(--color-accent-gold);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    font-size: clamp(2rem, 6vmin, 3.5rem); /* Адаптивный размер шрифта */
+    margin-bottom: 2rem;
+}
+/* Заголовок главной страницы светлой темы */
+html[data-theme='light'] #homeTitle {
+    color: #D97706;
+}
+
+/* --- ИЗМЕНЕНО: Стили полей ввода лобби --- */
+/* Стили для полей ввода имен команд на главной странице */
+.lobby-input {
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 75%); /* 25% непрозрачности */
+    border: 1px solid var(--color-border-medium);
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
+    font-size: clamp(1rem, 2.5vh, 1.3rem); /* Адаптивный размер шрифта */
+    font-weight: 500;
+    color: var(--color-text-primary);
+    /* ТЗ v2.3: Добавлена тень текста */
+    text-shadow: var(--shadow-text-input);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+/* Сохранить цвета для конкретных команд */
+#team1NameInput { color: var(--color-blue-team); }
+#team2NameInput { color: var(--color-red-team); }
+
+/* Поле ввода лобби светлой темы */
+html[data-theme='light'] .lobby-input {
+     background-color: color-mix(in srgb, var(--color-surface-1), transparent 75%);
+     border-color: #D1D5DB;
+     color: var(--color-text-primary);
+     text-shadow: var(--shadow-text-input); /* ТЗ v2.3: Добавлена тень текста */
+}
+html[data-theme='light'] #team1NameInput { color: var(--color-blue-team); }
+html[data-theme='light'] #team2NameInput { color: var(--color-red-team); }
+
+/* --- ИЗМЕНЕНО: Стили плейсхолдера полей ввода лобби --- */
+.lobby-input::placeholder {
+    color: var(--color-text-placeholder);
+    font-weight: 400;
+    text-shadow: none; /* Плейсхолдеры обычно без тени */
+    opacity: 0.8;
+}
+/* Плейсхолдер поля ввода лобби светлой темы */
+html[data-theme='light'] .lobby-input::placeholder {
+    color: var(--color-text-placeholder);
+    text-shadow: none;
+}
+
+/* Состояние фокуса для полей ввода лобби */
+.lobby-input:focus {
+    outline: none;
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue);
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 65%);
+}
+/* Состояние фокуса поля ввода лобби светлой темы */
+html[data-theme='light'] .lobby-input:focus {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-glow-blue);
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 65%);
+}
+
+/* Кнопка Создать Лобби/Драфт */
+#createLobbyButton {
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), transparent 25%);
+    border-color: var(--color-accent-blue-dark);
+    color: #FFFFFF;
+    padding: 0.8rem 2rem;
+    font-size: clamp(1rem, 2.5vh, 1.3rem); /* Адаптивный размер шрифта */
+    min-width: 150px;
+    font-weight: 600;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, border-color 0.2s ease;
+    box-shadow: var(--shadow-md);
+    margin-top: 1rem;
+}
+#createLobbyButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), transparent 15%);
+    border-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 15%);
+    box-shadow: var(--shadow-lg);
+}
+#createLobbyButton:active:not(:disabled) {
+    transform: scale(0.98); /* Легкий эффект сжатия при клике */
+    box-shadow: var(--shadow-sm);
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), transparent 5%);
+}
+/* Кнопка Создать Лобби светлой темы */
+html[data-theme='light'] #createLobbyButton {
+     background-color: color-mix(in srgb, #2563EB, transparent 25%);
+     border-color: #2563EB;
+     color: #FFFFFF;
+}
+html[data-theme='light'] #createLobbyButton:hover:not(:disabled) {
+     background-color: color-mix(in srgb, #2563EB, transparent 15%);
+     border-color: color-mix(in srgb, #2563EB, #000 10%);
+}
+html[data-theme='light'] #createLobbyButton:active:not(:disabled) {
+    background-color: color-mix(in srgb, #2563EB, transparent 5%);
+}
+
+/* Кнопка ссылки Telegram (Слева вверху) */
+#telegramLinkButton {
+    position: absolute;
+    top: var(--gap-double);
+    left: var(--gap-double);
+    z-index: 10;
+    width: var(--top-right-button-size);
+    height: var(--top-right-button-size);
+    min-width: var(--top-right-button-min-size);
+    min-height: var(--top-right-button-min-size);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 25%);
+    color: #50a0f0; /* Синий Telegram */
+    font-size: 1.1rem; /* Сохранить для возможного резервного текста */
+    line-height: 1;
+}
+/* ТЗ v2.3: Стиль для иконок Lucide SVG внутри кнопок */
+.lucide-icon-in-button {
+    width: 60%; /* Настроить размер по необходимости */
+    height: 60%;
+    stroke: currentColor; /* Использовать цвет текста кнопки */
+    vertical-align: middle; /* Красиво выровнять иконку */
+}
+#telegramLinkButton:hover {
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 15%);
+    color: #64b5f6; /* Светлее синий при наведении */
+    box-shadow: var(--shadow-lg);
+}
+#telegramLinkButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 5%);
+}
+/* Кнопка Telegram светлой темы */
+html[data-theme='light'] #telegramLinkButton {
+    background-color: color-mix(in srgb, #E5E7EB, transparent 25%);
+    color: #29B6F6; /* Синий Telegram светлой темы */
+    border-color: #D1D5DB;
+}
+html[data-theme='light'] #telegramLinkButton:hover {
+    background-color: color-mix(in srgb, #F3F4F6, transparent 15%);
+    color: #03A9F4;
+    border-color: #9CA3AF;
+}
+html[data-theme='light'] #telegramLinkButton:active {
+    background-color: color-mix(in srgb, #F3F4F6, transparent 5%);
+}
+
+/* Контейнер для кнопок Настройки и Админ (Справа вверху) */
+#topRightButtons {
+    position: absolute;
+    top: var(--gap-double);
+    right: var(--gap-double);
+    z-index: 10;
+    display: flex;
+    gap: var(--gap-size);
+    align-items: center;
+}
+
+/* Кнопка Настройки */
+#settingsButton {
+    width: var(--top-right-button-size);
+    height: var(--top-right-button-size);
+    min-width: var(--top-right-button-min-size);
+    min-height: var(--top-right-button-min-size);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+    background-color: color-mix(in srgb, var(--color-surface-2), transparent 25%);
+    color: var(--color-text-secondary);
+    font-size: 1.1rem; /* Сохранить для возможного резервного текста */
+    line-height: 1;
+}
+/* Кнопка Настройки светлой темы */
+html[data-theme='light'] #settingsButton {
+    background-color: color-mix(in srgb, #E5E7EB, transparent 25%);
+    color: #6B7280;
+    border-color: #D1D5DB;
+}
+#settingsButton:hover {
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 15%);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-lg);
+}
+html[data-theme='light'] #settingsButton:hover {
+    background-color: color-mix(in srgb, #F3F4F6, transparent 15%);
+    color: #111827;
+    border-color: #9CA3AF;
+}
+#settingsButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+    background-color: color-mix(in srgb, var(--color-surface-1), transparent 5%);
+}
+
+/* Кнопка Админ */
+#adminButton {
+    width: auto; /* Авто ширина по контенту */
+    height: var(--top-right-button-size);
+    min-height: var(--top-right-button-min-size);
+    padding: 0 1rem; /* Горизонтальный паддинг */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: var(--shadow-md);
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), transparent 25%);
+    border: 1px solid var(--color-accent-blue-dark);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+#adminButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), transparent 15%);
+    border-color: color-mix(in srgb, var(--color-accent-blue-dark), #fff 15%);
+    box-shadow: var(--shadow-lg);
+}
+#adminButton:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+    background-color: color-mix(in srgb, var(--color-accent-blue-dark), transparent 5%);
+}
+/* Кнопка Админ светлой темы */
+html[data-theme='light'] #adminButton {
+    background-color: color-mix(in srgb, #2563EB, transparent 25%);
+    border-color: #2563EB;
+    color: white;
+}
+html[data-theme='light'] #adminButton:hover:not(:disabled) {
+    background-color: color-mix(in srgb, #2563EB, transparent 15%);
+    border-color: color-mix(in srgb, #2563EB, #000 10%);
+}
+html[data-theme='light'] #adminButton:active:not(:disabled) {
+    background-color: color-mix(in srgb, #2563EB, transparent 5%);
+}
+
+/* --- Стили Страницы Драфта --- */
+#draftPage { height: 100%; overflow: hidden; }
+
+/* Заголовки названий команд (Синяя/Красная) */
+.team-name {
+    font-family: 'Cinzel', serif; /* Специальный шрифт */
+    text-align: center;
+    font-size: clamp(1.4rem, 4vmin, 2.1rem); /* Адаптивный размер шрифта */
+    font-weight: 700;
+    flex-shrink: 1; /* Разрешить сжатие */
+    min-height: var(--team-name-min-height);
+    line-height: var(--team-name-min-height);
+    overflow: hidden; /* Скрыть длинные названия */
+    white-space: nowrap;
+    text-overflow: ellipsis; /* Добавить ... для длинных названий */
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.375rem;
+    background-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: default;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+#blue-team-name-h2 { justify-self: center; color: var(--color-blue-team); }
+#red-team-name-h2 { justify-self: center; color: var(--color-red-team); }
+/* Названия команд светлой темы */
+html[data-theme='light'] #blue-team-name-h2 { color: var(--color-blue-team); text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); }
+html[data-theme='light'] #red-team-name-h2 { color: var(--color-red-team); text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); }
+/* Состояние редактирования для названий команд */
+.team-name[contenteditable="true"]:hover { background-color: color-mix(in srgb, var(--color-surface-1), transparent 50%); }
+html[data-theme='light'] .team-name[contenteditable="true"]:hover { background-color: color-mix(in srgb, #F3F4F6, transparent 50%); }
+.team-name[contenteditable="true"]:focus { outline: 2px solid var(--color-accent-gold); background-color: color-mix(in srgb, var(--color-surface-2), transparent 30%); white-space: normal; overflow: visible; box-shadow: var(--shadow-glow-gold); }
+html[data-theme='light'] .team-name[contenteditable="true"]:focus { outline-color: #D97706; background-color: color-mix(in srgb, #E5E7EB, transparent 30%); box-shadow: var(--shadow-glow-gold); }
+
+/* ТЗ v2.3: Обновление стиля никнейма */
+/* Поля ввода никнеймов внутри слотов пиков */
+.nickname-input {
+    font-family: 'Inter', sans-serif;
+    background-color: transparent; /* Убран фон */
+    color: #fff; /* Белый текст для видимости поверх изображений */
+    border-radius: 0.25rem;
+    padding: 3px 8px;
+    /* --- ИЗМЕНЕНО: Используется обновленная переменная тени --- */
+    text-shadow: var(--shadow-text-nickname); /* Добавлена жирная черная тень */
+    position: absolute;
+    bottom: 5px; /* Позиционировать внизу */
+    width: auto; /* Ширина по контенту */
+    max-width: calc(100% - 16px); /* Ограничить ширину, чтобы поместиться в слот */
+    z-index: 1; /* Убедиться, что он над изображением */
+    font-size: calc(var(--nick-font-size) * 0.9); /* Немного меньший размер шрифта */
+    font-weight: 500;
+    height: auto;
+    min-height: var(--nick-min-height);
+    pointer-events: auto; /* Разрешить клики */
+    cursor: text; /* Курсор текста при редактировании */
+    overflow: hidden; /* Скрыть длинный текст */
+    white-space: nowrap;
+    text-overflow: ellipsis; /* Добавить ... для длинного текста */
+    line-height: 1.3;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease; /* Убран переход фона */
+    border: 1px solid transparent; /* Прозрачная рамка изначально */
+}
+/* Текст плейсхолдера для пустого редактируемого никнейма */
+.nickname-input[contenteditable="true"]:empty::before {
+    content: attr(data-placeholder); /* Получить текст плейсхолдера из атрибута data */
+    color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый плейсхолдер */
+    font-style: normal;
+    /* --- ИЗМЕНЕНО: Применена тень к плейсхолдеру --- */
+    text-shadow: var(--shadow-text-nickname); /* Плейсхолдер теперь с тенью */
+    opacity: 1;
+}
+/* Стиль для нередактируемого никнейма (состояние только для чтения) */
+.nickname-input:not([contenteditable="true"]) {
+    cursor: default;
+    pointer-events: none;
+    /* Фон не нужен */
+}
+/* Позиционирование для никнеймов синей/красной команды */
+[id^="blue-pick-"] .nickname-input { right: 8px; left: auto; text-align: right; }
+[id^="red-pick-"] .nickname-input { left: 8px; right: auto; text-align: left; }
+/* Состояние фокуса для редактируемого никнейма */
+.nickname-input[contenteditable="true"]:focus {
+    outline: none;
+    white-space: normal; /* Разрешить перенос при фокусе */
+    overflow: visible;
+    text-overflow: clip;
+    border: 1px solid var(--color-accent-gold); /* Золотая рамка при фокусе */
+    box-shadow: var(--shadow-glow-gold);
+    /* Нет изменения фона при фокусе */
+}
+/* Состояние фокуса светлой темы */
+html[data-theme='light'] .nickname-input[contenteditable="true"]:focus {
+    border-color: #D97706;
+    box-shadow: var(--shadow-glow-gold);
+}
+/* --- ТЗ №5: Стиль никнейма светлой темы --- */
+/* Убедиться, что никнеймы светлой темы также имеют белый текст и черную тень */
+html[data-theme='light'] .nickname-input {
+    color: #ffffff; /* Белый текст */
+    text-shadow: var(--shadow-text-nickname); /* Черная тень (как в темной теме) */
+}
+/* Плейсхолдер светлой темы */
+html[data-theme='light'] .nickname-input[contenteditable="true"]:empty::before {
+     color: rgba(255, 255, 255, 0.7); /* Светлый плейсхолдер */
+     /* --- ИЗМЕНЕНО: Применена тень к плейсхолдеру светлой темы --- */
+     text-shadow: var(--shadow-text-nickname); /* Убрать тень у плейсхолдера */
+}
+/* --- Конец ТЗ №5 --- */
+
+/* Основная сетка макета для страницы драфта */
+#mainLayout {
+    display: grid;
+    grid-template-rows: auto 1fr; /* Верхняя строка авто высота, основная область занимает оставшееся пространство */
+    grid-template-columns: auto minmax(300px, 1fr) auto; /* Синяя колонка авто, Центральная сетка гибкая, Красная колонка авто */
+    gap: var(--gap-size);
+    height: 100%;
+    width: 100%;
+    opacity: 0; /* Начать скрытым для плавного появления */
+    transition: opacity 0.5s ease-in;
+}
+#mainLayout:not(.hidden) { opacity: 1; } /* Плавное появление при отсутствии класса hidden */
+
+/* Контейнер для элементов верхней строки (баны, таймер, счет, названия) */
+#topRowContainer {
+    grid-column: 1 / -1; /* Охватить все колонки */
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: subgrid; /* Наследовать колонки от #mainLayout */
+    gap: var(--gap-size);
+    align-items: center;
+    margin-bottom: var(--gap-size);
+    min-height: calc(var(--button-size) + var(--gap-size)); /* Обеспечить достаточную высоту */
+}
+/* Ячейки в верхней строке */
+.top-row-cell { display: flex; align-items: center; gap: var(--gap-size); min-width: 0; }
+.top-row-cell.blue-info { grid-column: 1; justify-content: flex-start; }
+.top-row-cell.center-controls { grid-column: 2; justify-content: center; }
+.top-row-cell.red-info { grid-column: 3; justify-content: flex-end; }
+/* Обертка для центральных контролов (названия, счет, таймер) для выравнивания */
+.center-controls-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content max-content max-content minmax(0, 1fr); /* Гибкое пространство вокруг фиксированного контента */
+    align-items: center;
+    gap: var(--gap-size);
+    width: 100%;
+}
+
+/* ТЗ v2.3: Тень поля ввода счета и удаление тени текста */
+/* Поля ввода счета */
+.score-input {
+    width: var(--score-size);
+    height: var(--score-size);
+    min-width: var(--score-min-size);
+    min-height: var(--score-min-size);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--score-font-size);
+    font-weight: 600;
+    flex-shrink: 0; /* Предотвратить сжатие */
+    justify-self: center; /* Центрировать в ячейке сетки */
+    background-color: var(--color-surface-2);
+    cursor: default;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-control); /* Добавлена тень */
+    text-shadow: none; /* Явно убрать тень текста */
+}
+/* Поле ввода счета светлой темы */
+html[data-theme='light'] .score-input {
+    border-color: #D1D5DB;
+    background-color: #E5E7EB;
+    color: #111827;
+    box-shadow: var(--shadow-control); /* Добавлена тень */
+    text-shadow: none;
+}
+/* Состояние редактирования для поля ввода счета */
+.score-input[contenteditable="true"] { cursor: text; }
+.score-input[contenteditable="true"]:hover { background-color: var(--color-surface-1); border-color: var(--color-border-medium); }
+html[data-theme='light'] .score-input[contenteditable="true"]:hover { background-color: #F3F4F6; border-color: #9CA3AF; }
+.score-input[contenteditable="true"]:focus { outline: none; border-color: var(--color-accent-gold); background-color: var(--color-surface-1); box-shadow: var(--shadow-glow-gold), var(--shadow-control); /* Сохранить тень контрола при фокусе */ }
+html[data-theme='light'] .score-input[contenteditable="true"]:focus { border-color: #D97706; background-color: #F3F4F6; box-shadow: var(--shadow-glow-gold), var(--shadow-control); }
+/* Плейсхолдер для пустого поля ввода счета */
+.score-input:empty::before { content: "0"; color: var(--color-text-placeholder); font-style: normal; }
+html[data-theme='light'] .score-input:empty::before { color: #9CA3AF; }
+/* Цвета счета для конкретных команд */
+#blue-score { color: var(--color-blue-team); }
+#red-score { color: var(--color-red-team); }
+
+/* ТЗ v2.3: Тень таймера */
+/* Отображение таймера / Кнопка Старт */
+.timer-display-button {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--timer-font-size);
+    font-weight: 600;
+    color: #FFFFFF;
+    min-width: 12ch; /* Обеспечить достаточную ширину для текста */
+    height: calc(var(--button-size) * 1.1); /* Чуть выше стандартной кнопки */
+    min-height: calc(var(--button-min-size) * 1.1);
+    text-align: center;
+    background-color: var(--color-accent-green); /* Зеленый изначально для "Старт" */
+    border: none;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-control); /* Добавлена тень */
+}
+/* Таймер светлой темы */
+html[data-theme='light'] .timer-display-button { background-color: #16A34A; color: #FFFFFF; box-shadow: var(--shadow-control); }
+/* Состояние наведения для таймера (когда кликабелен) */
+.timer-display-button:hover:not(:disabled) { background-color: color-mix(in srgb, var(--color-accent-green), #000 10%); box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.1); /* Усилить тень при наведении */ }
+html[data-theme='light'] .timer-display-button:hover:not(:disabled) { background-color: color-mix(in srgb, #16A34A, #000 10%); box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.05); }
+/* Отключенное состояние для таймера */
+.timer-display-button:disabled, .timer-display-button.timer-disabled { cursor: default; background-color: var(--color-surface-2); color: var(--color-text-secondary); opacity: 0.8; box-shadow: var(--shadow-control); /* Сохранить тень даже в отключенном состоянии */ }
+html[data-theme='light'] .timer-display-button:disabled, html[data-theme='light'] .timer-display-button.timer-disabled { background-color: #E5E7EB; color: #6B7280; box-shadow: var(--shadow-control); }
+/* Состояние работы таймера (не кликабелен, показывает время) */
+.timer-display-button.timer-running { background-color: var(--color-surface-2); color: var(--color-text-primary); cursor: default; opacity: 1; box-shadow: var(--shadow-control); }
+html[data-theme='light'] .timer-display-button.timer-running { background-color: #E5E7EB; color: #111827; box-shadow: var(--shadow-control); }
+/* Состояние окончания таймера (мигающий красный текст) */
+.timer-display-button.timer-ending { color: var(--color-accent-red); animation: pulse-red 1s infinite; }
+html[data-theme='light'] .timer-display-button.timer-ending { color: #DC2626; }
+/* Анимация красного пульса для окончания таймера */
+@keyframes pulse-red { 0%, 100% { box-shadow: var(--shadow-control), 0 0 0 0 color-mix(in srgb, var(--color-accent-red), transparent 60%); } 50% { box-shadow: var(--shadow-control), 0 0 5px 2px color-mix(in srgb, var(--color-accent-red), transparent 80%); } }
+
+/* --- ТЗ v3: Анимация подтверждения таймера --- */
+/* Анимация золотого пульса для ожидания подтверждения */
+@keyframes pulse-border {
+  0%, 100% {
+    box-shadow: var(--shadow-control), 0 0 0 0px color-mix(in srgb, var(--color-accent-gold), transparent 70%);
+  }
+  50% {
+    box-shadow: var(--shadow-control), 0 0 0 4px color-mix(in srgb, var(--color-accent-gold), transparent 90%);
+  }
+}
+/* Состояние, когда таймер ожидает клика для подтверждения */
+.timer-display-button.timer-awaiting-confirmation {
+    background-color: var(--color-accent-gold); /* Изменить фон на золотой */
+    color: #FFFFFF; /* Обеспечить читаемость текста */
+    animation: pulse-border 1.5s infinite ease-in-out;
+    /* Убедиться, что он переопределяет фон состояния работы, если оба применены */
+    cursor: pointer; /* Сделать понятным, что он кликабелен */
+    opacity: 1; /* Обеспечить полную непрозрачность */
+}
+/* Состояние подтверждения светлой темы */
+html[data-theme='light'] .timer-display-button.timer-awaiting-confirmation {
+    background-color: var(--color-accent-gold); /* Использовать золотой светлой темы */
+    color: #FFFFFF;
+}
+/* --- Конец ТЗ v3 --- */
+
+/* Контейнер для слотов банов в верхней строке */
+.bans-container { display: flex; justify-content: center; gap: var(--gap-half); flex-shrink: 0; }
+
+/* Сетка основной области драфта (колонки + контейнер сетки) */
+#draftArea {
+    grid-column: 1 / -1; /* Охватить все колонки */
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: subgrid; /* Наследовать колонки от #mainLayout */
+    gap: var(--gap-size);
+    overflow: hidden; /* Предотвратить переполнение контента */
+    min-height: 0; /* Разрешить сжатие */
+    align-items: stretch; /* Растянуть колонки по высоте */
+}
+
+/* Стилизация для колонок синей и красной команд */
+.team-column {
+    min-width: var(--team-col-min-width);
+    width: auto;
+    max-width: 480px; /* Ограничить макс. ширину */
+    flex: 0 1 var(--team-col-min-width); /* Разрешить сжатие, но не рост сверх мин. ширины */
+    padding: var(--gap-size);
+    border-radius: 0.5rem;
+    box-shadow: none; /* Нет тени на самой колонке */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Разрешить вертикальную прокрутку, если пики переполняют */
+    scrollbar-width: none; /* Скрыть скроллбар (Firefox) */
+    transition: opacity 0.3s ease, filter 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid var(--color-border);
+    background-color: transparent; /* Базовый фон */
+}
+/* Рамка колонки команды светлой темы */
+html[data-theme='light'] .team-column { border-color: #D1D5DB; }
+/* Фоны для конкретных команд */
+.team-column.blue-column { background-color: var(--color-blue-bg-transparent); border-color: color-mix(in srgb, var(--color-blue-team), transparent 70%); }
+.team-column.red-column { background-color: var(--color-red-bg-transparent); border-color: color-mix(in srgb, var(--color-red-team), transparent 70%);}
+html[data-theme='light'] .team-column.blue-column { background-color: rgba(37, 99, 235, 0.2); border-color: color-mix(in srgb, #2563EB, transparent 70%); }
+html[data-theme='light'] .team-column.red-column { background-color: rgba(220, 38, 38, 0.2); border-color: color-mix(in srgb, #DC2626, transparent 70%);}
+/* Скрыть скроллбар (Webkit) */
+.team-column::-webkit-scrollbar { display: none; }
+/* Стиль, когда драфт не начат */
+.team-column.draft-disabled { pointer-events: none; opacity: 0.6; filter: grayscale(60%); }
+/* Стиль, когда не очередь этой команды (на основе роли) */
+.team-column.role-disabled { opacity: 0.7; filter: grayscale(30%); pointer-events: none; }
+.team-column.role-disabled .pick-slot, .team-column.role-disabled .ban-slot { pointer-events: none; cursor: not-allowed; }
+.team-column.role-disabled .nickname-input { pointer-events: none; cursor: not-allowed; }
+
+/* Контейнер для слотов пиков внутри колонки команды */
+.picks-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-size);
+    flex-grow: 1; /* Занять доступное вертикальное пространство */
+    justify-content: space-around; /* Равномерно распределить пики */
+    width: 100%;
+    min-height: 0; /* Разрешить сжатие */
+    margin-top: var(--gap-size);
+}
+
+/* ТЗ v2.3: Тень слота пика/бана */
+/* Базовый стиль для слотов пиков и банов */
+.pick-slot, .ban-slot {
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Обрезать изображения чемпионов */
+    position: relative; /* Для абсолютного позиционирования изображения и никнейма */
+    flex-shrink: 0; /* Предотвратить сжатие */
+    border-radius: 0.375rem;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: var(--shadow-slot); /* Добавлена тень слота */
+}
+/* Слоты пиков/банов светлой темы */
+html[data-theme='light'] .pick-slot, html[data-theme='light'] .ban-slot { background-color: #E5E7EB; border-color: #D1D5DB; box-shadow: var(--shadow-slot); }
+/* Размер слота бана */
+.ban-slot { width: var(--ban-size); height: var(--ban-size); min-width: var(--ban-min-size); min-height: var(--ban-min-size); border-radius: 0.25rem; }
+/* Размер слота пика */
+.pick-slot { min-height: var(--pick-min-height); width: 100%; height: auto; flex-grow: 1; position: relative; }
+/* Стиль изображения внутри слотов */
+.pick-slot img.slot-image, .ban-slot img.slot-image { /* Целевые изображения слотов */
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    z-index: 0; /* За никнеймом */
+    transition: filter 0.3s ease, opacity 0.3s ease, transform 0.5s ease-out; /* Добавлен переход transform */
+}
+
+/* ТЗ v2.3: Анимация пика */
+/* Анимация при подтверждении пика */
+@keyframes pickAnimation {
+  0% { transform: scale(1.3); } /* Начать немного больше */
+  100% { transform: scale(1); } /* Уменьшиться до нормального размера */
+}
+/* Применить анимацию к изображению */
+.pick-slot img.slot-image.animate-pick {
+  animation: pickAnimation 0.5s ease-out;
+}
+
+/* Стиль выделения для текущего активного слота действия */
+.highlight-action { border-color: var(--color-accent-gold); box-shadow: var(--shadow-glow-gold), var(--shadow-slot); /* Комбинировать свечение и базовую тень */ background-color: color-mix(in srgb, var(--color-surface-2), var(--color-accent-gold) 10%); }
+html[data-theme='light'] .highlight-action { border-color: #D97706; box-shadow: var(--shadow-glow-gold), var(--shadow-slot); background-color: color-mix(in srgb, #E5E7EB, #D97706 10%); }
+/* Стиль выделения для выбранного слота обмена */
+.swap-selected { border-color: var(--color-accent-blue); box-shadow: var(--shadow-glow-blue), var(--shadow-slot); }
+html[data-theme='light'] .swap-selected { border-color: #2563EB; box-shadow: var(--shadow-glow-blue), var(--shadow-slot); }
+/* Анимация мигания для предпросматриваемого чемпиона */
+@keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.preview-flash > img.slot-image { animation: flash 1s infinite ease-in-out; }
+
+/* ТЗ v2.3: Тень контейнера сетки чемпионов */
+/* Контейнер для центральной области (сетка, поиск, фильтры) */
+#championGridContainer {
+    grid-column: 2; /* Поместить в центральную колонку */
+    background-color: transparent;
+    border-radius: 0.5rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Скрыть переполняющийся контент */
+    min-width: 300px; /* Минимальная ширина */
+    border: none;
+    /* Убрана тень здесь, применена к дочерним элементам */
+}
+
+/* ТЗ v2.3: Переход отображения глобально забаненных */
+/* Контейнер для отображения глобально забаненных чемпионов */
+#globallyBannedDisplay {
+    flex-shrink: 0; /* Предотвратить сжатие */
+    margin-bottom: var(--gap-size);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-half);
+    width: 100%;
+    min-height: calc(var(--global-ban-icon-min-size) + var(--gap-half)); /* Обеспечить минимальную высоту */
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--gap-half);
+    /* Добавлены свойства перехода для плавного скрытия/показа */
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin 0.3s ease-in-out, padding 0.3s ease-in-out, border 0.3s ease-in-out;
+    opacity: 1;
+    max-height: 300px; /* Примерная макс. высота для перехода */
+    overflow: hidden; /* Необходимо для перехода max-height */
+}
+/* Рамка отображения глобальных банов светлой темы */
+html[data-theme='light'] #globallyBannedDisplay { border-bottom-color: #D1D5DB; }
+/* Скрытое состояние для отображения глобальных банов */
+#globallyBannedDisplay.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0; /* Добавить padding-top для перехода */
+    padding-bottom: 0;
+    border-bottom: none;
+    /* overflow: hidden; уже установлено */
+}
+/* Строка, содержащая глобальные баны синих и красных */
+.global-bans-row { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; gap: var(--gap-size); }
+/* Контейнеры для иконок глобальных банов синих/красных */
+#global-bans-blue, #global-bans-red { display: grid; grid-template-columns: repeat(5, auto); gap: var(--gap-half); align-items: center; min-height: var(--global-ban-icon-min-size); }
+#global-bans-blue { justify-items: start; }
+#global-bans-red { justify-items: end; }
+/* Индивидуальная иконка глобального бана */
+.global-ban-icon {
+    width: var(--global-ban-icon-size);
+    height: var(--global-ban-icon-size);
+    min-width: var(--global-ban-icon-min-size);
+    min-height: var(--global-ban-icon-min-size);
+    background-size: cover;
+    background-position: center;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-surface-1);
+    border: 1px solid var(--color-border);
+    opacity: 0.6; /* Затемненный вид */
+    cursor: not-allowed; /* Указать неинтерактивность */
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+/* Иконка глобального бана светлой темы */
+html[data-theme='light'] .global-ban-icon { background-color: #F3F4F6; border-color: #D1D5DB; }
+/* Стиль изображения внутри иконки глобального бана */
+.global-ban-icon img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(90%) brightness(60%); /* Ч/б и затемнение */ }
+
+/* ТЗ v2.3: Тень обертки контролов поиска */
+/* Обертка для поля поиска и кнопок управления */
+.search-controls-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-half);
+    margin-bottom: var(--gap-size);
+    flex-shrink: 0; /* Предотвратить сжатие */
+    overflow-x: auto; /* Разрешить горизонтальную прокрутку при необходимости */
+    padding: var(--gap-half);
+    background-color: var(--color-surface-1);
+    border-radius: 0.375rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-container); /* Добавлена тень контейнера */
+    flex-wrap: wrap; /* Разрешить перенос на маленьких экранах */
+}
+/* Обертка контролов поиска светлой темы */
+html[data-theme='light'] .search-controls-wrapper { background-color: #F3F4F6; border-color: #D1D5DB; box-shadow: var(--shadow-container); }
+/* Стилизация скроллбара для обертки контролов поиска (Webkit) */
+.search-controls-wrapper::-webkit-scrollbar { height: 4px; }
+.search-controls-wrapper::-webkit-scrollbar-track { background: transparent; }
+.search-controls-wrapper::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 2px; }
+html[data-theme='light'] .search-controls-wrapper::-webkit-scrollbar-thumb { background-color: #9CA3AF; }
+/* Убедиться, что кнопки действий не сжимаются */
+.search-controls-wrapper .action-button { flex-shrink: 0; }
+
+/* ТЗ v2.3: Тень поиска чемпионов */
+/* Поле ввода поиска чемпионов */
+#championSearch {
+    flex-grow: 1; /* Занять доступное пространство */
+    flex-shrink: 1; /* Разрешить сжатие */
+    font-size: clamp(0.85rem, 2vmin, 1rem); /* Адаптивный размер шрифта */
+    min-width: 100px;
+    height: var(--filter-button-size); /* Совпадать с высотой кнопки фильтра */
+    min-height: 30px;
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+    padding: 0 0.5rem;
+    color: var(--color-text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-control); /* Добавлена тень контрола */
+}
+/* Поле поиска светлой темы */
+html[data-theme='light'] #championSearch { background-color: #E5E7EB; border-color: #D1D5DB; color: #111827; box-shadow: var(--shadow-control); }
+/* Стиль плейсхолдера */
+#championSearch::placeholder { color: var(--color-text-placeholder); }
+html[data-theme='light'] #championSearch::placeholder { color: #9CA3AF; }
+/* Состояние фокуса для поля поиска */
+#championSearch:focus { outline: none; border-color: var(--color-accent-blue); box-shadow: var(--shadow-glow-blue), var(--shadow-control); /* Комбинировать свечение и базовую тень */ background-color: var(--color-surface-1); }
+html[data-theme='light'] #championSearch:focus { border-color: #2563EB; box-shadow: var(--shadow-glow-blue), var(--shadow-control); background-color: #F3F4F6; }
+
+/* Контейнер для кнопок фильтра ролей */
+#roleFilterButtons { display: flex; gap: var(--gap-half); flex-shrink: 0; }
+
+/* ТЗ v2.3: Тень кнопки действия */
+/* Базовый стиль для кнопок действий (Сброс, Отмена, Фильтры, Далее, Смена, Домой) */
+.action-button {
+    color: var(--color-text-primary);
+    width: var(--button-size);
+    height: var(--button-size);
+    min-width: var(--button-min-size);
+    min-height: var(--button-min-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    font-size: calc(var(--button-size) * 0.45); /* Для возможного резервного текста */
+    line-height: 1;
+    flex-shrink: 0; /* Предотвратить сжатие */
+    background-color: var(--color-surface-2);
+    box-shadow: var(--shadow-control); /* Добавлена тень контрола */
+}
+/* Кнопка действия светлой темы */
+html[data-theme='light'] .action-button { color: #111827; border-color: #D1D5DB; background-color: #E5E7EB; box-shadow: var(--shadow-control); }
+/* Состояние наведения для кнопок действий */
+.action-button:hover:not(:disabled) { background-color: var(--color-border-medium); border-color: var(--color-text-secondary); color: #fff; box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.1); /* Усилить тень */ }
+html[data-theme='light'] .action-button:hover:not(:disabled) { background-color: #9CA3AF; border-color: #6B7280; color: #111827; box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.05); }
+/* Активное (нажатое) состояние для кнопок действий */
+.action-button:active:not(:disabled) { transform: scale(0.95); background-color: var(--color-border); box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); /* Внутренняя тень при нажатии */ }
+html[data-theme='light'] .action-button:active:not(:disabled) { background-color: #D1D5DB; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+/* Состояние focus-visible (навигация с клавиатуры) */
+.action-button:focus-visible { outline: 2px solid var(--color-accent-blue); outline-offset: 1px; box-shadow: var(--shadow-glow-blue), var(--shadow-control); border-color: var(--color-accent-blue); }
+html[data-theme='light'] .action-button:focus-visible { outline-color: #2563EB; box-shadow: var(--shadow-glow-blue), var(--shadow-control); border-color: #2563EB; }
+/* Отключенное состояние для кнопок действий */
+.action-button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: var(--shadow-control); /* Сохранить тень */ background-color: var(--color-surface-2); border-color: var(--color-border); color: var(--color-text-secondary); }
+html[data-theme='light'] .action-button:disabled { background-color: #E5E7EB; border-color: #D1D5DB; color: #6B7280; box-shadow: var(--shadow-control); }
+
+/* Размеры для кнопок только с иконками */
+.icon-button { font-size: calc(var(--button-size) * 0.55); width: var(--button-size); } /* Сохранить для размеров */
+
+/* Базовые стили для конкретных кнопок */
+#resetButton, #nextDraftButton, #swapTeamsButton { /* Добавлена swapTeamsButton */
+    background-color: var(--color-surface-2);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+}
+html[data-theme='light'] #resetButton,
+html[data-theme='light'] #nextDraftButton,
+html[data-theme='light'] #swapTeamsButton { /* Добавлена swapTeamsButton */
+    background-color: #E5E7EB;
+    color: #111827;
+    border-color: #D1D5DB;
+}
+/* Цвета иконок/текста для конкретных кнопок */
+#resetButton { color: var(--color-accent-red); }
+html[data-theme='light'] #resetButton { color: #DC2626; }
+#nextDraftButton { color: var(--color-accent-green); } /* Изменен цвет для След. драфт */
+html[data-theme='light'] #nextDraftButton { color: #16A34A; }
+#swapTeamsButton { color: var(--color-accent-gold); } /* Смена использует золотой */
+html[data-theme='light'] #swapTeamsButton { color: #D97706; }
+
+/* Стили наведения для конкретных кнопок */
+#resetButton:hover:not(:disabled),
+#nextDraftButton:hover:not(:disabled),
+#swapTeamsButton:hover:not(:disabled) { /* Добавлена swapTeamsButton */
+    background-color: var(--color-border-medium);
+    border-color: var(--color-text-secondary);
+    box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.1);
+}
+html[data-theme='light'] #resetButton:hover:not(:disabled),
+html[data-theme='light'] #nextDraftButton:hover:not(:disabled),
+html[data-theme='light'] #swapTeamsButton:hover:not(:disabled) { /* Добавлена swapTeamsButton */
+    background-color: #9CA3AF;
+    border-color: #6B7280;
+    box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.05);
+}
+/* Сохранить цвета иконок при наведении */
+#resetButton:hover:not(:disabled) { color: var(--color-accent-red); }
+html[data-theme='light'] #resetButton:hover:not(:disabled) { color: #DC2626; }
+#nextDraftButton:hover:not(:disabled) { color: var(--color-accent-green); }
+html[data-theme='light'] #nextDraftButton:hover:not(:disabled) { color: #16A34A; }
+#swapTeamsButton:hover:not(:disabled) { color: var(--color-accent-gold); }
+html[data-theme='light'] #swapTeamsButton:hover:not(:disabled) { color: #D97706; }
+
+/* Активные стили для конкретных кнопок */
+#resetButton:active:not(:disabled),
+#nextDraftButton:active:not(:disabled),
+#swapTeamsButton:active:not(:disabled) { /* Добавлена swapTeamsButton */
+    transform: scale(0.95);
+    background-color: var(--color-border);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+html[data-theme='light'] #resetButton:active:not(:disabled),
+html[data-theme='light'] #nextDraftButton:active:not(:disabled),
+html[data-theme='light'] #swapTeamsButton:active:not(:disabled) { /* Добавлена swapTeamsButton */
+    background-color: #D1D5DB;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ТЗ v2.3: Тень кнопки фильтра */
+/* Кнопки фильтра ролей */
+.filter-button {
+    background-color: var(--color-surface-2);
+    width: var(--filter-button-size);
+    height: var(--filter-button-size);
+    font-size: calc(var(--filter-button-size) * 0.4);
+    font-weight: 600;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 0 2px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-control); /* Добавлена тень контрола */
+}
+/* Кнопка фильтра светлой темы */
+html[data-theme='light'] .filter-button { background-color: #E5E7EB; border-color: #D1D5DB; color: #6B7280; box-shadow: var(--shadow-control); }
+/* Наведение на кнопку фильтра */
+.filter-button:hover:not(:disabled) { background-color: var(--color-border-medium); color: var(--color-text-primary); box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.1); }
+html[data-theme='light'] .filter-button:hover:not(:disabled) { background-color: #9CA3AF; color: #111827; box-shadow: var(--shadow-control), 0 2px 4px rgba(0,0,0,0.05); }
+/* Активная кнопка фильтра */
+.filter-button.active { background-color: var(--color-accent-blue); border-color: var(--color-accent-blue); color: #FFFFFF; box-shadow: var(--shadow-glow-blue), var(--shadow-control); }
+html[data-theme='light'] .filter-button.active { background-color: #2563EB; border-color: #2563EB; color: #FFFFFF; box-shadow: var(--shadow-glow-blue), var(--shadow-control); }
+
+/* ТЗ v2.3: Тень сетки чемпионов */
+/* Сетка выбора чемпионов */
+#championGrid {
+    display: flex;
+    flex-wrap: wrap; /* Разрешить перенос карточек */
+    justify-content: center; /* Центрировать карточки по горизонтали */
+    gap: var(--gap-half);
+    overflow-y: auto; /* Включить вертикальную прокрутку */
+    align-content: flex-start; /* Выровнять перенесенные элементы к верху */
+    flex-grow: 1; /* Занять доступное вертикальное пространство */
+    min-height: 0; /* Разрешить сжатие */
+    transition: opacity 0.3s ease;
+    padding: var(--gap-size);
+    background-color: var(--color-surface-1);
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-container); /* Добавлена тень контейнера */
+}
+/* Сетка чемпионов светлой темы */
+html[data-theme='light'] #championGrid { background-color: #F3F4F6; border-color: #D1D5DB; box-shadow: var(--shadow-container); }
+/* Стилизация скроллбара для сетки чемпионов (Webkit) */
+#championGrid::-webkit-scrollbar { width: 6px; }
+#championGrid::-webkit-scrollbar-track { background: transparent; }
+#championGrid::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 3px; }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb { background-color: #D1D5DB; }
+#championGrid::-webkit-scrollbar-thumb:hover { background-color: var(--color-border-medium); }
+html[data-theme='light'] #championGrid::-webkit-scrollbar-thumb:hover { background-color: #9CA3AF; }
+/* Стилизация скроллбара для сетки чемпионов (Firefox) */
+#championGrid { scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
+html[data-theme='light'] #championGrid { scrollbar-color: #D1D5DB transparent; }
+
+/* Карточка чемпиона в сетке */
+.champion-card {
+    width: var(--card-size);
+    height: var(--card-size);
+    min-width: var(--card-min-size);
+    min-height: var(--card-min-size);
+    border-radius: 0.25rem;
+    overflow: hidden; /* Обрезать изображение */
+    background-color: var(--color-surface-2);
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    flex-shrink: 0; /* Предотвратить сжатие */
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+/* Карточка чемпиона светлой темы */
+html[data-theme='light'] .champion-card { background-color: #E5E7EB; border-color: #D1D5DB; }
+/* Изображение внутри карточки чемпиона */
+.champion-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.2s ease, transform 0.2s ease; }
+/* Наведение на карточку чемпиона */
+.champion-card:hover { transform: scale(1.05); box-shadow: var(--shadow-md); border-color: var(--color-border-medium); }
+html[data-theme='light'] .champion-card:hover { border-color: #9CA3AF; }
+.champion-card:hover img { transform: scale(1.03); } /* Легкое увеличение изображения при наведении */
+/* Состояние focus-visible для карточки чемпиона */
+.champion-card:focus-visible { outline: 2px solid var(--color-accent-blue); outline-offset: 1px; box-shadow: var(--shadow-glow-blue); border-color: var(--color-accent-blue); transform: scale(1.03); }
+html[data-theme='light'] .champion-card:focus-visible { outline-color: #2563EB; box-shadow: var(--shadow-glow-blue); border-color: #2563EB; }
+/* Состояние выбранной/забаненной карточки чемпиона */
+.champion-card.selected { border-color: var(--color-accent-gold); }
+html[data-theme='light'] .champion-card.selected { border-color: #D97706; }
+.champion-card.selected img { filter: grayscale(80%) brightness(50%) sepia(30%); opacity: 0.7; } /* Эффект для выбранного чемпиона */
+html[data-theme='light'] .champion-card.selected img { filter: grayscale(50%) brightness(80%) sepia(10%); opacity: 0.8; }
+/* Отключенное состояние карточки чемпиона (глобально забанен или выбран) */
+.champion-card.disabled { pointer-events: none; opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.champion-card.disabled img { filter: grayscale(100%) brightness(40%); transform: none; } /* Сильный эффект для отключенного */
+html[data-theme='light'] .champion-card.disabled img { filter: grayscale(100%) brightness(70%); }
+.champion-card.disabled:hover { transform: none; border-color: var(--color-border); }
+html[data-theme='light'] .champion-card.disabled:hover { border-color: #D1D5DB; }
+
+/* Всплывающая подсказка для чемпиона */
+.tooltip {
+    position: fixed; /* Позиционировать относительно окна */
+    background-color: var(--color-tooltip-bg);
+    color: var(--color-tooltip-text);
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap; /* Предотвратить перенос текста */
+    z-index: 100; /* Убедиться, что над другими элементами */
+    pointer-events: none; /* Не мешать кликам */
+    opacity: 0; /* Скрыто по умолчанию */
+    transition: opacity 0.15s ease-in-out;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border-medium);
+}
+/* Всплывающая подсказка светлой темы */
+html[data-theme='light'] .tooltip { background-color: rgba(243, 244, 246, 0.95); color: #111827; border-color: #9CA3AF; }
+/* Видимое состояние всплывающей подсказки */
+.tooltip.visible { opacity: 1; }
+/* Заголовок всплывающей подсказки (имя чемпиона) */
+.tooltip-title { font-weight: 600; display: block; margin-bottom: 0.1rem; color: var(--color-accent-gold); }
+html[data-theme='light'] .tooltip-title { color: #D97706; }
+/* Текст всплывающей подсказки (титул чемпиона) */
+.tooltip-name { font-weight: 400; color: var(--color-text-secondary); font-size: 0.8rem; }
+html[data-theme='light'] .tooltip-name { color: #6B7280; }
+
+/* Сообщение статуса (внизу по центру) */
+#statusMessage {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%); /* Центрировать по горизонтали */
+    background-color: var(--color-surface-1);
+    color: var(--color-text-primary);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.375rem;
+    z-index: 90; /* Ниже тултипа, но выше остального */
+    opacity: 0; /* Скрыто по умолчанию */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid var(--color-border-medium);
+    box-shadow: var(--shadow-md);
+    transform: translate(-50%, 10px); /* Начальное положение для анимации */
+}
+/* Сообщение статуса светлой темы */
+html[data-theme='light'] #statusMessage { background-color: #F3F4F6; color: #111827; border-color: #9CA3AF; }
+/* Видимое состояние сообщения статуса */
+#statusMessage.visible { opacity: 1; transform: translate(-50%, 0); } /* Анимация появления */
+
+/* --- Стили Модальных окон --- */
+/* Фон модального окна */
+.modal-backdrop {
+    position: fixed;
+    inset: 0; /* Покрыть все окно */
+    background-color: var(--color-modal-backdrop);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500; /* Высокий z-index */
+    opacity: 0; /* Скрыто по умолчанию */
+    transition: opacity 0.3s ease-in-out;
+    padding: 1rem; /* Отступы для контента */
+}
+/* Видимое состояние фона */
+.modal-backdrop:not(.hidden) {
+    opacity: 1;
+}
+/* Фон модального окна светлой темы */
+html[data-theme='light'] .modal-backdrop {
+    background-color: var(--color-modal-backdrop);
+}
+
+/* Контент модального окна */
+.modal-content {
+    background-color: color-mix(in srgb, var(--color-modal-bg), transparent 25%); /* Полупрозрачный фон */
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    width: 100%;
+    max-height: var(--modal-max-height); /* Ограничить высоту */
+    overflow-y: auto; /* Включить прокрутку при необходимости */
+    border: 1px solid var(--color-modal-border);
+    scrollbar-width: thin; /* Скроллбар Firefox */
+    scrollbar-color: var(--color-border-medium) transparent;
+    /* Эффект размытия фона (опционально) */
+    /* backdrop-filter: blur(5px); */
+    /* -webkit-backdrop-filter: blur(5px); */
+}
+/* Макс. ширина для модального окна настроек */
+#settingsModal .modal-content {
+    max-width: var(--modal-max-width);
+}
+/* Макс. ширина для модального окна лобби */
+#lobbyModal .modal-content {
+     max-width: var(--lobby-modal-max-width);
+}
+
+/* Скроллбар контента модального окна (Webkit) */
+.modal-content::-webkit-scrollbar { width: 6px; }
+.modal-content::-webkit-scrollbar-track { background: transparent; }
+.modal-content::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); border-radius: 3px; }
+/* Контент модального окна светлой темы */
+html[data-theme='light'] .modal-content {
+    background-color: color-mix(in srgb, var(--color-modal-bg), transparent 15%);
+    border-color: var(--color-modal-border);
+    scrollbar-color: var(--color-border-medium) transparent;
+}
+html[data-theme='light'] .modal-content::-webkit-scrollbar-thumb { background-color: var(--color-border-medium); }
+
+/* Кнопка закрытия модального окна */
+.modal-close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    z-index: 1; /* Над контентом */
+}
+.modal-close-button:hover {
+    color: var(--color-text-primary);
+}
+/* Кнопка закрытия светлой темы */
+html[data-theme='light'] .modal-close-button {
+    color: var(--color-text-secondary);
+}
+html[data-theme='light'] .modal-close-button:hover {
+    color: var(--color-text-primary);
+}
+
+/* Кнопки внутри модального окна */
+.modal-button {
+    background-color: var(--color-modal-button-bg);
+    color: var(--color-modal-button-text);
+    border: 1px solid var(--color-modal-border);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    font-weight: 500;
+}
+.modal-button:hover {
+    background-color: var(--color-modal-button-hover-bg);
+    border-color: var(--color-border-medium);
+}
+/* Кнопка модального окна светлой темы */
+html[data-theme='light'] .modal-button {
+    background-color: var(--color-modal-button-bg);
+    color: var(--color-modal-button-text);
+    border-color: var(--color-modal-border);
+}
+html[data-theme='light'] .modal-button:hover {
+    background-color: var(--color-modal-button-hover-bg);
+    border-color: var(--color-border-medium);
+}
+
+/* Кнопка копирования ссылки в модальном окне лобби */
+#lobbyLinksContainer .copy-button {
+    background-color: var(--color-accent-purple);
+    color: #FFFFFF;
+    border: none;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.75em;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: background-color 0.2s;
+}
+#lobbyLinksContainer .copy-button:hover {
+    background-color: color-mix(in srgb, var(--color-accent-purple), #000 10%);
+}
+/* Кнопка копирования светлой темы */
+html[data-theme='light'] #lobbyLinksContainer .copy-button {
+    background-color: var(--color-accent-purple);
+}
+html[data-theme='light'] #lobbyLinksContainer .copy-button:hover {
+    background-color: color-mix(in srgb, var(--color-accent-purple), #000 10%);
+}
+/* Отображение сгенерированной ссылки в модальном окне лобби */
+#lobbyLinksContainer span {
+    color: var(--color-accent-blue);
+    background-color: var(--color-surface-2);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-border-medium);
+    word-break: break-all; /* Разрешить перенос длинных ссылок */
+    display: inline-block;
+    max-width: calc(100% - 100px); /* Ограничить ширину, чтобы кнопки поместились */
+}
+/* Ссылка светлой темы */
+html[data-theme='light'] #lobbyLinksContainer span {
+    color: var(--color-accent-blue);
+    background-color: var(--color-surface-2);
+    border-color: var(--color-border-medium);
+}
+
+
+/* --- Специфичные стили модального окна Настроек --- */
+/* Группа настроек */
+.setting-group {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+.setting-group:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+/* Разделитель групп светлой темы */
+html[data-theme='light'] .setting-group {
+    border-bottom-color: var(--color-border);
+}
+
+/* Метка настройки */
+.setting-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+}
+/* Метка настройки светлой темы */
+html[data-theme='light'] .setting-label {
+    color: var(--color-text-secondary);
+}
+
+/* Сегментированный контрол (группа кнопок) */
+.segmented-control {
+    display: flex;
+    border-radius: 0.375rem;
+    overflow: hidden; /* Обрезать углы кнопок */
+    border: 1px solid var(--color-segment-border);
+    background-color: var(--color-segment-bg);
+}
+/* Сегментированный контрол светлой темы */
+html[data-theme='light'] .segmented-control {
+    border-color: var(--color-segment-border);
+    background-color: var(--color-segment-bg);
+}
+
+/* Кнопка сегмента */
+.segment-button {
+    flex-grow: 1; /* Равномерно занять пространство */
+    padding: 0.4rem 0.6rem;
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    color: var(--color-segment-text);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 0.8rem;
+    position: relative;
+    line-height: 1.2;
+}
+/* Текст внутри кнопки сегмента */
+.segment-button span {
+    display: inline-block;
+}
+/* Разделитель между кнопками сегмента */
+.segment-button:not(:last-child) {
+    border-right: 1px solid var(--color-segment-border);
+}
+/* Кнопка сегмента светлой темы */
+html[data-theme='light'] .segment-button {
+    color: var(--color-segment-text);
+}
+html[data-theme='light'] .segment-button:not(:last-child) {
+    border-right-color: var(--color-segment-border);
+}
+
+/* Активная кнопка сегмента */
+.segment-button.active {
+    background-color: var(--color-segment-active-bg);
+    color: var(--color-segment-active-text);
+    font-weight: 600;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); /* Легкая внутренняя тень */
+}
+/* Активная кнопка сегмента светлой темы */
+html[data-theme='light'] .segment-button.active {
+    background-color: var(--color-segment-active-bg);
+    color: var(--color-segment-active-text);
+}
+
+/* Наведение на неактивную кнопку сегмента */
+.segment-button:hover:not(.active) {
+    background-color: color-mix(in srgb, var(--color-segment-bg), var(--color-text-primary) 5%);
+}
+html[data-theme='light'] .segment-button:hover:not(.active) {
+    background-color: color-mix(in srgb, var(--color-segment-bg), var(--color-text-primary) 5%);
+}
+
+/* --- Адаптивные настройки --- */
+/* Планшеты и небольшие десктопы */
+@media (max-width: 1280px) {
+     .search-controls-wrapper { flex-wrap: wrap; } /* Разрешить перенос контролов */
+     #championSearch { min-width: 180px; }
+     #settingsModal .modal-content { max-width: 300px; }
+}
+
+/* Небольшие планшеты */
+@media (max-width: 1024px) {
+    :root { /* Уменьшение размеров для экранов поменьше */
+        --card-size: 11.25vh;
+        --ban-size: 5vh;
+        --button-size: 4vh;
+        --filter-button-size: 3.5vh;
+        --score-size: 4vh;
+        --nick-font-size: 2.5vh;
+        --gap-size: 0.3rem;
+        --team-col-min-width: 220px;
+    }
+     .team-name { font-size: clamp(1.2rem, 3.5vmin, 1.8rem); max-width: 200px;}
+     .search-controls-wrapper { margin-bottom: var(--gap-size); padding: var(--gap-half); }
+     #championSearch { min-width: 150px; }
+     .timer-display-button { min-width: 10ch; }
+     .modal-content { max-width: 90%; } /* Уменьшить макс. ширину модальных окон */
+     #settingsModal .modal-content { max-width: 280px; }
+     #lobbyModal .modal-content { max-width: 90%; }
+     .home-content-wrapper { max-width: 90%; }
+     /* Уменьшение отступов в настройках */
+     .setting-group { margin-bottom: 0.6rem; padding-bottom: 0.6rem; }
+     .setting-label { margin-bottom: 0.25rem; font-size: 0.8rem; }
+     .segment-button { padding: 0.35rem 0.5rem; font-size: 0.75rem; }
+}
+
+/* Мобильные телефоны (ландшафт) и большие телефоны (портрет) */
+@media (max-width: 768px) {
+     :root { /* Дальнейшее уменьшение размеров */
+        --card-size: 10.5vh;
+        --ban-size: 4.5vh;
+        --button-size: 3.8vh;
+        --filter-button-size: 3.2vh;
+        --score-size: 3.8vh;
+        --nick-font-size: 2.2vh;
+        --team-col-min-width: 180px;
+     }
+    #mainLayout { grid-template-columns: auto minmax(150px, 1fr) auto; gap: var(--gap-half); } /* Сузить центральную колонку */
+     .center-controls-wrapper { grid-template-columns: 1fr auto auto auto 1fr; gap: var(--gap-half); } /* Уменьшить отступы в центре */
+    .team-name { max-width: 150px; font-size: clamp(1.1rem, 3vmin, 1.6rem);}
+    .bans-container { gap: 2px; } /* Уменьшить отступы между банами */
+    .search-controls-wrapper { flex-direction: row; flex-wrap: wrap; align-items: center; } /* Перенос контролов */
+    #championSearch { width: auto; flex-grow: 1; min-width: 120px; }
+    #roleFilterButtons { justify-content: flex-start; } /* Выровнять фильтры влево */
+    .picks-container { gap: 2px; } /* Уменьшить отступы между пиками */
+    .timer-display-button { min-width: 8ch; padding: 0.1rem 0.4rem; font-size: calc(var(--timer-font-size) * 0.9); } /* Уменьшить таймер */
+    .modal-content { padding: 1rem 1rem; } /* Уменьшить паддинг модальных окон */
+    #settingsModal .modal-content { max-width: 250px; }
+    /* Перенос кнопок сегментированного контрола в 2 колонки */
+    .segmented-control { flex-wrap: wrap; }
+    .segment-button { flex-basis: 50%; }
+    .segment-button:not(:last-child) { border-right: none; }
+    .segment-button:nth-child(odd) { border-right: 1px solid var(--color-segment-border); }
+    html[data-theme='light'] .segment-button:nth-child(odd) { border-right-color: var(--color-segment-border); }
+    .segment-button:nth-child(1), .segment-button:nth-child(2) { border-bottom: 1px solid var(--color-segment-border); }
+     html[data-theme='light'] .segment-button:nth-child(1), html[data-theme='light'] .segment-button:nth-child(2) { border-bottom-color: var(--color-segment-border); }
+    .home-content-wrapper { padding: 1.5rem; max-width: 375px; }
+     /* Уменьшение отступов в настройках */
+     .setting-group { margin-bottom: 0.5rem; padding-bottom: 0.5rem; }
+     .setting-label { margin-bottom: 0.2rem; font-size: 0.75rem; }
+     .segment-button { padding: 0.3rem 0.4rem; font-size: 0.7rem; }
+}
+
+/* Маленькие мобильные телефоны (портрет) */
+@media (max-width: 480px) {
+    body { padding: 2px; } /* Минимальный паддинг для body */
+     #app-container { padding: 2px; } /* Минимальный паддинг для контейнера */
+    :root { /* Самые маленькие размеры */
+        --card-size: 9.75vh;
+        --ban-size: 4vh;
+        --button-size: 3.5vh;
+        --filter-button-size: 3vh;
+        --score-size: 3.5vh;
+        --nick-font-size: 2vh;
+        --card-min-size: 57px;
+        --ban-min-size: 25px;
+        --button-min-size: 28px;
+        --score-min-size: 28px;
+        --team-col-min-width: 90px; /* Сильно сузить боковые колонки */
+        --top-right-button-size: 2rem;
+        --top-right-button-min-size: 32px;
+    }
+     #mainLayout { grid-template-columns: auto minmax(100px, 1fr) auto; gap: 2px; } /* Очень узкая центральная колонка */
+     #topRowContainer { grid-template-columns: 1fr auto 1fr; } /* Упростить верхнюю строку */
+     .top-row-cell.blue-info { grid-column: 1; }
+     .top-row-cell.center-controls { grid-column: 2; }
+     .top-row-cell.red-info { grid-column: 3; }
+     .center-controls-wrapper { display: flex; flex-wrap: wrap; justify-content: center; } /* Перенос центральных контролов */
+     #timerDisplay { order: -1; margin-bottom: var(--gap-half); min-width: 10ch; } /* Переместить таймер наверх */
+     .team-name { max-width: 100px; font-size: clamp(0.9rem, 2.8vmin, 1.2rem); }
+     /* Перестроить баны в сетку 3xN */
+     .bans-container { display: grid; grid-template-columns: repeat(3, 1fr); }
+     #blue-ban-4, #blue-ban-5, #red-ban-4, #red-ban-5 { margin-top: 2px; } /* Небольшой отступ для нижних банов */
+     .filter-button { min-width: 28px; min-height: 28px; font-size: 0.6rem; } /* Очень маленькие кнопки фильтров */
+     #championGrid { gap: 2px; } /* Минимальный отступ в сетке */
+     .team-column { padding: var(--gap-half); } /* Уменьшить паддинг колонок */
+     .picks-container { gap: 1px; } /* Минимальный отступ между пиками */
+     .nickname-input { display: none; } /* Скрыть никнеймы на очень маленьких экранах */
+     .search-controls-wrapper { overflow-x: visible; flex-wrap: wrap; } /* Убрать горизонтальный скролл контролов */
+     #championSearch { min-width: 100px; }
+     /* Приблизить верхние кнопки к краям */
+     #topRightButtons, #telegramLinkButton { top: var(--gap-size); }
+     #topRightButtons { right: var(--gap-size); gap: var(--gap-half); }
+     #telegramLinkButton { left: var(--gap-size); }
+     /* Уменьшить паддинг и ширину модальных окон */
+     .modal-content { max-width: calc(100% - 2rem); padding: 0.75rem; }
+     #settingsModal .modal-content { max-width: calc(100% - 2rem); }
+     /* Уменьшить шрифты в настройках */
+     .setting-label { font-size: 0.7rem; margin-bottom: 0.15rem;}
+     .segment-button { font-size: 0.65rem; padding: 0.25rem 0.3rem; }
+     /* Уменьшить макс. ширину ссылки в лобби */
+     #lobbyLinksContainer span { max-width: calc(100% - 80px); }
+     /* Уменьшить паддинг и ширину контента главной страницы */
+     .home-content-wrapper { padding: 1rem; max-width: calc(100% - 1rem); width: calc(100% - 1rem); }
+     #homeTitle { font-size: clamp(1.5rem, 5vmin, 2.5rem); margin-bottom: 1rem;}
+     .lobby-input { width: 90%; }
+     #createLobbyButton { padding: 0.6rem 1.5rem; font-size: clamp(0.9rem, 2.2vh, 1.1rem); }
+}
