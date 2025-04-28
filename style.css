@@ -1,4 +1,4 @@
-/* style.css - v16.1 - Universe Redesign: Make Admin/Settings buttons square */
+/* style.css - v16.2 - Universe Redesign: Combine Glow & Old Blink Animation for Preview */
 :root {
     /* --- Redesign v15.0: Обновление базовых переменных --- */
     /* Базовые размеры - Пока оставляем без изменений, корректируем элементы позже */
@@ -523,6 +523,10 @@ html[data-theme='light'] #settingsButton:hover {
     /* font-size: 0.8rem; */ /* Убираем размер шрифта, т.к. будет иконка */
     /* font-weight: 600; */
     /* text-transform: uppercase; */
+    /* v16.1: Добавляем flex для центрирования иконки (если она будет) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #adminButton:hover:not(:disabled) {
     background: linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-blue-dark), #fff 10%), var(--color-accent-blue-dark)); /* Светлее градиент */
@@ -928,7 +932,7 @@ html[data-theme='light'] .team-column.red-column { background-color: var(--color
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, opacity 0.2s ease; /* v16.2: Добавляем opacity в transition */
     box-shadow: var(--shadow-slot);
 }
 html[data-theme='light'] .pick-slot, html[data-theme='light'] .ban-slot {
@@ -989,18 +993,28 @@ html[data-theme='light'] .swap-selected {
     border-color: var(--color-accent-blue);
     box-shadow: var(--shadow-slot), 0 0 8px 2px var(--color-accent-blue);
 }
+
 /* Анимация мигания для предпросматриваемого чемпиона */
-/* Redesign v15.0: Используем новую анимацию свечения */
+/* v16.2: Возвращаем старую анимацию мигания opacity */
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; } /* Делаем чуть менее прозрачным для лучшей видимости */
+}
+/* v16.2: Анимация свечения рамки (остается) */
 @keyframes pulse-glow {
   0%, 100% { box-shadow: var(--shadow-slot), 0 0 8px 3px var(--color-accent-gold); }
   50% { box-shadow: var(--shadow-slot), 0 0 12px 5px var(--color-accent-gold); }
 }
-.preview-flash { /* Переименовать или использовать существующий класс */
+/* v16.2: Применяем ОБЕ анимации к .preview-flash */
+.preview-flash {
+    /* Применяем анимацию свечения рамки */
     animation: pulse-glow 1.5s infinite ease-in-out;
+    /* Добавляем старую анимацию мигания */
+    animation: pulse-glow 1.5s infinite ease-in-out, flash 1s infinite ease-in-out;
 }
-/* Убираем старую анимацию */
-/* @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } } */
+/* Убираем старую анимацию только с img, т.к. flash теперь на всем слоте */
 /* .preview-flash > img.slot-image { animation: flash 1s infinite ease-in-out; } */
+
 
 /* Контейнер для центральной области */
 #championGridContainer {
