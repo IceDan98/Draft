@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Companion - WebApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            color: var(--tg-theme-text-color, #ffffff);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            opacity: 0.8;
+            font-size: 1.1em;
+        }
+        
+        .persona-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .persona-card {
+            flex: 1;
+            max-width: 150px;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+        }
+        
+        .persona-card.active {
+            border-color: var(--tg-theme-button-color, #40a7e3);
+            transform: scale(1.05);
+        }
+        
+        .persona-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .persona-emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .persona-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .persona-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .chat-interface {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .message.user {
+            background: var(--tg-theme-button-color, #40a7e3);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .message.bot {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--tg-theme-text-color, #ffffff);
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .message-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .send-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: var(--tg-theme-button-color, #40a7e3);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--tg-theme-text-color, #ffffff);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .premium-banner {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .premium-btn {
+            background: #000;
+            color: #FFD700;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .mood-slider {
+            margin: 20px 0;
+        }
+        
+        .mood-label {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--tg-theme-button-color, #40a7e3);
+            cursor: pointer;
+        }
+        
+        .voice-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-btn.record {
+            background: #ff4757;
+            color: white;
+        }
+        
+        .voice-btn.play {
+            background: #2ed573;
+            color: white;
+        }
+        
+        .premium-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .premium-modal {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎭✨</div>
+            <div class="subtitle">AI Companion WebApp</div>
+        </div>
+
+        <!-- Премиум баннер -->
+        <div class="premium-banner" id="premiumBanner">
+            <div>⭐ ПРЕМИУМ ДОСТУП ⭐</div>
+            <div style="margin: 10px 0;">Безлимитное общение + Голосовые сообщения + Эксклюзивный контент</div>
+            <button class="premium-btn" onclick="showPremium()">ПОДКЛЮЧИТЬ</button>
+        </div>
+
+        <!-- Выбор персоны -->
+        <div class="persona-selector">
+            <div class="persona-card active" onclick="selectPersona('diana')">
+                <span class="persona-emoji">🌟</span>
+                <div class="persona-name">Diana</div>
+                <div class="persona-desc">Умная подруга</div>
+            </div>
+            <div class="persona-card" onclick="selectPersona('madina')">
+                <span class="persona-emoji">😈</span>
+                <div class="persona-name">Madina</div>
+                <div class="persona-desc">Страстная спутница</div>
+            </div>
+        </div>
+
+        <!-- Настройки Diana -->
+        <div id="dianaControls" class="mood-slider">
+            <div class="mood-label">Настроение Diana</div>
+            <select class="slider" onchange="changeVibe(this.value)">
+                <option value="friend">😊 Дружеский</option>
+                <option value="romantic">🥰 Романтичный</option>
+                <option value="passionate">🔥 Страстный</option>
+                <option value="philosophical">🤔 Философский</option>
+            </select>
+        </div>
+
+        <!-- Настройки Madina -->
+        <div id="madinaControls" class="mood-slider" style="display: none;">
+            <div class="mood-label">Уровень страсти: <span id="levelValue">5</span>/10</div>
+            <input type="range" min="1" max="10" value="5" class="slider" 
+                   oninput="changeSextingLevel(this.value)">
+        </div>
+
+        <!-- Голосовые элементы управления -->
+        <div class="voice-controls">
+            <button class="voice-btn record" onclick="toggleVoiceRecord()" title="Записать голосовое">🎤</button>
+            <button class="voice-btn play" onclick="toggleVoicePlay()" title="Озвучить ответ">🔊</button>
+        </div>
+
+        <!-- Интерфейс чата -->
+        <div class="chat-interface">
+            <div class="messages-container" id="messages">
+                <div class="message bot">
+                    Привет! Я твой AI-компаньон. Выбери персону и начни общение! ✨
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <span>Печатает</span>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <input type="text" class="message-input" id="messageInput" 
+                       placeholder="Напиши сообщение..." onkeypress="handleKeyPress(event)">
+                <button class="send-btn" onclick="sendMessage()">📤</button>
+            </div>
+        </div>
+
+        <!-- Быстрые действия -->
+        <div class="controls">
+            <button class="control-btn" onclick="quickAction('romantic_fantasy')">💫 Романтика</button>
+            <button class="control-btn" onclick="quickAction('create_story')">📚 История</button>
+            <button class="control-btn" onclick="quickAction('mood_check')">🎯 Настроение</button>
+            <button class="control-btn" onclick="quickAction('stats')">📊 Статистика</button>
+        </div>
+    </div>
+
+    <!-- Премиум модал -->
+    <div class="premium-overlay" id="premiumOverlay">
+        <div class="premium-modal">
+            <h2>⭐ ПРЕМИУМ ПОДПИСКА ⭐</h2>
+            <div style="margin: 20px 0;">
+                <div>✅ Безлимитное общение</div>
+                <div>✅ Голосовые сообщения</div>
+                <div>✅ Эксклюзивный контент</div>
+                <div>✅ Приоритетная поддержка</div>
+            </div>
+            <button class="premium-btn" onclick="buyPremium()">КУПИТЬ ЗА 299₽/месяц</button>
+            <button class="premium-btn" onclick="closePremium()" style="background: transparent; border: 1px solid white; margin-left: 10px;">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        let currentPersona = 'diana';
+        let currentVibe = 'friend';
+        let sextingLevel = 5;
+        let isRecording = false;
+        let isPremium = false;
+
+        // Применяем тему Telegram
+        document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#667eea');
+        document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#ffffff');
+        document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#40a7e3');
+
+        function selectPersona(persona) {
+            currentPersona = persona;
+            
+            // Обновляем UI
+            document.querySelectorAll('.persona-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.persona-card').classList.add('active');
+            
+            // Показываем соответствующие контролы
+            if (persona === 'diana') {
+                document.getElementById('dianaControls').style.display = 'block';
+                document.getElementById('madinaControls').style.display = 'none';
+            } else {
+                document.getElementById('dianaControls').style.display = 'none';
+                document.getElementById('madinaControls').style.display = 'block';
+            }
+            
+            // Отправляем данные в бот
+            tg.sendData(JSON.stringify({
+                action: 'switch_persona',
+                persona: persona
+            }));
+        }
+
+        function changeVibe(vibe) {
+            currentVibe = vibe;
+            tg.sendData(JSON.stringify({
+                action: 'set_vibe',
+                vibe: vibe
+            }));
+        }
+
+        function changeSextingLevel(level) {
+            sextingLevel = level;
+            document.getElementById('levelValue').textContent = level;
+            tg.sendData(JSON.stringify({
+                action: 'sexting_level',
+                level: parseInt(level)
+            }));
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Проверяем лимиты для бесплатных пользователей
+            if (!isPremium && getMessageCount() >= 10) {
+                showPremium();
+                return;
+            }
+            
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Показываем индикатор печати
+            showTyping();
+            
+            // Отправляем в бот
+            tg.sendData(JSON.stringify({
+                action: 'send_message',
+                message: message,
+                persona: currentPersona,
+                vibe: currentVibe,
+                level: sextingLevel
+            }));
+            
+            // Симуляция ответа (в реальности ответ придет от бота)
+            setTimeout(() => {
+                hideTyping();
+                addMessage(generateMockResponse(message), 'bot');
+            }, 2000);
+        }
+
+        function addMessage(text, sender) {
+            const container = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function quickAction(action) {
+            tg.sendData(JSON.stringify({
+                action: action,
+                persona: currentPersona
+            }));
+        }
+
+        function toggleVoiceRecord() {
+            if (!isPremium) {
+                showPremium();
+                return;
+            }
+            
+            isRecording = !isRecording;
+            const btn = event.target;
+            
+            if (isRecording) {
+                btn.style.background = '#ff6b7a';
+                btn.textContent = '⏹️';
+                // Здесь будет логика записи
+            } else {
+                btn.style.background = '#ff4757';
+                btn.textContent = '🎤';
+                // Здесь будет отправка аудио
+            }
+        }
+
+        function toggleVoicePlay() {
+            if (!isPremium) {
+                showPremium();
+                return;
+            }
+            // Логика воспроизведения голосового ответа
+        }
+
+        function showPremium() {
+            document.getElementById('premiumOverlay').style.display = 'flex';
+        }
+
+        function closePremium() {
+            document.getElementById('premiumOverlay').style.display = 'none';
+        }
+
+        function buyPremium() {
+            tg.sendData(JSON.stringify({
+                action: 'buy_premium'
+            }));
+        }
+
+        function getMessageCount() {
+            return document.querySelectorAll('.message.user').length;
+        }
+
+        function generateMockResponse(userMessage) {
+            const responses = {
+                diana: {
+                    friend: "Понимаю тебя! Давай поговорим об этом подробнее 😊",
+                    romantic: "Твои слова трогают мое сердце... 🥰✨",
+                    passionate: "Чувствую твою энергию! Это зажигает и меня 🔥",
+                    philosophical: "Интересная мысль... Давай размышлим глубже 🤔"
+                },
+                madina: [
+                    "Ммм, интересно... Расскажи больше 😈",
+                    "Твои слова возбуждают мое воображение 🔥",
+                    "О да, мне нравится твоя дерзость 💋"
+                ]
+            };
+            
+            if (currentPersona === 'diana') {
+                return responses.diana[currentVibe];
+            } else {
+                return responses.madina[Math.floor(Math.random() * responses.madina.length)];
+            }
+        }
+
+        // Обработка данных от бота
+        tg.onEvent('web_app_data_received', function(data) {
+            const response = JSON.parse(data);
+            
+            if (response.action === 'bot_response') {
+                hideTyping();
+                addMessage(response.message, 'bot');
+            } else if (response.action === 'premium_status') {
+                isPremium = response.isPremium;
+                if (isPremium) {
+                    document.getElementById('premiumBanner').style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
